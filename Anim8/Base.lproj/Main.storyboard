@@ -746,6 +746,12 @@
                                 <action selector="playWithSender:" destination="lkl-JU-3qv" id="7tx-b3-T9l"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem systemItem="pause" id="Td9-g8-BC6">
+                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="pauseWithSender:" destination="lkl-JU-3qv" id="M4s-yk-9sf"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="vUC-To-1Mo"/>
                         <barButtonItem systemItem="trash" id="fOM-Dx-wH7">
                             <color key="tintColor" red="0.99991279840000002" green="1" blue="0.99988144639999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -776,6 +782,7 @@
                         <outlet property="debugLabel" destination="waZ-V4-5Hs" id="dXq-Hr-aTb"/>
                         <outlet property="deleteButton" destination="fOM-Dx-wH7" id="foH-Nf-0Fx"/>
                         <outlet property="imageView" destination="rSF-4l-2gY" id="GKy-VD-Fel"/>
+                        <outlet property="pauseButton" destination="Td9-g8-BC6" id="cZS-d7-9mu"/>
                         <outlet property="playButton" destination="JNb-Cc-EZ9" id="5jD-WD-hdg"/>
                         <outlet property="shareButton" destination="PVy-Sk-vV4" id="9Yv-io-XHa"/>
                         <outlet property="tableView" destination="zMc-66-aNH" id="EwW-cr-1nI"/>

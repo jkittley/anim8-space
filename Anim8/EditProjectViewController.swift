@@ -30,6 +30,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet var captureButton: UIBarButtonItem!
     @IBOutlet var deleteButton: UIBarButtonItem!
     @IBOutlet var playButton: UIBarButtonItem!
+    @IBOutlet var pauseButton: UIBarButtonItem!
     @IBOutlet var shareButton: UIBarButtonItem!
     
     override func viewDidLoad() {
@@ -201,19 +202,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
-    func UpdateBarButtonIcon(button: UIBarButtonItem, newStyle: UIBarButtonSystemItem) {
-        // Update playPauseButton type.
-        let newButton = UIBarButtonItem(barButtonSystemItem: newStyle, target: self, action:button.action)
-        newButton.tintColor = UIColor.white;
-        var navItems = self.navigationController?.toolbar.items
-        if navItems != nil {
-            guard let idx = navItems?.index(of: button) else { return }
-            if (idx >= 0) {
-                navItems?[idx] = newButton;
-                self.navigationController?.toolbar.setItems(navItems!, animated: false);
-            }
-        }
-    }
+
     
     @IBAction func play(sender: UIBarButtonItem) {
         if (playTimer == nil) {
@@ -221,11 +210,13 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
             playPos = 0
             if (project?.frames.count)! > 1 {
                 playTimer = Timer.scheduledTimer(timeInterval: self.project!.playbackFrameRate, target: self, selector: #selector(EditProjectViewController.playback), userInfo: nil, repeats: true)
-                UpdateBarButtonIcon(button: sender, newStyle: UIBarButtonSystemItem.pause)
                 activateControls()
             }
-        } else {
-            UpdateBarButtonIcon(button: sender, newStyle: UIBarButtonSystemItem.play)
+        }
+    }
+    
+    @IBAction func pause(sender: UIBarButtonItem) {
+        if (playTimer != nil) {
             playTimer?.invalidate()
             activateControls()
         }
@@ -252,6 +243,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         self.playButton.isEnabled = false
         self.shareButton.isEnabled = false
         self.captureButton.isEnabled = true
+        self.pauseButton.isEnabled = false
         
         if self.project!.frames.count > 0 {
             self.tableView.isHidden = false
@@ -263,6 +255,8 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         }
         if playTimer != nil {
             self.captureButton.isEnabled = false
+            self.pauseButton.isEnabled = true
+            self.playButton.isEnabled = false
         }
     }
     
