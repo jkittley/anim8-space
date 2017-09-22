@@ -210,7 +210,7 @@ static void FeedbackKeypointDensity(cv::Mat &src, vector<cv::KeyPoint> keypoints
         cv::blur(src, background, cv::Size( 15, 15));
     } else if (mode == FB_MODE_HEATMAP) {
         background = src;
-        cv::cvtColor(heatmap, foreground, cv::COLOR_GRAY2BGR);
+        cv::cvtColor(blurred, foreground, cv::COLOR_GRAY2BGR);
         cv::applyColorMap(foreground, foreground, cv::COLORMAP_RAINBOW);
     } else {
         throw "UNKNOWN FB TYPE";
