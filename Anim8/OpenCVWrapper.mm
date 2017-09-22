@@ -21,6 +21,9 @@ int FB_MODE_BLURRED  = 0;
 int FB_MODE_COLOURED = 1;
 int FB_MODE_REVEAL   = 2;
 int FB_MODE_HEATMAP  = 3;
+int FB_MODE_REVEAL_PAPER = 4;
+float reveal_factor = 0.25;
+float reveal_factor_paper = 0.001;
 
 /// Converts an UIImage to Mat.
 /// Orientation of UIImage will be lost.
@@ -103,7 +106,12 @@ static void FeedbackAlgorithmVision(cv::Mat &src, vector<cv::KeyPoint> keypoints
     } else if (mode == FB_MODE_REVEAL) {
         foreground = src;
         cv::cvtColor(src, background, cv::COLOR_BGR2GRAY);
-        background *= 0.001;
+        background *= reveal_factor;
+        cv::cvtColor(background, background, cv::COLOR_GRAY2BGR);
+    } else if (mode == FB_MODE_REVEAL_PAPER) {
+        foreground = src;
+        cv::cvtColor(src, background, cv::COLOR_BGR2GRAY);
+        background *= reveal_factor_paper;
         cv::cvtColor(background, background, cv::COLOR_GRAY2BGR);
     } else if (mode == FB_MODE_BLURRED) {
         foreground = src;
@@ -143,31 +151,28 @@ static void FeedbackKeypointDensity(cv::Mat &src, vector<cv::KeyPoint> keypoints
     cv::Mat heatmap(r, c, CV_8UC1, cv::Scalar::all(0));
     
     // Basic
-    for(int i = 0; i < keypoints.size(); i++){
-        int x = floor(keypoints[i].pt.x / bin_factor);
-        int y = floor(keypoints[i].pt.y / bin_factor);
-        //if (heatmap.at<uchar>(x,y) < 250) {
-            //heatmap.at<uchar>(x,y) = heatmap.at<uchar>(x,y) + 1;
-            heatmap.data[y*c+x] += 1;
-        //}
-    }
-    
-    // Wider
 //    for(int i = 0; i < keypoints.size(); i++){
 //        int x = floor(keypoints[i].pt.x / bin_factor);
 //        int y = floor(keypoints[i].pt.y / bin_factor);
-//        for(int yi=y-1; yi<=y+1; yi++) {
-//            for(int xi=x-1; xi<=x+1; xi++) {
-//                try {
-//                    heatmap.data[yi*c+xi] += 1;
-//                } catch(...) {
-//                    // Catch out of bounds
-//                }
-//            }
-//        }
-//        // Bosst middle
-//        heatmap.data[y*c+x] += 2;
+//        heatmap.data[y*c+x] += 1;
 //    }
+    
+    // Wider
+    for(int i = 0; i < keypoints.size(); i++){
+        int x = floor(keypoints[i].pt.x / bin_factor);
+        int y = floor(keypoints[i].pt.y / bin_factor);
+        for(int yi=y-1; yi<=y+1; yi++) {
+            for(int xi=x-1; xi<=x+1; xi++) {
+                try {
+                    heatmap.data[yi*c+xi] += 1;
+                } catch(...) {
+                    // Catch out of bounds
+                }
+            }
+        }
+        // Bosst middle
+        heatmap.data[y*c+x] += 2;
+    }
 
     // Normalise it 0-255
     double min, max;
@@ -198,7 +203,7 @@ static void FeedbackKeypointDensity(cv::Mat &src, vector<cv::KeyPoint> keypoints
     } else if (mode == FB_MODE_REVEAL) {
         foreground = src;
         cv::cvtColor(src, background, cv::COLOR_BGR2GRAY);
-        background *= 0.001;
+        background *= reveal_factor;
         cv::cvtColor(background, background, cv::COLOR_GRAY2BGR);
     } else if (mode == FB_MODE_BLURRED) {
         foreground = src;
@@ -322,9 +327,7 @@ static bool isGoodHomography(cv::Mat H) {
         } catch (...) {
             return NULL;
         }
-    
-        printf("* Feedback %s \n", [fb UTF8String]);
-    
+        
         // Keypoints
         if ([fb  isEqual: @"keypoints"]) {
             outMat = bgrMat;
@@ -343,6 +346,8 @@ static bool isGoodHomography(cv::Mat H) {
         // Algorithm Vision
         } else if ([fb  isEqual: @"vision reveal"]) {
             FeedbackAlgorithmVision(bgrMat, keypoints, outMat, FB_MODE_REVEAL);
+        } else if ([fb  isEqual: @"vision reveal paper"]) {
+            FeedbackAlgorithmVision(bgrMat, keypoints, outMat, FB_MODE_REVEAL_PAPER);
         } else if ([fb  isEqual: @"vision blurred"]) {
             FeedbackAlgorithmVision(bgrMat, keypoints, outMat, FB_MODE_BLURRED);
         } else if ([fb  isEqual: @"vision colour"]) {

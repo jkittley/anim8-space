@@ -31,7 +31,7 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
     var project: Project?
     
     var captureDeviceInput: AVCaptureDeviceInput?
-    let photoOutput = AVCapturePhotoOutput()
+    let avCapturePhotoOutput = AVCapturePhotoOutput()
     var parentController: CaptureViewController?
     
     weak var previewDelegate: PreviewFrameExtractorDelegate?
@@ -93,10 +93,10 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
 //        
 //        }
 
-        if captureSession.canAddOutput(photoOutput) {
-            captureSession.addOutput(photoOutput)
-            photoOutput.isHighResolutionCaptureEnabled = true
-            photoOutput.isLivePhotoCaptureEnabled = photoOutput.isLivePhotoCaptureSupported
+        if captureSession.canAddOutput(avCapturePhotoOutput) {
+            captureSession.addOutput(avCapturePhotoOutput)
+            avCapturePhotoOutput.isHighResolutionCaptureEnabled = true
+            avCapturePhotoOutput.isLivePhotoCaptureEnabled = avCapturePhotoOutput.isLivePhotoCaptureSupported
         } else {
             print("Could not add photo output to the session")
             return
@@ -162,7 +162,7 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
 //          if !photoSettings.availablePreviewPhotoPixelFormatTypes.isEmpty {
 //               photoSettings.previewPhotoFormat = [kCVPixelBufferPixelFormatTypeKey as String:       photoSettings.availablePreviewPhotoPixelFormatTypes.first!]
 //          }
-          photoOutput.capturePhoto(with: photoSettings, delegate: self)
+          avCapturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
         } else {
             // No capture device
             newPhotoDeligate?.newPhotoError(message:"No capture device", dismiss: true)
@@ -170,37 +170,68 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
     }
     
     
-    
+    @available(iOS 11.0, *)
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        print("SNAP SNAP 11")
+        if error != nil {
+            newPhotoDeligate?.newPhotoError(message:"Error capturing photo", dismiss: true)
+            close()
+        } else {
+            if let rep = photo.fileDataRepresentation() {
+                photoOutInternal(dataImage: rep)
+            } else {
+                print("Processing failed 1124")
+                newPhotoDeligate?.newPhotoError(message:"Unable to capture Image", dismiss: true)
+                close()
+            }
+        }
+    }
     
     // MARK: - AVCapturePhotoCaptureDelegate Methods
-    func photoOutput(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?, previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
         
         if error != nil {
             newPhotoDeligate?.newPhotoError(message:"Error capturing photo", dismiss: true)
             close()
         } else {
-            print("SNAP SNAP")
+            print("SNAP SNAP < 11")
+            
             if let sampleBuffer = photoSampleBuffer,
                let previewBuffer = previewPhotoSampleBuffer,
                let dataImage = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: sampleBuffer, previewPhotoSampleBuffer: previewBuffer) {
-               if let image = UIImage(data: dataImage) {
-                    // Notify deligate
-                    let (processed, message) = processNewPhoto(image: image)
+               
+                photoOutInternal(dataImage: dataImage)
                 
-                    if processed == nil {
-                        newPhotoDeligate?.newPhotoError(message:message, dismiss: false)
-                    } else {
-                        newPhotoDeligate?.newPhoto(newImage: processed, message:message)
-                        close()
-                    }
-               } else {
-                    newPhotoDeligate?.newPhotoError(message:"No Image", dismiss: true)
-                    close()
-               }
+              
+                
+            } else {
+                print("Processing failed 24")
+                newPhotoDeligate?.newPhotoError(message:"Unable to capture Image", dismiss: true)
+                close()
             }
         }
     }
-    
+
+
+    private func photoOutInternal(dataImage: Data) {
+        if let image = UIImage(data: dataImage) {
+            // Notify deligate
+            let (processed, message) = processNewPhoto(image: image)
+            
+            if processed == nil {
+                print("Processing failed")
+                newPhotoDeligate?.newPhotoError(message:message, dismiss: false)
+            } else {
+                print("Processing")
+                newPhotoDeligate?.newPhoto(newImage: processed, message:message)
+                close()
+            }
+        } else {
+            print("Processing failed no image")
+            newPhotoDeligate?.newPhotoError(message:"No Image", dismiss: true)
+            close()
+        }
+    }
     
     
     func processNewPhoto(image: UIImage) -> (UIImage?, String) {
