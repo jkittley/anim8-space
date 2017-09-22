@@ -945,12 +945,12 @@
                                 <rect key="frame" x="20" y="20" width="984" height="748"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lid-1Q-pgT">
-                                <rect key="frame" x="40" y="240" width="944" height="508"/>
+                                <rect key="frame" x="40" y="240" width="944" height="428"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="KJe-3E-6d3" firstAttribute="top" secondItem="lid-1Q-pgT" secondAttribute="bottom" constant="20" id="2BY-bE-dsg"/>
+                            <constraint firstItem="KJe-3E-6d3" firstAttribute="top" secondItem="lid-1Q-pgT" secondAttribute="bottom" constant="100" id="2BY-bE-dsg"/>
                             <constraint firstItem="KJe-3E-6d3" firstAttribute="top" secondItem="R6o-yl-xme" secondAttribute="bottom" id="CYl-4Z-N7c"/>
                             <constraint firstItem="R6o-yl-xme" firstAttribute="top" secondItem="UoH-d5-prk" secondAttribute="bottom" id="EBg-Vr-Nki"/>
                             <constraint firstAttribute="trailingMargin" secondItem="R6o-yl-xme" secondAttribute="trailing" id="Fek-sU-vN9"/>

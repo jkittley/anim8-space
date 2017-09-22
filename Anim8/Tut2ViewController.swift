@@ -17,13 +17,17 @@ class Tut2ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
         playTimer = Timer.scheduledTimer(timeInterval: 0.15, target: self, selector: #selector(self.playback), userInfo: nil, repeats: true)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+         playTimer?.invalidate()
     }
     
     @objc func playback() {
-        
         print("a\(counter).png")
-        
         if let img = UIImage(named: "a\(counter).png") {
             imageView.image = img
         }
@@ -31,10 +35,6 @@ class Tut2ViewController: UIViewController {
             counter += 1
         } else {
             counter = 0
-        }
-        // Stop when tutorial closed
-        if (view.window == nil) {
-            playTimer?.invalidate()
         }
     }
 
