@@ -127,13 +127,14 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
     func captureOutput(_ captureOutput: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection) {
         
-            guard let uiImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
+        guard let uiImage:UIImage = imageFromSampleBuffer(sampleBuffer: sampleBuffer) else { return }
         
-        // Pick feedback
-            var resultImage: UIImage? = nil
+        var resultImage: UIImage? = nil
         
             if let algotithm = self.project?.algFeatures , let feedback = self.project?.feedback, let kpon = self.project?.keypoints, let kpadv = self.project?.keypointsAdv {
-                resultImage = OpenCVWrapper.feedback(uiImage.copy() as! UIImage, arg2:algotithm, arg3:feedback, arg4:kpon, arg5:kpadv)
+                resultImage = OpenCVWrapper.feedback(uiImage, arg2:algotithm, arg3:feedback, arg4:kpon, arg5:kpadv)
+            } else {
+                resultImage = uiImage
             }
         
             // Send result to preview

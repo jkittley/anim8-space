@@ -44,7 +44,9 @@ static void UIImageToMat(UIImage *image, cv::Mat &mat) {
 /// Converts a Mat to UIImage.
 static UIImage *MatToUIImage(cv::Mat &mat) {
     // Create a pixel buffer.
-    assert(mat.elemSize() == 1 || mat.elemSize() == 3);
+    if (mat.elemSize() < 1 || mat.elemSize() > 3) {
+        throw "MatToUIImage mat is missing of wrong shape";
+    }
     cv::Mat matrgb;
     if (mat.elemSize() == 1) {
         cv::cvtColor(mat, matrgb, CV_GRAY2RGB);
@@ -305,74 +307,70 @@ static bool isGoodHomography(cv::Mat H) {
 //
 
 + (nullable UIImage *)feedback:(nonnull UIImage *)image arg2:(nonnull NSString *)algFeat arg3:(nonnull NSString *)fb arg4:(bool)kpon arg5:(bool)kpadv {
-    
     cv::initModule_nonfree();
-    
     cv::Mat bgrMat;
     UIImageToMat(image, bgrMat);
-    
-    cv::Mat outMat;
-    
     cv::Mat grayMat;
     cv::cvtColor(bgrMat, grayMat, CV_BGR2GRAY);
+    cv::Mat outMat;
     
-    //try {
-        
-    
-    vector<cv::KeyPoint> keypoints;
     try {
-        keypoints = getKeypoints(grayMat, algFeat);
+   
+        vector<cv::KeyPoint> keypoints;
+        try {
+            keypoints = getKeypoints(grayMat, algFeat);
+        } catch (...) {
+            return NULL;
+        }
+    
+        printf("* Feedback %s \n", [fb UTF8String]);
+    
+        // Keypoints
+        if ([fb  isEqual: @"keypoints"]) {
+            outMat = bgrMat;
+            kpon = true;
+        // Density
+        } else if ([fb  isEqual: @"density reveal"]) {
+            //FeedbackAlgorithmSees(bgrMat, keypoints, bgrMat);
+            FeedbackKeypointDensity(bgrMat, keypoints, outMat, 20, 50, 255, FB_MODE_REVEAL, 15);
+        } else if ([fb  isEqual: @"density heatmap"]) {
+            FeedbackKeypointDensity(bgrMat, keypoints, outMat, 20, 50, 255, FB_MODE_HEATMAP,  15);
+        } else if ([fb  isEqual: @"density blurred"]) {
+            FeedbackKeypointDensity(bgrMat, keypoints, outMat, 20, 50, 255, FB_MODE_BLURRED, 15);
+        } else if ([fb  isEqual: @"density colour"]) {
+            FeedbackKeypointDensity(bgrMat, keypoints, outMat, 20, 50, 255, FB_MODE_COLOURED, 15);
+        
+        // Algorithm Vision
+        } else if ([fb  isEqual: @"vision reveal"]) {
+            FeedbackAlgorithmVision(bgrMat, keypoints, outMat, FB_MODE_REVEAL);
+        } else if ([fb  isEqual: @"vision blurred"]) {
+            FeedbackAlgorithmVision(bgrMat, keypoints, outMat, FB_MODE_BLURRED);
+        } else if ([fb  isEqual: @"vision colour"]) {
+            FeedbackAlgorithmVision(bgrMat, keypoints, outMat, FB_MODE_COLOURED);
+        } else {
+            outMat = bgrMat;
+        }
+        
+        // Extra Keypoints
+        if (kpon) {
+            if (kpadv) {
+                cv::drawKeypoints(outMat, keypoints, outMat, cv::Scalar::all(-1), 4);
+            } else {
+                FeedbackKeypoints(outMat, keypoints, outMat);
+            }
+        }
+        
+        // Return
+        UIImage *kpImage = MatToUIImage(outMat);
+        return RestoreUIImageOrientation(kpImage, image);
+        
+    } catch (const std::exception &exc) {
+        // catch anything thrown within try block that derives from std::exception
+        std::cerr << exc.what();
+        return NULL;
     } catch (...) {
         return NULL;
     }
-    
-    // Keypoints
-    if ([fb  isEqual: @"keypoints"]) {
-        kpon = true;
-        
-    // Density
-    } else if ([fb  isEqual: @"density reveal"]) {
-        //FeedbackAlgorithmSees(bgrMat, keypoints, bgrMat);
-        FeedbackKeypointDensity(bgrMat, keypoints, outMat, 20, 50, 255, FB_MODE_REVEAL, 15);
-    } else if ([fb  isEqual: @"density heatmap"]) {
-        FeedbackKeypointDensity(bgrMat, keypoints, outMat, 20, 50, 255, FB_MODE_HEATMAP,  15);
-    } else if ([fb  isEqual: @"density blurred"]) {
-        FeedbackKeypointDensity(bgrMat, keypoints, outMat, 20, 50, 255, FB_MODE_BLURRED, 15);
-    } else if ([fb  isEqual: @"density colour"]) {
-        FeedbackKeypointDensity(bgrMat, keypoints, outMat, 20, 50, 255, FB_MODE_COLOURED, 15);
-    
-    // Algorithm Vision
-    } else if ([fb  isEqual: @"vision reveal"]) {
-        FeedbackAlgorithmVision(bgrMat, keypoints, outMat, FB_MODE_REVEAL);
-    } else if ([fb  isEqual: @"vision blurred"]) {
-        FeedbackAlgorithmVision(bgrMat, keypoints, outMat, FB_MODE_BLURRED);
-    } else if ([fb  isEqual: @"vision colour"]) {
-        FeedbackAlgorithmVision(bgrMat, keypoints, outMat, FB_MODE_COLOURED);
-    }
-    
-    // None
-    // Do nothing - this is none
-    
-    // Extra Keypoints
-    if (kpon) {
-        if (kpadv) {
-            cv::drawKeypoints(bgrMat, keypoints, outMat, cv::Scalar::all(-1), 4);
-        } else {
-            FeedbackKeypoints(bgrMat, keypoints, outMat);
-        }
-    }
-    
-    // Return
-    UIImage *kpImage = MatToUIImage(outMat);
-    return RestoreUIImageOrientation(kpImage, image);
-        
-//    } catch (const std::exception &exc) {
-//        // catch anything thrown within try block that derives from std::exception
-//        std::cerr << exc.what();
-//        return NULL;
-//    } catch (...) {
-//        return NULL;
-//    }
 }
 
 
@@ -616,7 +614,7 @@ static bool isGoodHomography(cv::Mat H) {
         NSMutableDictionary * userInfo = [NSMutableDictionary dictionaryWithDictionary:exception.userInfo];
         [userInfo setValue:exception.reason forKey:NSLocalizedDescriptionKey];
         [userInfo setValue:exception.name forKey:NSUnderlyingErrorKey];
-        
+
         *error = [[NSError alloc] initWithDomain:exception.name
                                             code:0
                                         userInfo:userInfo];

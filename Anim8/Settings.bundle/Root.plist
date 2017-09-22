@@ -60,8 +60,6 @@
 			<key>Values</key>
 			<array>
 				<string>orb</string>
-				<string>sift</string>
-				<string>surf</string>
 			</array>
 		</dict>
 		<dict>
@@ -82,8 +80,6 @@
 			<key>Values</key>
 			<array>
 				<string>orb</string>
-				<string>sift</string>
-				<string>surf</string>
 			</array>
 		</dict>
 		<dict>
