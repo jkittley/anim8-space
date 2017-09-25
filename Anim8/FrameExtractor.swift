@@ -52,7 +52,7 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
             permissionGranted = true
         } else {
             permissionGranted = false
-            self.newPhotoDeligate?.newPhotoError(message:"Permission to camera denied.", dismiss: true)
+            self.newPhotoDeligate?.newPhotoError(message:"Permission to camera denied", dismiss: true)
             self.close()
         }
     }
@@ -63,7 +63,7 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
         captureSession.sessionPreset = quality
         guard let captureDevice = selectCaptureDevice() else {
             // No capture device
-            newPhotoDeligate?.newPhotoError(message:"No capture device found.", dismiss: true)
+            newPhotoDeligate?.newPhotoError(message:"No capture device found", dismiss: true)
             return
         }
         guard let captureDeviceInput = try? AVCaptureDeviceInput(device: captureDevice) else { return }
@@ -146,7 +146,7 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
             } else {
                 close()
                 print("RETURNED IMAGE WAS NULL FOR FEEDBACK")
-                self.newPhotoDeligate?.newPhotoError(message: "Unable to generate selected feedback type", dismiss: true)
+                self.newPhotoDeligate?.newPhotoError(message: "Unable to generate selected feedback visualisation", dismiss: true)
             }
        
     }
@@ -165,7 +165,7 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
           avCapturePhotoOutput.capturePhoto(with: photoSettings, delegate: self)
         } else {
             // No capture device
-            newPhotoDeligate?.newPhotoError(message:"No capture device", dismiss: true)
+            newPhotoDeligate?.newPhotoError(message:"Camera not found", dismiss: true)
         }
     }
     
@@ -181,7 +181,7 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
                 photoOutInternal(dataImage: rep)
             } else {
                 print("Processing failed 1124")
-                newPhotoDeligate?.newPhotoError(message:"Unable to capture Image", dismiss: true)
+                newPhotoDeligate?.newPhotoError(message:"Unable to capture photo", dismiss: true)
                 close()
             }
         }
@@ -206,7 +206,7 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
                 
             } else {
                 print("Processing failed 24")
-                newPhotoDeligate?.newPhotoError(message:"Unable to capture Image", dismiss: true)
+                newPhotoDeligate?.newPhotoError(message:"Unable to capture photo", dismiss: true)
                 close()
             }
         }
@@ -217,7 +217,6 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
         if let image = UIImage(data: dataImage) {
             // Notify deligate
             let (processed, message) = processNewPhoto(image: image)
-            
             if processed == nil {
                 print("Processing failed")
                 newPhotoDeligate?.newPhotoError(message:message, dismiss: false)
@@ -228,7 +227,7 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
             }
         } else {
             print("Processing failed no image")
-            newPhotoDeligate?.newPhotoError(message:"No Image", dismiss: true)
+            newPhotoDeligate?.newPhotoError(message:"Photo missing", dismiss: true)
             close()
         }
     }
@@ -245,11 +244,10 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
             if project.frames.count > 0 {
                 if let keyFrame = project.compareFrameWithFirst ? project.frames.first : project.frames.last {
             
-                    print("Compare with first?", project.compareFrameWithFirst)
-                    print("Compare frame index:", project.frames.index(of: keyFrame) ?? "Not found")
-                
-                    print("algFeat: ", project.algFeatures)
-                    print("algDesc: ", project.algDescriptor)
+                    //print("Compare with first?", project.compareFrameWithFirst)
+                    //print("Compare frame index:", project.frames.index(of: keyFrame) ?? "Not found")
+                    //print("algFeat: ", project.algFeatures)
+                    //print("algDesc: ", project.algDescriptor)
                     
                     var processed: UIImage?
                     
@@ -258,26 +256,26 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
                             processed = OpenCVWrapper.transform(keyFrame.image!, arg2: rot, arg3: project.algFeatures, arg4: project.algDescriptor)
                         }
                     } catch {
-                        print(error.localizedDescription)
+                        //print(error.localizedDescription)
                         parentController?.hideProcessingMessage()
-                        return (nil, "Failed to transform image. " + error.localizedDescription + ".")
+                        return (nil, "Failed to process photo: " + error.localizedDescription + ".")
                     }
                     
                     parentController?.hideProcessingMessage()
-                    print("Returnbing processed")
+                    //print("Returning processed")
                     return (processed, "")
                     
                 } else {
-                    return (nil, "Failed to find comparision frame")
+                    return (nil, "Failed to located comparision frame")
                 }
                 
-            // THis is the first images
+            // This is the first images
             } else {
                 if OpenCVWrapper.testfirstimage(rot, arg2: project.algFeatures) {
                     return (rot, "")
                 }
                 parentController?.hideProcessingMessage()
-                return (nil, "The first image is not good enough quality")
+                return (nil, "The photo is not good enough quality, please try again and with more detail in the background")
             }
         
         } else {

@@ -213,7 +213,7 @@ static void FeedbackKeypointDensity(cv::Mat &src, vector<cv::KeyPoint> keypoints
         cv::cvtColor(blurred, foreground, cv::COLOR_GRAY2BGR);
         cv::applyColorMap(foreground, foreground, cv::COLORMAP_RAINBOW);
     } else {
-        throw "UNKNOWN FB TYPE";
+        throw "Unknown density feedback visualisation";
     }
     
     cv::bitwise_and(background, invMask, background);
@@ -247,7 +247,7 @@ static vector<cv::KeyPoint> getKeypoints(cv::Mat &src, NSString* algFeat) {
         detector.detect(src, keypoints);
 
     } else {
-        throw "No algorithm";
+        throw "Unknown visualisation algorithm";
     }
     
     return keypoints;
@@ -271,7 +271,7 @@ static cv::Mat getDescriptors(cv::Mat &src, vector<cv::KeyPoint> keypoints, NSSt
         cv::OrbDescriptorExtractor extractor;
         extractor.compute(src, keypoints, descriptors);
     } else {
-        throw "No algorithm";
+        throw "Unknown processing algorithm";
     }
     
     return descriptors;
@@ -474,14 +474,14 @@ static bool isGoodHomography(cv::Mat H) {
     if (kpKey.size() < 4) {
         printf("too few points on key image\n");
         [NSException raise:@"FrameTransformError"
-                    format:@"Too few features on key image"];
+                    format:@"Too little detail in the comparison photo. Try retaking the first/last photo captured"];
         return NULL;
     }
     
     if (kpImg.size() < 4) {
         printf("too few points on captured image\n");
         [NSException raise:@"FrameTransformError"
-                    format:@"Too few features on captured image"];
+                    format:@"Too little detail in photo. Try again and make sure there is enough detail in the background."];
         return NULL;
     }
     
@@ -494,28 +494,24 @@ static bool isGoodHomography(cv::Mat H) {
     } catch (...) {
         printf("Descriptor generation failed\n");
         [NSException raise:@"FrameTransformError"
-                    format:@"Failed to generate descriptors"];
+                    format:@"Internal error - Failed to generate descriptors"];
         return NULL;
     }
     
     if ( desKey.empty()) {
         printf("Key descriptors Empty\n");
         [NSException raise:@"FrameTransformError"
-                    format:@"Too few key descriptors"];
+                    format:@"Internal error - Too few key descriptors"];
         return NULL;
     }
 
     if ( desImg.empty() ) {
         printf("Image descriptors Empty\n");
         [NSException raise:@"FrameTransformError"
-                    format:@"Too few image descriptors"];
+                    format:@"Internal error - Too few image descriptors"];
         return NULL;
     }
 
-    cout << "Key Descriptors size:" << desKey.size() << endl;
-    cout << "Img Descriptors size:" << desImg.size() << endl;
-    
-    
     if(desKey.type()!=CV_32F) {
         desKey.convertTo(desKey, CV_32F);
     }
@@ -563,13 +559,10 @@ static bool isGoodHomography(cv::Mat H) {
         dst.push_back( kpKey[ good_matches[i].trainIdx ].pt );
     }
     
-    
-    cout << "Number of good Matches: " << good_matches.size() <<endl;
-    
     if (good_matches.size() < 4) {
         printf("Too few matches\n");
         [NSException raise:@"FrameTransformError"
-                    format:@"Insufficient feature matches"];
+                    format:@"Insufficient detail to process the photo. Try retaking this photo or the one it is being compared to"];
         return NULL;
     }
     
@@ -580,7 +573,7 @@ static bool isGoodHomography(cv::Mat H) {
     if (!isGoodHomography(M)) {
         printf("Bad Homography\n");
         [NSException raise:@"FrameTransformError"
-                    format:@"Insufficient feature matches to create good homography"];
+                    format:@"Anim8 failed to process the image correctly. Please try again"];
         return NULL;
     }
     
