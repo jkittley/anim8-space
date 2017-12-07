@@ -131,8 +131,18 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
         
         var resultImage: UIImage? = nil
         
-            if let algotithm = self.project?.algFeatures , let feedback = self.project?.feedback, let kpon = self.project?.keypoints, let kpadv = self.project?.keypointsAdv {
-                resultImage = OpenCVWrapper.feedback(uiImage, arg2:algotithm, arg3:feedback, arg4:kpon, arg5:kpadv)
+            if let algFeat = self.project?.algFeatures, let algoDesc = self.project?.algDescriptor, let feedback = self.project?.feedback, let kpon = self.project?.keypoints, let kpadv = self.project?.keypointsAdv {
+                
+                if let project = self.project {
+                    if project.frames.count > 0 {
+                        let keyFrame = project.compareFrameWithFirst ? project.frames.first : project.frames.last
+                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:algFeat, arg3:feedback, arg4:kpon, arg5:kpadv, arg6:keyFrame?.image, arg7:algFeat )
+                    } else {
+                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:algFeat, arg3:feedback, arg4:kpon, arg5:kpadv, arg6:nil, arg7:algFeat)
+                    }
+                    
+                }
+                
             } else {
                 resultImage = uiImage
             }
@@ -231,6 +241,7 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
             close()
         }
     }
+    
     
     
     func processNewPhoto(image: UIImage) -> (UIImage?, String) {

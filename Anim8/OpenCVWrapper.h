@@ -11,7 +11,7 @@
 
 @interface OpenCVWrapper : NSObject
 + (nonnull UIImage *)cvtColorBGR2GRAY:(nonnull UIImage *)image;
-+ (nullable UIImage *)feedback:(nonnull UIImage*)image arg2:(nonnull NSString*)alg arg3:(nonnull NSString*)fb arg4:(bool)kpon arg5:(bool)kpadv;
++ (nullable UIImage *)feedback:(nonnull UIImage*)image arg2:(nonnull NSString*)alg arg3:(nonnull NSString*)fb arg4:(bool)kpon arg5:(bool)kpadv arg6:(nullable UIImage *)keyFrame arg7:(nonnull NSString *)algDesc;
 + (bool)testfirstimage:(nonnull UIImage*)key arg2:(nonnull NSString*)alg;
 + (nullable UIImage *)transform:(nonnull UIImage*)key arg2:(nonnull UIImage*)img arg3:(nonnull NSString*)algFeat arg4:(nonnull NSString*)algDesc;
 + (nonnull UIImage *)rotate:(nonnull UIImage*)img arg2:(double)angle;

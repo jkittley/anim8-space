@@ -223,6 +223,9 @@ static void FeedbackKeypointDensity(cv::Mat &src, vector<cv::KeyPoint> keypoints
 }
 
 
+
+
+
 static vector<cv::KeyPoint> getKeypoints(cv::Mat &src, NSString* algFeat) {
     
     vector<cv::KeyPoint> keypoints;
@@ -259,15 +262,15 @@ static cv::Mat getDescriptors(cv::Mat &src, vector<cv::KeyPoint> keypoints, NSSt
     cv::Mat descriptors;
     
     if ([algDesc  isEqual: @"sift"]) {
-        printf("Using SIFT extractor\n");
+        //printf("Using SIFT extractor\n");
         cv::SiftDescriptorExtractor extractor;
         extractor.compute(src, keypoints, descriptors);
     } else if ([algDesc  isEqual: @"surf"]) {
-        printf("Using SURF extractor\n");
+        //printf("Using SURF extractor\n");
         cv::SurfDescriptorExtractor extractor;
         extractor.compute(src, keypoints, descriptors);
     } else if ([algDesc  isEqual: @"orb"]) {
-        printf("Using ORB extractor\n");
+        //printf("Using ORB extractor\n");
         cv::OrbDescriptorExtractor extractor;
         extractor.compute(src, keypoints, descriptors);
     } else {
@@ -298,6 +301,128 @@ static bool isGoodHomography(cv::Mat H) {
     return true;
 }
 
+static bool getMatches(cv::Mat grayKey, cv::Mat grayImg, vector<cv::KeyPoint>kpKey, vector<cv::KeyPoint>kpImg, NSString* algFeat, NSString* algDesc, vector<cv::DMatch> &good_matches, std::vector<cv::Point2f> &src_match_points, std::vector<cv::Point2f> &dst_match_points) {
+    
+    cv::Mat desKey;
+    cv::Mat desImg;
+    try {
+        desKey = getDescriptors(grayKey, kpKey, algDesc);
+        desImg = getDescriptors(grayImg, kpImg, algDesc);
+    } catch (...) {
+        printf("Descriptor generation failed\n");
+//        [NSException raise:@"FrameTransformError"
+//                    format:@"Internal error - Failed to generate descriptors"];
+        return false;
+    }
+    
+    if ( desKey.empty()) {
+        printf("Key descriptors Empty\n");
+//        [NSException raise:@"FrameTransformError"
+//                    format:@"Internal error - Too few key descriptors"];
+        return false;
+    }
+    
+    if ( desImg.empty() ) {
+        printf("Image descriptors Empty\n");
+//        [NSException raise:@"FrameTransformError"
+//                    format:@"Internal error - Too few image descriptors"];
+        return false;
+    }
+    
+    if(desKey.type()!=CV_32F) {
+        desKey.convertTo(desKey, CV_32F);
+    }
+    
+    if(desImg.type()!=CV_32F) {
+        desImg.convertTo(desImg, CV_32F);
+    }
+    
+    cv::FlannBasedMatcher matcher;
+    vector< cv::DMatch > matches;
+    matcher.match(desImg, desKey, matches);
+    double max_dist = 0; double min_dist = 100;
+    
+    //-- Quick calculation of max and min distances between keypoints
+    for( int i = 0; i < desImg.rows; i++ )
+    { double dist = matches[i].distance;
+        if( dist < min_dist ) min_dist = dist;
+        if( dist > max_dist ) max_dist = dist;
+    }
+    
+    //-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist,
+    //-- or a small arbitary value ( 0.02 ) in the event that min_dist is very small)
+    //-- PS.- radiusMatch can also be used here.
+    
+    for( int i = 0; i < desImg.rows; i++ ) {
+        if( matches[i].distance <= max(2*min_dist, 0.02) ) {
+            good_matches.push_back( matches[i]);
+        }
+    }
+
+    //-- Localize the object
+    for( int i = 0; i < good_matches.size(); i++ ) {
+        //-- Get the keypoints from the good matches
+        src_match_points.push_back( kpImg[ good_matches[i].queryIdx ].pt );
+        dst_match_points.push_back( kpKey[ good_matches[i].trainIdx ].pt );
+    }
+    
+    if (good_matches.size() < 4) {
+        printf("Too few matches\n");
+//        [NSException raise:@"FrameTransformError"
+//                    format:@"Insufficient detail to process the photo. Try retaking this photo or the one it is being compared to"];
+        return false;
+    }
+    
+    return true;
+}
+    
+
+// Feedback Matches
+static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyImage, cv::Mat &outMat, NSString* algFeat, NSString* algDesc) {
+    
+    bool noMathces = false;
+    
+    cv::Mat bgrMatKey;
+    UIImageToMat(keyImage, bgrMatKey);
+    cv::Mat grayMatKey;
+    cv::cvtColor(bgrMatKey, grayMatKey, CV_BGR2GRAY);
+    
+    float scale = 0.5;
+    cv::resize(grayMatKey, grayMatKey, cv::Size(), scale, scale);
+    cv::resize(grayMat, grayMat, cv::Size(), scale, scale);
+    cv::resize(bgrMatKey, bgrMatKey, cv::Size(), scale, scale);
+    cv::resize(bgrMat, bgrMat, cv::Size(), scale, scale);
+    
+    outMat = bgrMat;
+    
+    vector<cv::KeyPoint> keypointsKey = getKeypoints(grayMatKey, algFeat);
+    vector<cv::KeyPoint> keypointsCap = getKeypoints(grayMat, algFeat);
+    
+    // Keypoints
+    for(int i = 0; i < keypointsCap.size(); i++){
+        cv::circle(outMat, keypointsCap[i].pt, 1, cv::Scalar(10, 110, 250), -1);
+        cv::circle(outMat, keypointsCap[i].pt, 2, cv::Scalar(0, 0, 0), 1);
+    }
+    
+    // Matches
+    if (keypointsKey.size() > 4 && keypointsCap.size() > 4) {
+        vector< cv::DMatch > good_matches;
+        vector< cv::Point2f > src_match_points;
+        vector< cv::Point2f > dst_match_points;
+        bool success = getMatches(grayMatKey, grayMat, keypointsKey, keypointsCap, algFeat, algDesc, good_matches, src_match_points, dst_match_points);
+        //if (success) {
+            //cv::drawMatches(bgrMat, keypoints, bgrMatKey, keypointsKey, good_matches, outMat, cv::Scalar::all(-1), cv::Scalar::all(-1), vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+            
+            for(int i = 0; i < src_match_points.size(); i++){
+                cv::circle(outMat, src_match_points[i], 1, cv::Scalar(10, 250, 10), -1);
+            }
+            
+        //}
+    }
+    
+   
+    
+}
 
 // ---------------------------------------------------------------------------------------
 // Functions available to SWIFT wrapper
@@ -311,8 +436,9 @@ static bool isGoodHomography(cv::Mat H) {
 // Feedback - Provide feedback based on algorithm and feedback type
 //
 
-+ (nullable UIImage *)feedback:(nonnull UIImage *)image arg2:(nonnull NSString *)algFeat arg3:(nonnull NSString *)fb arg4:(bool)kpon arg5:(bool)kpadv {
++ (nullable UIImage *)feedback:(nonnull UIImage *)image arg2:(nonnull NSString *)algFeat arg3:(nonnull NSString *)fb arg4:(bool)kpon arg5:(bool)kpadv arg6:(nullable UIImage *)keyImage arg7:(nonnull NSString *)algDesc {
     cv::initModule_nonfree();
+   
     cv::Mat bgrMat;
     UIImageToMat(image, bgrMat);
     cv::Mat grayMat;
@@ -322,16 +448,19 @@ static bool isGoodHomography(cv::Mat H) {
     try {
    
         vector<cv::KeyPoint> keypoints;
-        try {
-            keypoints = getKeypoints(grayMat, algFeat);
-        } catch (...) {
-            return NULL;
+        if (![fb  isEqual: @"matching"]) {
+            try {
+                keypoints = getKeypoints(grayMat, algFeat);
+            } catch (...) {
+                return NULL;
+            }
         }
         
         // Keypoints
         if ([fb  isEqual: @"keypoints"]) {
             outMat = bgrMat;
             kpon = true;
+            
         // Density
         } else if ([fb  isEqual: @"density reveal"]) {
             //FeedbackAlgorithmSees(bgrMat, keypoints, bgrMat);
@@ -343,6 +472,14 @@ static bool isGoodHomography(cv::Mat H) {
         } else if ([fb  isEqual: @"density colour"]) {
             FeedbackKeypointDensity(bgrMat, keypoints, outMat, 20, 50, 255, FB_MODE_COLOURED, 15);
         
+        // Matching
+        } else if ([fb  isEqual: @"matching"]) {
+            if (keyImage != NULL) {
+                FeedbackMatchingKeypoints(bgrMat, grayMat, keyImage, outMat, algFeat, algDesc);
+            } else {
+                outMat = bgrMat;
+                kpon = true;
+            }
         // Algorithm Vision
         } else if ([fb  isEqual: @"vision reveal"]) {
             FeedbackAlgorithmVision(bgrMat, keypoints, outMat, FB_MODE_REVEAL);
@@ -355,6 +492,8 @@ static bool isGoodHomography(cv::Mat H) {
         } else {
             outMat = bgrMat;
         }
+        
+        
         
         // Extra Keypoints
         if (kpon) {
@@ -442,6 +581,8 @@ static bool isGoodHomography(cv::Mat H) {
 // Transform an image to match its predicesor
 //
 
+
+
 + (nullable UIImage *)transform:(nonnull UIImage*)key arg2:(nonnull UIImage*)img arg3:(nonnull NSString*)algFeat arg4:(nonnull NSString*)algDesc {
     cout << "------ Transforming -------" << endl;
     printf("Fetaure Alg: %s\n", [algFeat UTF8String]);
@@ -485,89 +626,18 @@ static bool isGoodHomography(cv::Mat H) {
         return NULL;
     }
     
-    
-    cv::Mat desKey;
-    cv::Mat desImg;
-    try {
-        desKey = getDescriptors(grayKey, kpKey, algDesc);
-        desImg = getDescriptors(grayImg, kpImg, algDesc);
-    } catch (...) {
-        printf("Descriptor generation failed\n");
-        [NSException raise:@"FrameTransformError"
-                    format:@"Internal error - Failed to generate descriptors"];
-        return NULL;
-    }
-    
-    if ( desKey.empty()) {
-        printf("Key descriptors Empty\n");
-        [NSException raise:@"FrameTransformError"
-                    format:@"Internal error - Too few key descriptors"];
-        return NULL;
-    }
-
-    if ( desImg.empty() ) {
-        printf("Image descriptors Empty\n");
-        [NSException raise:@"FrameTransformError"
-                    format:@"Internal error - Too few image descriptors"];
-        return NULL;
-    }
-
-    if(desKey.type()!=CV_32F) {
-        desKey.convertTo(desKey, CV_32F);
-    }
-    
-    if(desImg.type()!=CV_32F) {
-        desImg.convertTo(desImg, CV_32F);
-    }
-    
-    printf("Matching\n");
-    
-    cv::FlannBasedMatcher matcher;
-    vector< cv::DMatch > matches;
-    matcher.match(desImg, desKey, matches);
-    double max_dist = 0; double min_dist = 100;
-    
-    //-- Quick calculation of max and min distances between keypoints
-    for( int i = 0; i < desImg.rows; i++ )
-    { double dist = matches[i].distance;
-        if( dist < min_dist ) min_dist = dist;
-        if( dist > max_dist ) max_dist = dist;
-    }
-    
-    //-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist,
-    //-- or a small arbitary value ( 0.02 ) in the event that min_dist is very small)
-    //-- PS.- radiusMatch can also be used here.
     vector< cv::DMatch > good_matches;
+    vector< cv::Point2f > src_match_points;
+    vector< cv::Point2f > dst_match_points;
+    bool success = getMatches(grayKey, grayImg, kpKey, kpImg, algFeat, algDesc, good_matches, src_match_points, dst_match_points);
     
-    for( int i = 0; i < desImg.rows; i++ ) {
-        if( matches[i].distance <= max(2*min_dist, 0.02) ) {
-            good_matches.push_back( matches[i]);
-        }
-    }
-    
-    //-- Draw only "good" matches
-    //cv::Mat img_matches;
-    //cv::drawMatches( bgrImg, kpImg, bgrKey, kpKey, good_matches, img_matches, cv::Scalar::all(-1), cv::Scalar::all(-1), vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
-    
-    
-    //-- Localize the object
-    std::vector<cv::Point2f> src;
-    std::vector<cv::Point2f> dst;
-    for( int i = 0; i < good_matches.size(); i++ ) {
-        //-- Get the keypoints from the good matches
-        src.push_back( kpImg[ good_matches[i].queryIdx ].pt );
-        dst.push_back( kpKey[ good_matches[i].trainIdx ].pt );
-    }
-    
-    if (good_matches.size() < 4) {
-        printf("Too few matches\n");
+    if (!success) {
         [NSException raise:@"FrameTransformError"
-                    format:@"Insufficient detail to process the photo. Try retaking this photo or the one it is being compared to"];
-        return NULL;
+            format:@"Anim8 failed to process the image correctly. Please try again. (Matches)"];
     }
     
     // Find perspective
-    cv::Mat M = findHomography( src, dst, CV_RANSAC );
+    cv::Mat M = findHomography(src_match_points, dst_match_points, CV_RANSAC);
     
     cout << M << endl;
     if (!isGoodHomography(M)) {

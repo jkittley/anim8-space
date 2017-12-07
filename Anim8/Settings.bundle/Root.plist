@@ -60,6 +60,8 @@
 			<key>Values</key>
 			<array>
 				<string>orb</string>
+				<string>sift</string>
+				<string>surf</string>
 			</array>
 		</dict>
 		<dict>
@@ -80,6 +82,8 @@
 			<key>Values</key>
 			<array>
 				<string>orb</string>
+				<string>sift</string>
+				<string>surf</string>
 			</array>
 		</dict>
 		<dict>
@@ -115,6 +119,7 @@
 				<string>vision reveal paper</string>
 				<string>vision blurred</string>
 				<string>vision colour</string>
+				<string>matching</string>
 			</array>
 		</dict>
 		<dict>
