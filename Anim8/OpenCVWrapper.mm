@@ -445,6 +445,16 @@ static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage
     }
 }
 
+static void CannyThreshold(cv::Mat& src_gray, cv::Mat& detected_edges) {
+    int lowThreshold = 5;
+    int ratio = 3;
+    int kernel_size = 3;
+    /// Reduce noise with a kernel 3x3
+    cv::blur( src_gray, detected_edges, cv::Size(3,3) );
+    /// Canny detector
+    cv::Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size);
+}
+
 static void rotateMat(cv::Mat& src, double angle, cv::Mat& dst){
     cv::Point2f ptCp(src.cols*0.5, src.rows*0.5);
     cv::Mat M = cv::getRotationMatrix2D(ptCp, angle, 1.0);
@@ -506,12 +516,16 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
         return;
     }
     
-    // Error output
+    // Output
     if (showMode==1) {
         cv::vconcat(bgrMat, warped, outMat);
         cv::resize(outMat, outMat, cv::Size(bgrMat.cols, bgrMat.rows));
     } else {
-        outMat = warped;
+        cv::Mat canny;
+        cv::cvtColor(warped, warped, CV_BGR2GRAY);
+        CannyThreshold(warped, canny);
+        cv::cvtColor(canny, canny, CV_GRAY2BGR);
+        addWeighted( bgrMat, 1.0, canny, 0.8, 0.0, outMat);
     }
   
     
