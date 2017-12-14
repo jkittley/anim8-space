@@ -50,12 +50,20 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }
         // Set init frame
-        showFrame(frame: self.project!.getMostRecentFrame())
+        if let hideFrame1 = project?.hideFrame1, hideFrame1 == true && project?.frames.count == 1 {
+            showFrame(frame: nil)
+        } else {
+            showFrame(frame: self.project!.getMostRecentFrame())
+            let newIndexPath = IndexPath(row: project!.frames.count - 1, section: 0)
+            self.tableView.selectRow(at: newIndexPath, animated: true, scrollPosition: .bottom)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateDebugLabel()
+        // Added to redraw table when first frame hide swithc is toggled in settings
+        self.tableView.reloadData()
     }
     
     //
@@ -69,14 +77,12 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         selectedFrame = frame
         if (selectedFrame == nil) {
             imageView.contentMode = .center
-            
             imageView.image = UIImage(named: "defaultFrame2.png")
-                //?.resizeImageWith(newSize: imageView.frame.size)
+            //?.resizeImageWith(newSize: imageView.frame.size)
         } else {
             imageView.contentMode = .scaleAspectFit
             imageView.image = selectedFrame?.image
         }
-        
         updateDebugLabel()
     }
     
@@ -194,10 +200,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     func deselectAll() {
         if let selectedItems = tableView.indexPathsForSelectedRows {
             for indexPath in selectedItems {
-                tableView.deselectRow(at: indexPath, animated: true)
-                if let cell = tableView.cellForRow(at: indexPath) as? ProjFrameTableViewCell {
-                    cell.layer.borderColor = UIColor.clear.cgColor
-                }
+                tableView.deselectRow(at: indexPath, animated: false)
             }
         }
     }
@@ -205,10 +208,17 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
 
     
     @IBAction func play(sender: UIBarButtonItem) {
+        var minFrames = 1
         if (playTimer == nil) {
             deselectAll()
-            playPos = 0
-            if (project?.frames.count)! > 1 {
+            if let hideFrame1 = project?.hideFrame1, hideFrame1 == true {
+                playPos = 0
+                minFrames = 2
+            } else {
+                playPos = 1
+                minFrames = 1
+            }
+            if (project?.frames.count)! > minFrames {
                 playTimer = Timer.scheduledTimer(timeInterval: self.project!.playbackFrameRate, target: self, selector: #selector(EditProjectViewController.playback), userInfo: nil, repeats: true)
                 activateControls()
             }
@@ -228,7 +238,11 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         showFrame(frame: self.project!.frames[indexPath.row])
         playPos = playPos + 1
         if playPos >= self.tableView.numberOfRows(inSection: 0) {
-            playPos = 0
+            if let hideFrame1 = project?.hideFrame1, hideFrame1 == true && indexPath.row == 0 {
+                playPos = 0
+            } else {
+                playPos = 1
+            }
         }
     }
     
@@ -245,11 +259,16 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         self.captureButton.isEnabled = true
         self.pauseButton.isEnabled = false
         
-        if self.project!.frames.count > 0 {
+        var minFrames = 0
+        if let hideFrame1 = project?.hideFrame1, hideFrame1 == true {
+            minFrames = 1
+        }
+        
+        if self.project!.frames.count > minFrames {
             self.tableView.isHidden = false
             self.deleteButton.isEnabled = (playTimer == nil)
         }
-        if self.project!.frames.count > 1 {
+        if self.project!.frames.count > minFrames + 1 {
             self.playButton.isEnabled = true
             self.shareButton.isEnabled = true
         }
@@ -265,27 +284,33 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         return self.project!.frames.count;
     }
     
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if let hideFrame1 = project?.hideFrame1, hideFrame1 == true && indexPath.row == 0 {
+            return 1.0;
+        } else {
+            return 140.0
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let frame = (project?.frames[indexPath.row])!
         let cell = tableView.dequeueReusableCell(withIdentifier: "frameCell", for: indexPath) as! ProjFrameTableViewCell
-        cell.thumbView?.image = frame.image
+        if let hideFrame1 = project?.hideFrame1, hideFrame1 == true && indexPath.row == 0 {
+            cell.isHidden = true
+        } else {
+            cell.thumbView?.image = frame.image
+        }
         return cell
     }
     
     func tableView(_: UITableView, didSelectRowAt: IndexPath) {
-        // Fetch Item
-        selectedFrame = project!.frames[didSelectRowAt.row]
-        showFrame(frame: selectedFrame)
-        let cell  = tableView.cellForRow(at: didSelectRowAt)
-        cell!.layer.borderColor = UIColor.orange.cgColor
-        cell!.layer.borderWidth = 4.0
+        showFrame(frame: project!.frames[didSelectRowAt.row])
     }
     
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        let cell  = tableView.cellForRow(at: indexPath)
-        cell!.layer.borderColor = UIColor.clear.cgColor
-        cell!.layer.borderWidth = 4.0
-    }
+//    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+//        let cell  = tableView.cellForRow(at: indexPath)
+//    }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // If not animating then allow delete

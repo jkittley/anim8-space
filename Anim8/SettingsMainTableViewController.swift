@@ -36,6 +36,7 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
     var showDeveloperDebugOptions = false
     var showAlgorithmOptions = true
     var showVisualisationOptions = true
+    var hideFrame1Option = false
     
     let userDefaults = UserDefaults.standard
     
@@ -55,16 +56,17 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
     @IBOutlet weak var debugMessagesSwitch: UISwitch!
     @IBOutlet weak var overlayKeypointsSwitch: UISwitch!
     @IBOutlet weak var advancedKeypointsSwitch: UISwitch!
-    
+    @IBOutlet weak var advancedHideFramne1Switch: UISwitch!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Get app settings
-        UserDefaults.standard.register(defaults: ["enabled_dev_options":showDeveloperDebugOptions, "allow_algorithm_options":showAlgorithmOptions, "allow_visualisation_options":showVisualisationOptions])
+        UserDefaults.standard.register(defaults: ["enabled_dev_options":showDeveloperDebugOptions, "allow_algorithm_options":showAlgorithmOptions, "allow_visualisation_options":showVisualisationOptions, "hide_first_frame":hideFrame1Option])
         showDeveloperDebugOptions   = userDefaults.bool(forKey: "enabled_dev_options")
         showAlgorithmOptions        = userDefaults.bool(forKey: "allow_algorithm_options")
         showVisualisationOptions    = userDefaults.bool(forKey: "allow_visualisation_options")
+        hideFrame1Option            = userDefaults.bool(forKey: "hide_first_frame")
         
         // Custom Title Image
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "navbar.png"))
@@ -101,6 +103,9 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
             debugMessagesSwitch.setOn(proj.devMode, animated: false)
             overlayKeypointsSwitch.setOn(proj.keypoints, animated: false)
             advancedKeypointsSwitch.setOn(proj.keypointsAdv, animated: false)
+            advancedHideFramne1Switch.setOn(proj.hideFrame1, animated: false)
+            
+            printAll();
             
         } else {
             // Throw error when no project
@@ -170,6 +175,7 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
         print("Keypoints On ----------", project!.keypoints)
         print("Keypoints Adv ---------", project!.keypointsAdv)
         print("Dev Mode --------------", project!.devMode)
+        print("Hide Frame 1 --------------", project!.hideFrame1)
         
     }
     
@@ -211,11 +217,13 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
             proj.devMode = debugMessagesSwitch.isOn
             proj.keypoints = overlayKeypointsSwitch.isOn
             proj.keypointsAdv = advancedKeypointsSwitch.isOn
+            proj.hideFrame1 = advancedHideFramne1Switch.isOn
             // Playback
             proj.playbackFrameRate = playbackIntervalOptions[Int(plackbackStepper.value)]
             // Notify deligate of changes
             editProjectDelegate?.projectEdited(didUpdateItem: proj)
         }
+        printAll()
         dismiss(animated: true, completion: nil)
     }
     

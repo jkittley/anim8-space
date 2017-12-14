@@ -28,6 +28,7 @@ class Project: NSObject, NSCoding {
     
     var keypoints: Bool = false     // Show keypoints overlayt
     var keypointsAdv: Bool = false  // Show advanced keypints
+    var hideFrame1: Bool = false
     
     var frames : [Frame] = []
     
@@ -144,6 +145,7 @@ class Project: NSObject, NSCoding {
         self.algDescriptor = Project.getDefaultSelect(forKey: "defaultAlgDescriptors")
         self.playbackFrameRate = Project.getDefaultDouble(forKey: "defaultPlaybackInterval")
         self.compareFrameWithFirst = Project.getDefaultBool(forKey: "defaultTranformToFirstFrame")
+        self.hideFrame1 = Project.getDefaultBool(forKey: "defaultHideFirstFrame")
         
         print("---> Creating a new project")
         print("feedback: ", self.feedback)
@@ -151,10 +153,11 @@ class Project: NSObject, NSCoding {
         print("algDescriptor:", self.algDescriptor)
         print("playbackFrameRate:", self.playbackFrameRate)
         print("compareFrameWithFirst:", self.compareFrameWithFirst)
+        print("hideFrame1:", self.hideFrame1)
         super.init()
     }
     
-    init(frames: [Frame], name: String, desc:String, uuid: String, feedback: String, algFeatures: String, playbackFrameRate: Double, timeCreated: NSDate, timeEdited: NSDate, actionLog: [String], keypoints: Bool, keypointsAdv: Bool, compareFrameWithFirst: Bool, devMode: Bool, algDescriptor: String) {
+    init(frames: [Frame], name: String, desc:String, uuid: String, feedback: String, algFeatures: String, playbackFrameRate: Double, timeCreated: NSDate, timeEdited: NSDate, actionLog: [String], keypoints: Bool, keypointsAdv: Bool, compareFrameWithFirst: Bool, devMode: Bool, algDescriptor: String, hideFrame1: Bool) {
         
         print("---> Loading an existing project")
         
@@ -173,7 +176,8 @@ class Project: NSObject, NSCoding {
         self.devMode = devMode
         self.algDescriptor = algDescriptor
         self.playbackFrameRate = playbackFrameRate
-        
+        self.hideFrame1 = hideFrame1
+
         super.init()
     }
     
@@ -197,6 +201,7 @@ class Project: NSObject, NSCoding {
         aCoder.encode(compareFrameWithFirst, forKey: "compareFrameWithFirst")
         aCoder.encode(devMode, forKey: "devMode")
         aCoder.encode(algDescriptor, forKey: "algDescriptor")
+        aCoder.encode(hideFrame1, forKey: "hideFrame1")
 //        print ("saving name...", name)
 //        print ("saving keypoints...", keypoints)
 //        print ("saving kp adv...", keypointsAdv)
@@ -216,7 +221,7 @@ class Project: NSObject, NSCoding {
     
     func getMostRecentFrame() -> Frame? {
         if frames.count > 0 {
-            return frames.first
+            return frames.last
         } else {
             return nil
         }
@@ -252,6 +257,7 @@ class Project: NSObject, NSCoding {
         
         let archivedDevMode = aDecoder.decodeObject(forKey: "devMode") as? Bool ?? aDecoder.decodeBool(forKey: "devMode")
         
+        let archivedHideFrame1 = aDecoder.decodeObject(forKey: "hideFrame1") as? Bool ?? aDecoder.decodeBool(forKey: "hideFrame1")
         
         
         self.init(
@@ -269,7 +275,8 @@ class Project: NSObject, NSCoding {
             keypointsAdv: archivedKeypointsAdv,
             compareFrameWithFirst: archivedCompareFrameWithFirst,
             devMode: archivedDevMode,
-            algDescriptor: archivedAlgDescriptor
+            algDescriptor: archivedAlgDescriptor,
+            hideFrame1: archivedHideFrame1
         )
     }
     

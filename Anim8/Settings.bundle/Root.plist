@@ -106,6 +106,10 @@
 				<string>Vision Reveal</string>
 				<string>Vision Blurred</string>
 				<string>Vision Colour</string>
+				<string>Matches Only</string>
+				<string>Mathces All</string>
+				<string>Output Split</string>
+				<string>Output Canny</string>
 			</array>
 			<key>Values</key>
 			<array>
@@ -119,7 +123,10 @@
 				<string>vision reveal paper</string>
 				<string>vision blurred</string>
 				<string>vision colour</string>
-				<string>matching</string>
+				<string>matches only</string>
+				<string>matches all</string>
+				<string>output split</string>
+				<string>output canny</string>
 			</array>
 		</dict>
 		<dict>
@@ -131,6 +138,16 @@
 			<string>defaultTranformToFirstFrame</string>
 			<key>DefaultValue</key>
 			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Hide first frame</string>
+			<key>Key</key>
+			<string>defaultHideFirstFrame</string>
+			<key>DefaultValue</key>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>

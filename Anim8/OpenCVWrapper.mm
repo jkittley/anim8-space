@@ -280,6 +280,20 @@ static cv::Mat getDescriptors(cv::Mat &src, vector<cv::KeyPoint> keypoints, NSSt
     return descriptors;
 }
 
+void rot90(cv::Mat &matImage, int rotflag){
+    //1=CW, 2=CCW, 3=180
+    if (rotflag == 1){
+        transpose(matImage, matImage);
+        flip(matImage, matImage,1); //transpose+flip(1)=CW
+    } else if (rotflag == 2) {
+        transpose(matImage, matImage);
+        flip(matImage, matImage,0); //transpose+flip(0)=CCW
+    } else if (rotflag ==3){
+        flip(matImage, matImage,-1);    //flip(-1)=180
+    } else if (rotflag != 0){ //if not 0,1,2,3:
+        cout  << "Unknown rotation flag(" << rotflag << ")" << endl;
+    }
+}
 
 static bool isGoodHomography(cv::Mat H) {
     const double det = H.at<double>(0, 0) * H.at<double>(1, 1) - H.at<double>(1, 0) * H.at<double>(0, 1);
@@ -378,16 +392,14 @@ static bool getMatches(cv::Mat grayKey, cv::Mat grayImg, vector<cv::KeyPoint>kpK
     
 
 // Feedback Matches
-static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyImage, cv::Mat &outMat, NSString* algFeat, NSString* algDesc) {
-    
-    bool noMathces = false;
+static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyImage, cv::Mat &outMat, NSString* algFeat, NSString* algDesc, bool showAll) {
     
     cv::Mat bgrMatKey;
     UIImageToMat(keyImage, bgrMatKey);
     cv::Mat grayMatKey;
     cv::cvtColor(bgrMatKey, grayMatKey, CV_BGR2GRAY);
     
-    float scale = 0.5;
+    float scale = 0.4;
     cv::resize(grayMatKey, grayMatKey, cv::Size(), scale, scale);
     cv::resize(grayMat, grayMat, cv::Size(), scale, scale);
     cv::resize(bgrMatKey, bgrMatKey, cv::Size(), scale, scale);
@@ -398,10 +410,12 @@ static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage
     vector<cv::KeyPoint> keypointsKey = getKeypoints(grayMatKey, algFeat);
     vector<cv::KeyPoint> keypointsCap = getKeypoints(grayMat, algFeat);
     
-    // Keypoints
-    for(int i = 0; i < keypointsCap.size(); i++){
-        cv::circle(outMat, keypointsCap[i].pt, 1, cv::Scalar(10, 110, 250), -1);
-        cv::circle(outMat, keypointsCap[i].pt, 2, cv::Scalar(0, 0, 0), 1);
+    // All Keypoints
+    if (showAll) {
+        for(int i = 0; i < keypointsCap.size(); i++){
+            cv::circle(outMat, keypointsCap[i].pt, 1, cv::Scalar(10, 110, 250), -1);
+            cv::circle(outMat, keypointsCap[i].pt, 2, cv::Scalar(0, 0, 0), 1);
+        }
     }
     
     // Matches
@@ -409,7 +423,8 @@ static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage
         vector< cv::DMatch > good_matches;
         vector< cv::Point2f > src_match_points;
         vector< cv::Point2f > dst_match_points;
-        bool success = getMatches(grayMatKey, grayMat, keypointsKey, keypointsCap, algFeat, algDesc, good_matches, src_match_points, dst_match_points);
+        //bool success =
+        getMatches(grayMatKey, grayMat, keypointsKey, keypointsCap, algFeat, algDesc, good_matches, src_match_points, dst_match_points);
         //if (success) {
             //cv::drawMatches(bgrMat, keypoints, bgrMatKey, keypointsKey, good_matches, outMat, cv::Scalar::all(-1), cv::Scalar::all(-1), vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
             
@@ -419,8 +434,58 @@ static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage
             
         //}
     }
+}
+
+// Feedback Pipeline End
+static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyImage, cv::Mat &outMat, NSString* algFeat, NSString* algDesc, int showMode) {
+    cv::Mat bgrMatKey;
+    UIImageToMat(keyImage, bgrMatKey);
+    cv::Mat grayMatKey;
+    cv::cvtColor(bgrMatKey, grayMatKey, CV_BGR2GRAY);
     
-   
+    float scale = 0.4;
+    cv::resize(grayMatKey, grayMatKey, cv::Size(), scale, scale);
+    cv::resize(grayMat, grayMat, cv::Size(), scale, scale);
+    cv::resize(bgrMatKey, bgrMatKey, cv::Size(), scale, scale);
+    cv::resize(bgrMat, bgrMat, cv::Size(), scale, scale);
+    
+    // Error output
+    if (showMode==1) {
+        // Side by side
+        cv::hconcat(bgrMat, bgrMat, outMat);
+    } else {
+        // Overlay
+        outMat = bgrMat;
+    }
+        
+    vector<cv::KeyPoint> keypointsKey = getKeypoints(grayMatKey, algFeat);
+    vector<cv::KeyPoint> keypointsCap = getKeypoints(grayMat, algFeat);
+    
+    if (keypointsKey.size() < 4 || keypointsCap.size() < 4) {
+        return;
+    }
+    
+    // Find perspective
+    vector< cv::DMatch > good_matches;
+    vector< cv::Point2f > src_match_points;
+    vector< cv::Point2f > dst_match_points;
+    getMatches(grayMatKey, grayMat, keypointsKey, keypointsCap, algFeat, algDesc, good_matches, src_match_points, dst_match_points);
+    
+    cv::Mat warped;
+    try {
+        cv::Mat M = findHomography(src_match_points, dst_match_points, CV_RANSAC);
+        cv::warpPerspective(bgrMat, warped, M, bgrMat.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+    } catch (cv::Exception& e) {
+        return;
+    }
+    
+    // Error output
+    if (showMode==1) {
+        cv::hconcat(bgrMat, warped, outMat);
+    } else {
+        outMat = warped;
+    }
+  
     
 }
 
@@ -473,13 +538,28 @@ static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage
             FeedbackKeypointDensity(bgrMat, keypoints, outMat, 20, 50, 255, FB_MODE_COLOURED, 15);
         
         // Matching
-        } else if ([fb  isEqual: @"matching"]) {
+        } else if ([fb  isEqual: @"matches only"]) {
             if (keyImage != NULL) {
-                FeedbackMatchingKeypoints(bgrMat, grayMat, keyImage, outMat, algFeat, algDesc);
+                FeedbackMatchingKeypoints(bgrMat, grayMat, keyImage, outMat, algFeat, algDesc, false);
             } else {
                 outMat = bgrMat;
                 kpon = true;
             }
+        
+        } else if ([fb  isEqual: @"matches all"]) {
+            if (keyImage != NULL) {
+                FeedbackMatchingKeypoints(bgrMat, grayMat, keyImage, outMat, algFeat, algDesc, true);
+            } else {
+                outMat = bgrMat;
+                kpon = true;
+            }
+        
+        // Output
+        } else if ([fb  isEqual: @"output split"]) {
+            FeedbackPipelineEnd(bgrMat, grayMat, keyImage, outMat, algFeat, algDesc, 1);
+        } else if ([fb  isEqual: @"output canny"]) {
+            FeedbackPipelineEnd(bgrMat, grayMat, keyImage, outMat, algFeat, algDesc, 2);
+            
         // Algorithm Vision
         } else if ([fb  isEqual: @"vision reveal"]) {
             FeedbackAlgorithmVision(bgrMat, keypoints, outMat, FB_MODE_REVEAL);
