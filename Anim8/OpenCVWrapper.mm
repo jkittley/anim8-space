@@ -399,7 +399,15 @@ static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage
     cv::Mat grayMatKey;
     cv::cvtColor(bgrMatKey, grayMatKey, CV_BGR2GRAY);
     
-    float scale = 0.4;
+    float scale = 1;
+    if ([algDesc  isEqual: @"sift"]) {
+        scale = 0.5;
+    } else if ([algDesc  isEqual: @"surf"]) {
+        scale = 0.8;
+    } else if ([algDesc  isEqual: @"orb"]) {
+        scale = 1;
+    }
+    
     cv::resize(grayMatKey, grayMatKey, cv::Size(), scale, scale);
     cv::resize(grayMat, grayMat, cv::Size(), scale, scale);
     cv::resize(bgrMatKey, bgrMatKey, cv::Size(), scale, scale);
@@ -413,8 +421,8 @@ static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage
     // All Keypoints
     if (showAll) {
         for(int i = 0; i < keypointsCap.size(); i++){
-            cv::circle(outMat, keypointsCap[i].pt, 1, cv::Scalar(10, 110, 250), -1);
-            cv::circle(outMat, keypointsCap[i].pt, 2, cv::Scalar(0, 0, 0), 1);
+            cv::circle(outMat, keypointsCap[i].pt, 1, cv::Scalar(255, 240, 200), -1);
+            cv::circle(outMat, keypointsCap[i].pt, 2, cv::Scalar(135, 135, 135), 1);
         }
     }
     
@@ -429,30 +437,49 @@ static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage
             //cv::drawMatches(bgrMat, keypoints, bgrMatKey, keypointsKey, good_matches, outMat, cv::Scalar::all(-1), cv::Scalar::all(-1), vector<char>(), cv::DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
             
             for(int i = 0; i < src_match_points.size(); i++){
-                cv::circle(outMat, src_match_points[i], 1, cv::Scalar(10, 250, 10), -1);
+                cv::circle(outMat, src_match_points[i], 1, cv::Scalar(10, 110, 250), -1);
+                cv::circle(outMat, src_match_points[i], 2, cv::Scalar(0, 0, 0), 1);
             }
             
         //}
     }
 }
 
+static void rotateMat(cv::Mat& src, double angle, cv::Mat& dst){
+    cv::Point2f ptCp(src.cols*0.5, src.rows*0.5);
+    cv::Mat M = cv::getRotationMatrix2D(ptCp, angle, 1.0);
+    cv::warpAffine(src, dst, M, src.size(), cv::INTER_CUBIC); //Nearest is too rough,
+}
+
 // Feedback Pipeline End
 static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyImage, cv::Mat &outMat, NSString* algFeat, NSString* algDesc, int showMode) {
     cv::Mat bgrMatKey;
     UIImageToMat(keyImage, bgrMatKey);
+    rotateMat(bgrMatKey, 270.0, bgrMatKey);
     cv::Mat grayMatKey;
     cv::cvtColor(bgrMatKey, grayMatKey, CV_BGR2GRAY);
     
-    float scale = 0.4;
-    cv::resize(grayMatKey, grayMatKey, cv::Size(), scale, scale);
-    cv::resize(grayMat, grayMat, cv::Size(), scale, scale);
-    cv::resize(bgrMatKey, bgrMatKey, cv::Size(), scale, scale);
-    cv::resize(bgrMat, bgrMat, cv::Size(), scale, scale);
+    float scale = 1;
+    if ([algDesc  isEqual: @"sift"]) {
+        scale = 0.5;
+    } else if ([algDesc  isEqual: @"surf"]) {
+        scale = 0.8;
+    } else if ([algDesc  isEqual: @"orb"]) {
+        scale = 1;
+    }
+    
+    if (scale != 1) {
+        cv::resize(grayMatKey, grayMatKey, cv::Size(), scale, scale);
+        cv::resize(grayMat, grayMat, cv::Size(), scale, scale);
+        cv::resize(bgrMatKey, bgrMatKey, cv::Size(), scale, scale);
+        cv::resize(bgrMat, bgrMat, cv::Size(), scale, scale);
+    }
     
     // Error output
     if (showMode==1) {
         // Side by side
-        cv::hconcat(bgrMat, bgrMat, outMat);
+        cv::Mat errorMat(bgrMat.rows, bgrMat.cols, CV_8UC3, cv::Scalar(0,0,0));;
+        cv::vconcat(bgrMat, errorMat, outMat);
     } else {
         // Overlay
         outMat = bgrMat;
@@ -481,7 +508,8 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
     
     // Error output
     if (showMode==1) {
-        cv::hconcat(bgrMat, warped, outMat);
+        cv::vconcat(bgrMat, warped, outMat);
+        cv::resize(outMat, outMat, cv::Size(bgrMat.cols, bgrMat.rows));
     } else {
         outMat = warped;
     }
