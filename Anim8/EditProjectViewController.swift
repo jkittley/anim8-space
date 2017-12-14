@@ -52,6 +52,8 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         // Set init frame
         if let hideFrame1 = project?.hideFrame1, hideFrame1 == true && project?.frames.count == 1 {
             showFrame(frame: nil)
+        } else if project?.frames.count == 0 {
+            showFrame(frame: nil)
         } else {
             showFrame(frame: self.project!.getMostRecentFrame())
             let newIndexPath = IndexPath(row: project!.frames.count - 1, section: 0)
@@ -212,10 +214,10 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         if (playTimer == nil) {
             deselectAll()
             if let hideFrame1 = project?.hideFrame1, hideFrame1 == true {
-                playPos = 0
+                playPos = 1
                 minFrames = 2
             } else {
-                playPos = 1
+                playPos = 0
                 minFrames = 1
             }
             if (project?.frames.count)! > minFrames {
@@ -238,10 +240,10 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         showFrame(frame: self.project!.frames[indexPath.row])
         playPos = playPos + 1
         if playPos >= self.tableView.numberOfRows(inSection: 0) {
-            if let hideFrame1 = project?.hideFrame1, hideFrame1 == true && indexPath.row == 0 {
-                playPos = 0
-            } else {
+            if let hideFrame1 = project?.hideFrame1, hideFrame1 == true {
                 playPos = 1
+            } else {
+                playPos = 0
             }
         }
     }
