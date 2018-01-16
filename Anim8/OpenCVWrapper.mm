@@ -461,14 +461,45 @@ static void rotateMat(cv::Mat& src, double angle, cv::Mat& dst){
     cv::warpAffine(src, dst, M, src.size(), cv::INTER_CUBIC); //Nearest is too rough,
 }
 
+
+static void SideBySide(cv::Mat &bgrLeft, cv::Mat &bgrRight, cv::Mat &bgrOutput) {
+    cv::Mat sideBySide;
+    cv::hconcat(bgrLeft, bgrRight, sideBySide);
+    cv::copyMakeBorder( sideBySide, bgrOutput, bgrLeft.rows/2, bgrLeft.rows/2, 0, 0, cv::BORDER_CONSTANT, cv::Scalar(0,0,0));
+}
+
+static void PictureInPicture(cv::Mat &bgrBig, cv::Mat &bgrSmall, cv::Mat &bgrOutput) {
+    cv::Mat bgrPip;
+    cv::resize(bgrSmall, bgrPip, cv::Size(), 0.3, 0.3);
+    cv::copyMakeBorder(bgrPip, bgrPip, 2,2,2,2, cv::BORDER_CONSTANT, cv::Scalar(10, 110, 250));
+    cv::resize(bgrBig, bgrOutput, cv::Size(), 1, 1);
+    
+    // Define roi area (it has small image dimensions).
+    cv::Rect roi = cv::Rect(bgrBig.cols - bgrPip.cols - 5, 5, bgrPip.cols, bgrPip.rows);
+    // Take a sub-view of the large image
+    cv::Mat subView = bgrOutput(roi);
+    // Copy contents of the small image to large
+    bgrPip.copyTo(subView);
+    
+}
+
+
 // Feedback Pipeline End
 static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyImage, cv::Mat &outMat, NSString* algFeat, NSString* algDesc, int showMode) {
+    
+    // No Keyimage i.e. this is the first image to be captured
+    if (keyImage == NULL) {
+        outMat = bgrMat;
+        return;
+    }
+    
     cv::Mat bgrMatKey;
     UIImageToMat(keyImage, bgrMatKey);
     rotateMat(bgrMatKey, 270.0, bgrMatKey);
     cv::Mat grayMatKey;
     cv::cvtColor(bgrMatKey, grayMatKey, CV_BGR2GRAY);
     
+    // Scale image to speed up based on algorithm used
     float scale = 1;
     if ([algDesc  isEqual: @"sift"]) {
         scale = 0.5;
@@ -477,7 +508,6 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
     } else if ([algDesc  isEqual: @"orb"]) {
         scale = 1;
     }
-    
     if (scale != 1) {
         cv::resize(grayMatKey, grayMatKey, cv::Size(), scale, scale);
         cv::resize(grayMat, grayMat, cv::Size(), scale, scale);
@@ -485,19 +515,24 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
         cv::resize(bgrMat, bgrMat, cv::Size(), scale, scale);
     }
     
-    // Error output
+    
+    // Basic setup
     if (showMode==1) {
-        // Side by side
-        cv::Mat errorMat(bgrMat.rows, bgrMat.cols, CV_8UC3, cv::Scalar(0,0,0));;
-        cv::vconcat(bgrMat, errorMat, outMat);
+        cv::Mat errorMat(bgrMat.rows, bgrMat.cols, CV_8UC3, cv::Scalar(139,0,0));;
+        SideBySide(bgrMat, errorMat, outMat);
+    } else if (showMode==2) {
+        outMat = bgrMat;
+    } else if (showMode==3) {
+        cv::Mat errorMat(bgrMat.rows, bgrMat.cols, CV_8UC3, cv::Scalar(139,0,0));;
+        PictureInPicture(bgrMat, errorMat, outMat);
     } else {
-        // Overlay
         outMat = bgrMat;
     }
         
     vector<cv::KeyPoint> keypointsKey = getKeypoints(grayMatKey, algFeat);
     vector<cv::KeyPoint> keypointsCap = getKeypoints(grayMat, algFeat);
     
+    // Too few key points return half black
     if (keypointsKey.size() < 4 || keypointsCap.size() < 4) {
         return;
     }
@@ -511,25 +546,32 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
     cv::Mat warped;
     try {
         cv::Mat M = findHomography(src_match_points, dst_match_points, CV_RANSAC);
-        cv::warpPerspective(bgrMat, warped, M, bgrMat.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+        cv::warpPerspective(bgrMat, warped, M, cv::Size(bgrMat.cols, bgrMat.rows), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
     } catch (cv::Exception& e) {
         return;
     }
     
     // Output
     if (showMode==1) {
-        cv::vconcat(bgrMat, warped, outMat);
-        cv::resize(outMat, outMat, cv::Size(bgrMat.cols, bgrMat.rows));
-    } else {
+        SideBySide(bgrMat, warped, outMat);
+        
+    } else if (showMode==2){
         cv::Mat canny;
         cv::cvtColor(warped, warped, CV_BGR2GRAY);
         CannyThreshold(warped, canny);
         cv::cvtColor(canny, canny, CV_GRAY2BGR);
         addWeighted( bgrMat, 1.0, canny, 0.8, 0.0, outMat);
+    
+    } else if (showMode==3) {
+        PictureInPicture(bgrMat, warped, outMat);
+   
+    } else {
+        outMat = bgrMat;
     }
-  
     
 }
+
+
 
 // ---------------------------------------------------------------------------------------
 // Functions available to SWIFT wrapper
@@ -601,6 +643,9 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
             FeedbackPipelineEnd(bgrMat, grayMat, keyImage, outMat, algFeat, algDesc, 1);
         } else if ([fb  isEqual: @"output canny"]) {
             FeedbackPipelineEnd(bgrMat, grayMat, keyImage, outMat, algFeat, algDesc, 2);
+        } else if ([fb  isEqual: @"output picture in picture"]) {
+            FeedbackPipelineEnd(bgrMat, grayMat, keyImage, outMat, algFeat, algDesc, 3);
+            
             
         // Algorithm Vision
         } else if ([fb  isEqual: @"vision reveal"]) {
