@@ -239,7 +239,7 @@ static vector<cv::KeyPoint> getKeypoints(cv::Mat &src, NSString* algFeat) {
         detector.detect(src, keypoints);
         
     } else if ([algFeat  isEqual: @"orb"]) {
-        cv::OrbFeatureDetector detector;
+        cv::OrbFeatureDetector detector = cv::ORB(20000);
         detector.detect(src, keypoints);
         
     } else if ([algFeat  isEqual: @"harris"]) {
@@ -354,24 +354,34 @@ static bool getMatches(cv::Mat grayKey, cv::Mat grayImg, vector<cv::KeyPoint>kpK
     cv::FlannBasedMatcher matcher;
     vector< cv::DMatch > matches;
     matcher.match(desImg, desKey, matches);
-    double max_dist = 0; double min_dist = 100;
+    double max_dist = 0; double min_dist = 10000000;
     
     //-- Quick calculation of max and min distances between keypoints
-    for( int i = 0; i < desImg.rows; i++ )
-    { double dist = matches[i].distance;
+    for( int i = 0; i < desImg.rows; i++ ) {
+        double dist = matches[i].distance;
         if( dist < min_dist ) min_dist = dist;
         if( dist > max_dist ) max_dist = dist;
     }
+    
+    
     
     //-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist,
     //-- or a small arbitary value ( 0.02 ) in the event that min_dist is very small)
     //-- PS.- radiusMatch can also be used here.
     
+    
+    cout << "MIN DIST:" << min_dist <<endl;
+    
+    // If min dist is too high then the moving objects will affect the transformation
     for( int i = 0; i < desImg.rows; i++ ) {
-        if( matches[i].distance <= max(2*min_dist, 0.02) ) {
+        if( matches[i].distance <= max( 2 * min_dist, 0.02) ) {
             good_matches.push_back( matches[i]);
         }
     }
+    
+    
+    
+    
 
     //-- Localize the object
     for( int i = 0; i < good_matches.size(); i++ ) {
@@ -806,13 +816,13 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
     // Find perspective
     cv::Mat M = findHomography(src_match_points, dst_match_points, CV_RANSAC);
     
-    cout << M << endl;
-    if (!isGoodHomography(M)) {
-        printf("Bad Homography\n");
-        [NSException raise:@"FrameTransformError"
-                    format:@"Anim8 failed to process the image correctly. Please try again"];
-        return NULL;
-    }
+//    cout << M << endl;
+//    if (!isGoodHomography(M)) {
+//        printf("Bad Homography\n");
+//        [NSException raise:@"FrameTransformError"
+//                    format:@"Anim8 failed to process the image correctly. Please try again"];
+//        return NULL;
+//    }
     
     // Make warp for mask
     cv::Mat img_warped;
