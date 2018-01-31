@@ -62,12 +62,12 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
         super.viewDidLoad()
         
         // Get app settings
-        UserDefaults.standard.register(defaults: ["enabled_dev_options":showDeveloperDebugOptions, "allow_algorithm_options":showAlgorithmOptions, "allow_visualisation_options":showVisualisationOptions, "hide_first_frame":hideFrame1Option])
+        UserDefaults.standard.register(defaults: ["enabled_dev_options":showDeveloperDebugOptions, "allow_algorithm_options":showAlgorithmOptions, "allow_visualisation_options":showVisualisationOptions])
         showDeveloperDebugOptions   = userDefaults.bool(forKey: "enabled_dev_options")
         showAlgorithmOptions        = userDefaults.bool(forKey: "allow_algorithm_options")
         showVisualisationOptions    = userDefaults.bool(forKey: "allow_visualisation_options")
-        hideFrame1Option            = userDefaults.bool(forKey: "hide_first_frame")
         
+       
         // Custom Title Image
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "navbar.png"))
         self.navigationController?.navigationBar.tintColor = UIColor.white;
@@ -104,6 +104,7 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
             overlayKeypointsSwitch.setOn(proj.keypoints, animated: false)
             advancedKeypointsSwitch.setOn(proj.keypointsAdv, animated: false)
             advancedHideFramne1Switch.setOn(proj.hideFrame1, animated: false)
+            
             
             printAll();
             
@@ -185,13 +186,23 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
    
     func saveAsDefaults() {
         print("Saving as defaults")
-        // Other
-        userDefaults.set((transformChoice.selectedSegmentIndex==0), forKey: "defaultTranformToFirstFrame")
+        // Playback
         userDefaults.set(playbackIntervalOptions[Int(plackbackStepper.value)], forKey: "defaultPlaybackInterval")
         // Feedback
         if let choice = newFeatureChoice { userDefaults.set(choice, forKey:"defaultAlgFeatures") }
         if let choice = newDescriptorChoice { userDefaults.set(choice, forKey:"defaultAlgDescriptors") }
+        // Visualisation
         if let choice = newVisualisationChoice { userDefaults.set(choice, forKey:"defaultVisualisation") }
+        // Advanced
+        userDefaults.set((transformChoice.selectedSegmentIndex==0), forKey: "defaultTranformToFirstFrame")
+        // Dev
+        userDefaults.set(advancedHideFramne1Switch.isOn, forKey: "defaultHideFirstFrame")
+        userDefaults.set(advancedKeypointsSwitch.isOn, forKey: "defaultKeypointsAdv")
+        userDefaults.set(debugMessagesSwitch.isOn, forKey: "defaultDebugMessages")
+        userDefaults.set(overlayKeypointsSwitch.isOn, forKey: "defaultAlwaysKeypoints")
+        
+  
+        
         
         showAlert(title: "Saved", message: "Settings saved as defaults.")
     }

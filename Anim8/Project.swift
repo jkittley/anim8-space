@@ -145,7 +145,11 @@ class Project: NSObject, NSCoding {
         self.algDescriptor = Project.getDefaultSelect(forKey: "defaultAlgDescriptors")
         self.playbackFrameRate = Project.getDefaultDouble(forKey: "defaultPlaybackInterval")
         self.compareFrameWithFirst = Project.getDefaultBool(forKey: "defaultTranformToFirstFrame")
+        
+        self.keypointsAdv = Project.getDefaultBool(forKey: "defaultKeypointsAdv")
         self.hideFrame1 = Project.getDefaultBool(forKey: "defaultHideFirstFrame")
+        self.keypoints = Project.getDefaultBool(forKey: "defaultAlwaysKeypoints")
+        self.devMode = Project.getDefaultBool(forKey: "defaultDebugMessages")
         
         print("---> Creating a new project")
         print("feedback: ", self.feedback)
