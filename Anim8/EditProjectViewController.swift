@@ -334,7 +334,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
                 newRowToSelect = indexPath.row + 1
             }
             
-            if newRowToSelect >= 0 {
+            if newRowToSelect >= 0 && self.project!.hideFrame1 == false {
                 let newIndexPath = IndexPath(row: newRowToSelect, section: 0)
                 self.tableView.selectRow(at: newIndexPath, animated: true, scrollPosition: .bottom)
                 showFrame(frame: self.project!.frames[newIndexPath.row])
@@ -342,7 +342,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
                 // This will pick the empty cell
                 showFrame(frame: nil)
             }
-                
+            
             // Delete frame
             self.project?.frames.remove(at: indexPath.row)
                 
