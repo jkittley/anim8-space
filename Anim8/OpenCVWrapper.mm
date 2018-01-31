@@ -25,6 +25,11 @@ int FB_MODE_REVEAL_PAPER = 4;
 float reveal_factor = 0.25;
 float reveal_factor_paper = 0.001;
 
+int ORB_KP_NUMBER = 2500;
+int GOOD_MIN_DIST_MULTIPLIER = 3;
+bool CHECK_HOMOGRAPHY = false;
+
+
 /// Converts an UIImage to Mat.
 /// Orientation of UIImage will be lost.
 static void UIImageToMat(UIImage *image, cv::Mat &mat) {
@@ -237,9 +242,8 @@ static vector<cv::KeyPoint> getKeypoints(cv::Mat &src, NSString* algFeat) {
     } else if ([algFeat  isEqual: @"surf"]) {
         cv::SurfFeatureDetector detector;
         detector.detect(src, keypoints);
-        
     } else if ([algFeat  isEqual: @"orb"]) {
-        cv::OrbFeatureDetector detector = cv::ORB(20000);
+        cv::OrbFeatureDetector detector = cv::ORB(ORB_KP_NUMBER);
         detector.detect(src, keypoints);
         
     } else if ([algFeat  isEqual: @"harris"]) {
@@ -370,12 +374,12 @@ static bool getMatches(cv::Mat grayKey, cv::Mat grayImg, vector<cv::KeyPoint>kpK
     //-- PS.- radiusMatch can also be used here.
     
     
-    cout << "MIN DIST:" << min_dist <<endl;
+    //cout << "MIN DIST:" << min_dist <<endl;
     
     // If min dist is too high then the moving objects will affect the transformation
     for( int i = 0; i < desImg.rows; i++ ) {
-        if( matches[i].distance <= max( 2 * min_dist, 0.02) ) {
-            good_matches.push_back( matches[i]);
+        if( matches[i].distance <= max( GOOD_MIN_DIST_MULTIPLIER * min_dist, 0.02) ) {
+            good_matches.push_back( matches[i] );
         }
     }
     
@@ -468,11 +472,12 @@ static void CannyThreshold(cv::Mat& src_gray, cv::Mat& detected_edges) {
 static void rotateMat(cv::Mat& src, double angle, cv::Mat& dst){
     cv::Point2f ptCp(src.cols*0.5, src.rows*0.5);
     cv::Mat M = cv::getRotationMatrix2D(ptCp, angle, 1.0);
-    cv::warpAffine(src, dst, M, src.size(), cv::INTER_CUBIC); //Nearest is too rough,
+    cv::warpAffine(src, dst, M, cv::Size(src.rows, src.cols), cv::INTER_CUBIC); //Nearest is too rough,
 }
 
 
 static void SideBySide(cv::Mat &bgrLeft, cv::Mat &bgrRight, cv::Mat &bgrOutput) {
+    cv::resize(bgrRight, bgrRight, bgrLeft.size());
     cv::Mat sideBySide;
     cv::hconcat(bgrLeft, bgrRight, sideBySide);
     cv::copyMakeBorder( sideBySide, bgrOutput, bgrLeft.rows/2, bgrLeft.rows/2, 0, 0, cv::BORDER_CONSTANT, cv::Scalar(0,0,0));
@@ -506,6 +511,8 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
     cv::Mat bgrMatKey;
     UIImageToMat(keyImage, bgrMatKey);
     rotateMat(bgrMatKey, 270.0, bgrMatKey);
+    cv::resize(bgrMatKey, bgrMatKey, bgrMat.size());
+    
     cv::Mat grayMatKey;
     cv::cvtColor(bgrMatKey, grayMatKey, CV_BGR2GRAY);
     
@@ -554,26 +561,43 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
     getMatches(grayMatKey, grayMat, keypointsKey, keypointsCap, algFeat, algDesc, good_matches, src_match_points, dst_match_points);
     
     cv::Mat warped;
+    cv::Mat merged = bgrMatKey.clone();
+   
+    
     try {
         cv::Mat M = findHomography(src_match_points, dst_match_points, CV_RANSAC);
-        cv::warpPerspective(bgrMat, warped, M, cv::Size(bgrMat.cols, bgrMat.rows), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+        cv::warpPerspective(bgrMat, warped, M, bgrMat.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+
+        cv::Mat mask;
+        cv::inRange(warped, cv::Scalar(0,0,0), cv::Scalar(5,5,5), mask);
+
+        // Shirk mask a little
+        int size = 6;
+        cv::Mat element = getStructuringElement(cv::MORPH_CROSS, cv::Size(2 * size + 1, 2 * size + 1), cv::Point(size, size) );
+        cv::dilate( mask, mask, element );
+        
+        cout << warped.size() << endl;
+        
+        warped.copyTo(merged, 255-mask);
+        
+        
     } catch (cv::Exception& e) {
         return;
     }
     
     // Output
     if (showMode==1) {
-        SideBySide(bgrMat, warped, outMat);
+        SideBySide(bgrMat, merged, outMat);
         
     } else if (showMode==2){
         cv::Mat canny;
-        cv::cvtColor(warped, warped, CV_BGR2GRAY);
-        CannyThreshold(warped, canny);
+        cv::cvtColor(merged, merged, CV_BGR2GRAY);
+        CannyThreshold(merged, canny);
         cv::cvtColor(canny, canny, CV_GRAY2BGR);
         addWeighted( bgrMat, 1.0, canny, 0.8, 0.0, outMat);
     
     } else if (showMode==3) {
-        PictureInPicture(bgrMat, warped, outMat);
+        PictureInPicture(bgrMat, merged, outMat);
    
     } else {
         outMat = bgrMat;
@@ -816,13 +840,13 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
     // Find perspective
     cv::Mat M = findHomography(src_match_points, dst_match_points, CV_RANSAC);
     
-//    cout << M << endl;
-//    if (!isGoodHomography(M)) {
-//        printf("Bad Homography\n");
-//        [NSException raise:@"FrameTransformError"
-//                    format:@"Anim8 failed to process the image correctly. Please try again"];
-//        return NULL;
-//    }
+   
+    if (CHECK_HOMOGRAPHY && !isGoodHomography(M)) {
+        printf("Bad Homography\n");
+        [NSException raise:@"FrameTransformError"
+                    format:@"Anim8 failed to process the image correctly. Please try again"];
+        return NULL;
+    }
     
     // Make warp for mask
     cv::Mat img_warped;

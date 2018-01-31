@@ -50,7 +50,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }
         // Set init frame
-        if let hideFrame1 = project?.hideFrame1, hideFrame1 == true && project?.frames.count == 1 {
+        if let hideFrame1 = project?.hideFrame1, let frames = project?.frames, hideFrame1 == true && frames.count == 1 {
             showFrame(frame: nil)
         } else if project?.frames.count == 0 {
             showFrame(frame: nil)
@@ -75,8 +75,12 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     //
     func showFrame(frame: Frame?) {
         imageView.clipsToBounds = true;
-        
         selectedFrame = frame
+        // Make sure first frame is always hidden
+        if let hideFrame1 = project?.hideFrame1, let frames = project?.frames, hideFrame1 == true && frames.count == 1 {
+            selectedFrame = nil;
+        }
+        // If frame is nil then hide
         if (selectedFrame == nil) {
             imageView.contentMode = .center
             imageView.image = UIImage(named: "defaultFrame2.png")

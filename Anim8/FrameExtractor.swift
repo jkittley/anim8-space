@@ -250,9 +250,13 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
             
             // Rotate the image
             let rot = OpenCVWrapper.rotate(image, arg2:90)
-        
+            
+            // This is the second images, but the first is hidden
+            if project.frames.count == 1 && project.hideFrame1 == true {
+                return (rot, "")
+    
             // Is this NOT the first image
-            if project.frames.count > 0 {
+            } else if project.frames.count > 0 {
                 if let keyFrame = project.compareFrameWithFirst ? project.frames.first : project.frames.last {
             
                     //print("Compare with first?", project.compareFrameWithFirst)
@@ -280,6 +284,8 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
                     return (nil, "Failed to located comparision frame")
                 }
                 
+            
+            
             // This is the first images
             } else {
                 if OpenCVWrapper.testfirstimage(rot, arg2: project.algFeatures) {
