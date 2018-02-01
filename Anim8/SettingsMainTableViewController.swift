@@ -58,6 +58,8 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
     @IBOutlet weak var advancedKeypointsSwitch: UISwitch!
     @IBOutlet weak var advancedHideFramne1Switch: UISwitch!
     
+    @IBOutlet weak var advancedORBLimit: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -104,7 +106,7 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
             overlayKeypointsSwitch.setOn(proj.keypoints, animated: false)
             advancedKeypointsSwitch.setOn(proj.keypointsAdv, animated: false)
             advancedHideFramne1Switch.setOn(proj.hideFrame1, animated: false)
-            
+            advancedORBLimit.text = String(Int(proj.orbLimit))
             
             printAll();
             
@@ -176,7 +178,8 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
         print("Keypoints On ----------", project!.keypoints)
         print("Keypoints Adv ---------", project!.keypointsAdv)
         print("Dev Mode --------------", project!.devMode)
-        print("Hide Frame 1 --------------", project!.hideFrame1)
+        print("Hide Frame 1 ----------", project!.hideFrame1)
+        print("ORB Limit -------------", project!.orbLimit)
         
     }
     
@@ -201,8 +204,7 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
         userDefaults.set(debugMessagesSwitch.isOn, forKey: "defaultDebugMessages")
         userDefaults.set(overlayKeypointsSwitch.isOn, forKey: "defaultAlwaysKeypoints")
         
-  
-        
+        userDefaults.set(Double(advancedORBLimit.text!), forKey: "defaultORBLimit")
         
         showAlert(title: "Saved", message: "Settings saved as defaults.")
     }
@@ -229,6 +231,8 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
             proj.keypoints = overlayKeypointsSwitch.isOn
             proj.keypointsAdv = advancedKeypointsSwitch.isOn
             proj.hideFrame1 = advancedHideFramne1Switch.isOn
+            if let lim = advancedORBLimit.text { proj.orbLimit = Double(lim)! }
+            
             // Playback
             proj.playbackFrameRate = playbackIntervalOptions[Int(plackbackStepper.value)]
             // Notify deligate of changes

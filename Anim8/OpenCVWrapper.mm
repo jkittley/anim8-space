@@ -25,7 +25,7 @@ int FB_MODE_REVEAL_PAPER = 4;
 float reveal_factor = 0.25;
 float reveal_factor_paper = 0.001;
 
-int ORB_KP_NUMBER = 2500;
+int ORB_KP_NUMBER = 500;
 int GOOD_MIN_DIST_MULTIPLIER = 3;
 bool CHECK_HOMOGRAPHY = false;
 
@@ -619,9 +619,13 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
 // Feedback - Provide feedback based on algorithm and feedback type
 //
 
-+ (nullable UIImage *)feedback:(nonnull UIImage *)image arg2:(nonnull NSString *)algFeat arg3:(nonnull NSString *)fb arg4:(bool)kpon arg5:(bool)kpadv arg6:(nullable UIImage *)keyImage arg7:(nonnull NSString *)algDesc {
++ (nullable UIImage *)feedback:(nonnull UIImage *)image arg2:(nonnull NSString *)algFeat arg3:(nonnull NSString *)fb arg4:(bool)kpon arg5:(bool)kpadv arg6:(nullable UIImage *)keyImage arg7:(nonnull NSString *)algDesc arg8:(double)orbLimit {
     cv::initModule_nonfree();
    
+    // Set orb limit
+    ORB_KP_NUMBER = orbLimit;
+    cout << "ORB_KP_NUMBER:" << ORB_KP_NUMBER << endl;
+    
     cv::Mat bgrMat;
     UIImageToMat(image, bgrMat);
     cv::Mat grayMat;
@@ -784,10 +788,14 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
 
 
 
-+ (nullable UIImage *)transform:(nonnull UIImage*)key arg2:(nonnull UIImage*)img arg3:(nonnull NSString*)algFeat arg4:(nonnull NSString*)algDesc {
++ (nullable UIImage *)transform:(nonnull UIImage*)key arg2:(nonnull UIImage*)img arg3:(nonnull NSString*)algFeat arg4:(nonnull NSString*)algDesc arg5:(double)orbLimit {
     cout << "------ Transforming -------" << endl;
     printf("Fetaure Alg: %s\n", [algFeat UTF8String]);
     printf("Descriptor Alg: %s\n", [algDesc UTF8String]);
+    
+    // Set orb limit
+    ORB_KP_NUMBER = orbLimit;
+    cout << "ORB_KP_NUMBER:" << ORB_KP_NUMBER << endl;
     
     cv::initModule_nonfree();
     

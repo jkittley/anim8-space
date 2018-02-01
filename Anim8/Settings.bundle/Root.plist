@@ -175,6 +175,34 @@
 				<real>2</real>
 			</array>
 		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>ORB Limit</string>
+			<key>Key</key>
+			<string>defaultORBLimit</string>
+			<key>DefaultValue</key>
+			<integer>500</integer>
+			<key>Titles</key>
+			<array>
+				<string>500</string>
+				<string>1000</string>
+				<string>2500</string>
+				<string>5000</string>
+				<string>10000</string>
+				<string>20000</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<integer>500</integer>
+				<integer>1000</integer>
+				<integer>2500</integer>
+				<integer>5000</integer>
+				<integer>10000</integer>
+				<integer>20000</integer>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

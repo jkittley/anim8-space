@@ -131,14 +131,14 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
         
         var resultImage: UIImage? = nil
         
-            if let algFeat = self.project?.algFeatures, let algoDesc = self.project?.algDescriptor, let feedback = self.project?.feedback, let kpon = self.project?.keypoints, let kpadv = self.project?.keypointsAdv {
-                
+        if let p = self.project {
+            
                 if let project = self.project {
                     if project.frames.count > 0 {
                         let keyFrame = project.compareFrameWithFirst ? project.frames.first : project.frames.last
-                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:algFeat, arg3:feedback, arg4:kpon, arg5:kpadv, arg6:keyFrame?.image, arg7:algFeat )
+                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:keyFrame?.image, arg7:p.algDescriptor, arg8:p.orbLimit )
                     } else {
-                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:algFeat, arg3:feedback, arg4:kpon, arg5:kpadv, arg6:nil, arg7:algFeat)
+                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:nil, arg7:p.algDescriptor, arg8:p.orbLimit)
                     }
                     
                 }
@@ -268,7 +268,7 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
                     
                     do {
                         try OpenCVWrapper.catchException {
-                            processed = OpenCVWrapper.transform(keyFrame.image!, arg2: rot, arg3: project.algFeatures, arg4: project.algDescriptor)
+                            processed = OpenCVWrapper.transform(keyFrame.image!, arg2: rot, arg3: project.algFeatures, arg4: project.algDescriptor, arg5:project.orbLimit)
                         }
                     } catch {
                         //print(error.localizedDescription)

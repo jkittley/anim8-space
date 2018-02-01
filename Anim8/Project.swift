@@ -29,6 +29,7 @@ class Project: NSObject, NSCoding {
     var keypoints: Bool = false     // Show keypoints overlayt
     var keypointsAdv: Bool = false  // Show advanced keypints
     var hideFrame1: Bool = false
+    var orbLimit: Double
     
     var frames : [Frame] = []
     
@@ -130,6 +131,7 @@ class Project: NSObject, NSCoding {
         return [Double]()
     }
     
+    
     //
     // Initialisation
     //
@@ -150,7 +152,8 @@ class Project: NSObject, NSCoding {
         self.hideFrame1 = Project.getDefaultBool(forKey: "defaultHideFirstFrame")
         self.keypoints = Project.getDefaultBool(forKey: "defaultAlwaysKeypoints")
         self.devMode = Project.getDefaultBool(forKey: "defaultDebugMessages")
-        
+        self.orbLimit = Project.getDefaultDouble(forKey: "defaultORBLimit")
+   
         print("---> Creating a new project")
         print("feedback: ", self.feedback)
         print("algFeatures:", self.algFeatures)
@@ -158,10 +161,11 @@ class Project: NSObject, NSCoding {
         print("playbackFrameRate:", self.playbackFrameRate)
         print("compareFrameWithFirst:", self.compareFrameWithFirst)
         print("hideFrame1:", self.hideFrame1)
+        print("defaultORBLimit:", self.orbLimit)
         super.init()
     }
     
-    init(frames: [Frame], name: String, desc:String, uuid: String, feedback: String, algFeatures: String, playbackFrameRate: Double, timeCreated: NSDate, timeEdited: NSDate, actionLog: [String], keypoints: Bool, keypointsAdv: Bool, compareFrameWithFirst: Bool, devMode: Bool, algDescriptor: String, hideFrame1: Bool) {
+    init(frames: [Frame], name: String, desc:String, uuid: String, feedback: String, algFeatures: String, playbackFrameRate: Double, timeCreated: NSDate, timeEdited: NSDate, actionLog: [String], keypoints: Bool, keypointsAdv: Bool, compareFrameWithFirst: Bool, devMode: Bool, algDescriptor: String, hideFrame1: Bool, orbLimit: Double) {
         
         print("---> Loading an existing project")
         
@@ -181,7 +185,7 @@ class Project: NSObject, NSCoding {
         self.algDescriptor = algDescriptor
         self.playbackFrameRate = playbackFrameRate
         self.hideFrame1 = hideFrame1
-
+        self.orbLimit = orbLimit
         super.init()
     }
     
@@ -206,6 +210,7 @@ class Project: NSObject, NSCoding {
         aCoder.encode(devMode, forKey: "devMode")
         aCoder.encode(algDescriptor, forKey: "algDescriptor")
         aCoder.encode(hideFrame1, forKey: "hideFrame1")
+        aCoder.encode(orbLimit, forKey: "orbLimit")
 //        print ("saving name...", name)
 //        print ("saving keypoints...", keypoints)
 //        print ("saving kp adv...", keypointsAdv)
@@ -263,6 +268,8 @@ class Project: NSObject, NSCoding {
         
         let archivedHideFrame1 = aDecoder.decodeObject(forKey: "hideFrame1") as? Bool ?? aDecoder.decodeBool(forKey: "hideFrame1")
         
+        let archivedORBLimit = aDecoder.decodeObject(forKey: "orbLimit") as? Double ?? Project.getDefaultDouble(forKey: "defaultORBLimit")
+
         
         self.init(
             frames: archivedFrames,
@@ -280,7 +287,8 @@ class Project: NSObject, NSCoding {
             compareFrameWithFirst: archivedCompareFrameWithFirst,
             devMode: archivedDevMode,
             algDescriptor: archivedAlgDescriptor,
-            hideFrame1: archivedHideFrame1
+            hideFrame1: archivedHideFrame1,
+            orbLimit: archivedORBLimit
         )
     }
     
