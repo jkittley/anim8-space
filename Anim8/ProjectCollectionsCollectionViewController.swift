@@ -15,9 +15,11 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
     var delMode = false
     
     @IBOutlet weak var welcomeImageView: UIImageView!
+    
 
     required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
+        
         // Load Items
         loadItems()
     }
@@ -28,6 +30,12 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
         // Custom Title Image
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "navbar.png"))
         self.navigationController?.navigationBar.tintColor = UIColor.white;
+        
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
+        let build = Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as! String
+        
+        let versionString = "V" + version + ".b" + build
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: versionString, style: .plain, target: self, action: nil)
         
         let numCols = CGFloat(4.0)
         let pad = CGFloat(15)
@@ -92,17 +100,7 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
     @IBAction func toggleDeleteMode(_ sender: Any) {
         delMode = !delMode
         print("Delete Mode", delMode)
-        for cell in (collectionView?.visibleCells)! as! [ProjectCollectionCell] {
-            if delMode {
-                cell.thumbView.layer.borderColor = UIColor.red.cgColor
-                cell.thumbView.layer.borderWidth = 4.0
-                cell.deleteIcon.isHidden = false
-            } else {
-                cell.thumbView.layer.borderColor = UIColor.black.cgColor
-                cell.thumbView.layer.borderWidth = 1.0
-                cell.deleteIcon.isHidden = true
-            }
-        }
+        self.collectionView?.reloadData()
     }
     
     
@@ -184,6 +182,16 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
         // Configure Table View Cell
         cell.titleText?.text = project.name + " (" + String(project.frames.count) + " frames)"
         cell.thumbView?.image = project.getThumb()
+        
+        if delMode {
+            cell.thumbView.layer.borderColor = UIColor.red.cgColor
+            cell.thumbView.layer.borderWidth = 4.0
+            cell.deleteIcon.isHidden = false
+        } else {
+            cell.thumbView.layer.borderColor = UIColor.black.cgColor
+            cell.thumbView.layer.borderWidth = 1.0
+            cell.deleteIcon.isHidden = true
+        }
         
 //        let dateFormatter = DateFormatter()
 //        dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"

@@ -14,4 +14,5 @@ class ProjectCollectionCell: UICollectionViewCell {
     @IBOutlet var deleteIcon: UIImageView!
     @IBOutlet var titleText: UILabel!
     @IBOutlet var numFramesLabel: UILabel!
+
 }
