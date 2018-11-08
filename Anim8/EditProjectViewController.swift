@@ -45,7 +45,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: CellIdentifier)
         
         // Back button
-        let backButton = UIBarButtonItem(title: "Projects", style: .plain, target: self, action: #selector(self.goBack))
+        let backButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.goBack))
         backButton.tintColor = UIColor.white
         self.navigationItem.leftBarButtonItem = backButton
         
@@ -229,6 +229,8 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     @IBAction func play(sender: UIBarButtonItem) {
         var minFrames = 1
         if (playTimer == nil) {
+            playButton.isEnabled = false
+            pauseButton.isEnabled = true
             deselectAll()
             if let hideFrame1 = project?.hideFrame1, hideFrame1 == true {
                 playPos = 1
@@ -246,6 +248,8 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     
     @IBAction func pause(sender: UIBarButtonItem) {
         if (playTimer != nil) {
+            playButton.isEnabled = true
+            pauseButton.isEnabled = false
             playTimer?.invalidate()
             activateControls()
         }
@@ -295,6 +299,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
             self.captureButton.isEnabled = false
             self.pauseButton.isEnabled = true
             self.playButton.isEnabled = false
+            self.shareButton.isEnabled = false
         }
     }
     

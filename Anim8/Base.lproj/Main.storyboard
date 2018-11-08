@@ -812,7 +812,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jRN-TS-o0G">
-                                <rect key="frame" x="919" y="683" width="60" height="60"/>
+                                <rect key="frame" x="929" y="683" width="60" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="baj-Iu-8Xt"/>
                                     <constraint firstAttribute="height" constant="60" id="djS-Gv-Ua1"/>
@@ -826,10 +826,10 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lzH-N3-MFH">
-                                <rect key="frame" x="45" y="683" width="60" height="60"/>
+                                <rect key="frame" x="35" y="693" width="40" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="dcb-gj-sGu"/>
-                                    <constraint firstAttribute="width" constant="60" id="dkT-vU-Ohz"/>
+                                    <constraint firstAttribute="height" constant="40" id="dcb-gj-sGu"/>
+                                    <constraint firstAttribute="width" constant="40" id="dkT-vU-Ohz"/>
                                 </constraints>
                                 <state key="normal" image="camClose.png"/>
                                 <connections>
@@ -862,13 +862,13 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Adt-FD-jus" secondAttribute="trailing" id="10s-Ci-nCM"/>
                             <constraint firstItem="d8C-0J-M9Q" firstAttribute="top" secondItem="jRN-TS-o0G" secondAttribute="bottom" constant="25" id="7zt-QB-SSe"/>
-                            <constraint firstItem="d8C-0J-M9Q" firstAttribute="top" secondItem="lzH-N3-MFH" secondAttribute="bottom" constant="25" id="8bu-zG-1n4"/>
+                            <constraint firstItem="d8C-0J-M9Q" firstAttribute="top" secondItem="lzH-N3-MFH" secondAttribute="bottom" constant="35" id="8bu-zG-1n4"/>
                             <constraint firstItem="Adt-FD-jus" firstAttribute="centerY" secondItem="O9U-qM-wIH" secondAttribute="centerY" id="AbE-Ab-oRI"/>
                             <constraint firstItem="Adt-FD-jus" firstAttribute="bottom" secondItem="d8C-0J-M9Q" secondAttribute="top" id="BMx-cW-86e"/>
                             <constraint firstItem="Adt-FD-jus" firstAttribute="top" secondItem="d7P-Nd-0U0" secondAttribute="top" id="D1p-bN-kWw"/>
                             <constraint firstItem="O9U-qM-wIH" firstAttribute="top" secondItem="Ypw-Jj-XMO" secondAttribute="bottom" constant="299" id="LxH-Rc-Zc8"/>
-                            <constraint firstItem="lzH-N3-MFH" firstAttribute="leading" secondItem="d7P-Nd-0U0" secondAttribute="leadingMargin" constant="25" id="YTR-bG-brP"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="jRN-TS-o0G" secondAttribute="trailing" constant="25" id="ZZN-UZ-We0"/>
+                            <constraint firstItem="lzH-N3-MFH" firstAttribute="leading" secondItem="d7P-Nd-0U0" secondAttribute="leadingMargin" constant="15" id="YTR-bG-brP"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="jRN-TS-o0G" secondAttribute="trailing" constant="15" id="ZZN-UZ-We0"/>
                             <constraint firstItem="Adt-FD-jus" firstAttribute="centerX" secondItem="5CV-XU-0Wp" secondAttribute="centerX" priority="750" id="hSH-9g-sGb"/>
                             <constraint firstAttribute="bottom" secondItem="5CV-XU-0Wp" secondAttribute="bottom" priority="750" constant="20" symbolic="YES" id="hhs-e3-8E9"/>
                             <constraint firstItem="Adt-FD-jus" firstAttribute="leading" secondItem="d7P-Nd-0U0" secondAttribute="leading" id="jqJ-zq-Br3"/>
