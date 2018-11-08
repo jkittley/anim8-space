@@ -61,7 +61,7 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
         layout.minimumInteritemSpacing = 0
         
         // Set minimum vertical line spacing here between two lines in collectionview
-        layout.minimumLineSpacing = 0
+        layout.minimumLineSpacing = 10
         
         // Apply defined layout to collectionview
         collectionView!.collectionViewLayout = layout
