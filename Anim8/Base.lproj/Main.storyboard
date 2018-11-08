@@ -16,7 +16,7 @@
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="wku-K1-EMt">
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="698"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.11392269283533096" green="0.10592082887887955" blue="0.11413248628377914" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="DDa-Uc-zVi">
                             <size key="itemSize" width="300" height="300"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -26,6 +26,7 @@
                         <imageView key="backgroundView" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="welcome.png" id="vOo-U3-U76">
                             <rect key="frame" x="0.0" y="0.0" width="1024" height="698"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </imageView>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="projCollectCell" id="hQl-0O-kmJ" customClass="ProjectCollectionCell" customModule="Anim8" customModuleProvider="target">
@@ -44,7 +45,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Project Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4LK-oK-7hU">
                                                     <rect key="frame" x="0.0" y="159" width="284" height="35"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" red="0.99991279840000002" green="1" blue="0.99988144639999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -56,7 +57,7 @@
                                             </constraints>
                                         </stackView>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="delProj.png" translatesAutoresizingMaskIntoConstraints="NO" id="3Ie-0H-uQp">
-                                            <rect key="frame" x="250" y="20" width="30" height="30"/>
+                                            <rect key="frame" x="260" y="10" width="30" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="30" id="GBD-Uw-PVD"/>
                                                 <constraint firstAttribute="height" constant="30" id="jkt-vI-eqF"/>
@@ -77,11 +78,11 @@
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstItem="3Ie-0H-uQp" firstAttribute="top" secondItem="hQl-0O-kmJ" secondAttribute="top" constant="20" id="0CU-mD-mdf"/>
+                                    <constraint firstItem="3Ie-0H-uQp" firstAttribute="top" secondItem="hQl-0O-kmJ" secondAttribute="top" constant="10" id="0CU-mD-mdf"/>
                                     <constraint firstAttribute="trailingMargin" secondItem="ifX-HX-ONs" secondAttribute="trailing" id="5Ip-VQ-XBf"/>
                                     <constraint firstItem="gzG-Bv-Qiu" firstAttribute="top" secondItem="hQl-0O-kmJ" secondAttribute="top" constant="10" id="BIJ-wQ-M0L"/>
                                     <constraint firstItem="ifX-HX-ONs" firstAttribute="leading" secondItem="hQl-0O-kmJ" secondAttribute="leadingMargin" id="HyP-zo-BhS"/>
-                                    <constraint firstAttribute="trailing" secondItem="3Ie-0H-uQp" secondAttribute="trailing" constant="20" id="N8Q-rs-hHl"/>
+                                    <constraint firstAttribute="trailing" secondItem="3Ie-0H-uQp" secondAttribute="trailing" constant="10" id="N8Q-rs-hHl"/>
                                     <constraint firstItem="ifX-HX-ONs" firstAttribute="top" secondItem="hQl-0O-kmJ" secondAttribute="topMargin" id="Uqo-qS-Fze"/>
                                     <constraint firstItem="gzG-Bv-Qiu" firstAttribute="leading" secondItem="hQl-0O-kmJ" secondAttribute="leading" constant="15" id="rDd-Ii-7TA"/>
                                     <constraint firstAttribute="bottomMargin" secondItem="ifX-HX-ONs" secondAttribute="bottom" id="trX-os-YjA"/>
@@ -100,15 +101,15 @@
                         </connections>
                     </collectionView>
                     <toolbarItems>
-                        <barButtonItem title="Help" id="8t3-RK-DSw">
+                        <barButtonItem systemItem="bookmarks" id="8t3-RK-DSw">
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="helpButtonClick:" destination="jcW-Yl-4Hu" id="Dyj-z2-Png"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="Fmh-Kw-yD0"/>
-                        <barButtonItem title="Create New Project" id="sce-NK-h4X">
-                            <color key="tintColor" red="0.99991279840000002" green="1" blue="0.99988144639999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <barButtonItem title="Create New Animation" id="sce-NK-h4X">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="addNewProjectAction:" destination="jcW-Yl-4Hu" id="LZZ-dO-5e2"/>
                             </connections>
@@ -645,7 +646,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="698"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="rSF-4l-2gY">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DLS-40-ikd">
+                                <rect key="frame" x="412" y="249" width="200" height="200"/>
+                                <state key="normal" image="firstCapture.png"/>
+                                <connections>
+                                    <action selector="firstFrameButtonClick:" destination="lkl-JU-3qv" eventType="touchUpInside" id="4oF-k5-uaL"/>
+                                </connections>
+                            </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="rSF-4l-2gY">
                                 <rect key="frame" x="0.0" y="0.0" width="824" height="648"/>
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="0.59999999999999998" height="1"/>
@@ -656,11 +664,11 @@
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="140" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zMc-66-aNH">
                                 <rect key="frame" x="824" y="0.0" width="200" height="648"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.1139226928" green="0.1059208289" blue="0.1141324863" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" priority="999" constant="200" id="V34-is-h3A"/>
                                 </constraints>
-                                <color key="separatorColor" red="1" green="0.46772867439999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="separatorColor" red="0.1139226928" green="0.1059208289" blue="0.1141324863" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="frameCell" id="5gm-tC-t99" customClass="ProjFrameTableViewCell" customModule="Anim8" customModuleProvider="target">
@@ -684,6 +692,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
                                         <connections>
                                             <outlet property="thumbView" destination="qof-S9-GHf" id="uCR-og-TF5"/>
                                         </connections>
@@ -703,19 +712,22 @@
                                 <size key="shadowOffset" width="1" height="1"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.11392269283533096" green="0.10592082887887955" blue="0.11413248628377914" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="DLS-40-ikd" firstAttribute="centerX" secondItem="aWj-lD-oSA" secondAttribute="centerX" id="2iW-ef-fSV"/>
                             <constraint firstItem="waZ-V4-5Hs" firstAttribute="leading" secondItem="aWj-lD-oSA" secondAttribute="leadingMargin" id="ABa-Bc-eKx"/>
+                            <constraint firstItem="waZ-V4-5Hs" firstAttribute="bottom" secondItem="zdF-Is-GpX" secondAttribute="top" constant="-10" id="Cwn-gp-E2l"/>
+                            <constraint firstItem="rSF-4l-2gY" firstAttribute="top" secondItem="MRX-YZ-t2W" secondAttribute="bottom" id="I1P-2T-Yjn"/>
                             <constraint firstItem="waZ-V4-5Hs" firstAttribute="leading" secondItem="aWj-lD-oSA" secondAttribute="leadingMargin" id="KGS-yP-7ou"/>
-                            <constraint firstAttribute="trailing" secondItem="zMc-66-aNH" secondAttribute="trailing" id="PbK-gb-zwB"/>
+                            <constraint firstItem="zMc-66-aNH" firstAttribute="trailing" secondItem="aWj-lD-oSA" secondAttribute="trailing" id="PbK-gb-zwB"/>
+                            <constraint firstItem="DLS-40-ikd" firstAttribute="centerY" secondItem="aWj-lD-oSA" secondAttribute="centerY" id="PuO-hO-VpJ"/>
                             <constraint firstItem="rSF-4l-2gY" firstAttribute="left" secondItem="aWj-lD-oSA" secondAttribute="left" id="Qbl-n6-tqJ"/>
-                            <constraint firstItem="zMc-66-aNH" firstAttribute="bottom" secondItem="aWj-lD-oSA" secondAttribute="bottomMargin" id="R0t-IF-FSO"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="waZ-V4-5Hs" secondAttribute="trailing" constant="300" id="cyJ-OC-lBx"/>
-                            <constraint firstItem="rSF-4l-2gY" firstAttribute="top" secondItem="MRX-YZ-t2W" secondAttribute="bottom" id="dsv-l0-agM"/>
-                            <constraint firstItem="rSF-4l-2gY" firstAttribute="bottom" secondItem="aWj-lD-oSA" secondAttribute="bottomMargin" id="kyH-t8-VnY"/>
-                            <constraint firstItem="zdF-Is-GpX" firstAttribute="top" secondItem="waZ-V4-5Hs" secondAttribute="bottom" constant="10" id="lsB-Zo-4T1"/>
-                            <constraint firstItem="zMc-66-aNH" firstAttribute="top" secondItem="MRX-YZ-t2W" secondAttribute="bottom" id="sqp-kd-vTA"/>
-                            <constraint firstAttribute="trailing" secondItem="rSF-4l-2gY" secondAttribute="trailing" constant="200" id="v5Q-Xp-g0Z"/>
+                            <constraint firstItem="zMc-66-aNH" firstAttribute="bottom" secondItem="zdF-Is-GpX" secondAttribute="top" id="R0t-IF-FSO"/>
+                            <constraint firstItem="zMc-66-aNH" firstAttribute="top" secondItem="MRX-YZ-t2W" secondAttribute="bottom" id="XL8-it-sQc"/>
+                            <constraint firstItem="waZ-V4-5Hs" firstAttribute="trailing" secondItem="aWj-lD-oSA" secondAttribute="trailingMargin" constant="-300" id="cyJ-OC-lBx"/>
+                            <constraint firstItem="rSF-4l-2gY" firstAttribute="top" secondItem="MRX-YZ-t2W" secondAttribute="bottom" id="iIZ-mJ-5SE"/>
+                            <constraint firstItem="rSF-4l-2gY" firstAttribute="bottom" secondItem="zdF-Is-GpX" secondAttribute="top" id="j8S-cS-Y1V"/>
+                            <constraint firstItem="rSF-4l-2gY" firstAttribute="trailing" secondItem="aWj-lD-oSA" secondAttribute="trailing" constant="-200" id="v5Q-Xp-g0Z"/>
                         </constraints>
                     </view>
                     <toolbarItems>
@@ -770,6 +782,7 @@
                         <outlet property="captureButton" destination="ZAT-Nw-a8N" id="fLN-EU-1T3"/>
                         <outlet property="debugLabel" destination="waZ-V4-5Hs" id="dXq-Hr-aTb"/>
                         <outlet property="deleteButton" destination="fOM-Dx-wH7" id="foH-Nf-0Fx"/>
+                        <outlet property="firstFrameButton" destination="DLS-40-ikd" id="vuH-jf-arR"/>
                         <outlet property="imageView" destination="rSF-4l-2gY" id="GKy-VD-Fel"/>
                         <outlet property="pauseButton" destination="Td9-g8-BC6" id="cZS-d7-9mu"/>
                         <outlet property="playButton" destination="JNb-Cc-EZ9" id="5jD-WD-hdg"/>
@@ -781,7 +794,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rzf-JB-WuJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3225" y="-181"/>
+            <point key="canvasLocation" x="3225" y="-181.25"/>
         </scene>
         <!--Capture View Controller-->
         <scene sceneID="vEd-M9-3Pm">
@@ -1001,7 +1014,7 @@
                         <rect key="frame" x="0.0" y="718" width="1024" height="50"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
                         <edgeInsets key="layoutMargins" top="8" left="16" bottom="14" right="8"/>
-                        <color key="barTintColor" red="1" green="0.46772867439999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" red="0.18450731039047241" green="0.17651250958442688" blue="0.18471720814704895" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </toolbar>
                     <connections>
                         <segue destination="lkl-JU-3qv" kind="relationship" relationship="rootViewController" id="yI5-lK-LXe"/>
@@ -1016,7 +1029,7 @@
             <objects>
                 <navigationController title="Projects" automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="SIM-Ad-ioM" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="oia-wb-PDh">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="oia-wb-PDh">
                         <rect key="frame" x="0.0" y="20" width="1024" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="1" green="0.46772867439999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1025,7 +1038,7 @@
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translucent="NO" id="Zff-FE-aA3">
                         <rect key="frame" x="0.0" y="718" width="1024" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="barTintColor" red="1" green="0.46772867439999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" red="0.18450731039047241" green="0.17651250958442688" blue="0.18471720814704895" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </toolbar>
                     <connections>
                         <segue destination="jcW-Yl-4Hu" kind="relationship" relationship="rootViewController" id="hMc-ck-QJf"/>
@@ -1063,7 +1076,8 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nwV-Fp-EVN" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="OLW-cx-w8b">
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="OLW-cx-w8b">
                         <rect key="frame" x="0.0" y="20" width="1024" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="1" green="0.46772867439999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1082,9 +1096,10 @@
         <image name="camCapture.png" width="128" height="128"/>
         <image name="camClose.png" width="128" height="128"/>
         <image name="delProj.png" width="256" height="256"/>
+        <image name="firstCapture.png" width="200" height="200"/>
         <image name="t1.png" width="1050" height="800"/>
         <image name="t2.png" width="1050" height="800"/>
         <image name="t3.png" width="1050" height="800"/>
-        <image name="welcome.png" width="1050" height="800"/>
+        <image name="welcome.png" width="800" height="400"/>
     </resources>
 </document>

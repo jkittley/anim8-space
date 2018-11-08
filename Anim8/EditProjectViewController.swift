@@ -32,17 +32,23 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet var playButton: UIBarButtonItem!
     @IBOutlet var pauseButton: UIBarButtonItem!
     @IBOutlet var shareButton: UIBarButtonItem!
+    @IBOutlet weak var firstFrameButton: UIButton!
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Custom Title Image
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "navbar.png"))
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(imageLiteralResourceName: "headPattern.png"), for: .default)
         // Other
         tableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: CellIdentifier)
-        // Backl button
+        
+        // Back button
         let backButton = UIBarButtonItem(title: "Projects", style: .plain, target: self, action: #selector(self.goBack))
         backButton.tintColor = UIColor.white
         self.navigationItem.leftBarButtonItem = backButton
+        
         // On reload of table
         tableView.reloadData {
             if !self.tableView.isHidden {
@@ -82,12 +88,12 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         }
         // If frame is nil then hide
         if (selectedFrame == nil) {
-            imageView.contentMode = .center
-            imageView.image = UIImage(named: "defaultFrame2.png")
-            //?.resizeImageWith(newSize: imageView.frame.size)
+            imageView.isHidden = true
+            firstFrameButton.isHidden = false;
         } else {
-            imageView.contentMode = .scaleAspectFit
             imageView.image = selectedFrame?.image
+            firstFrameButton.isHidden = true
+            imageView.isHidden = false
         }
         updateDebugLabel()
     }
@@ -106,6 +112,14 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     @IBAction func capture(sender: UIBarButtonItem) {
+        openCamera();
+    }
+    
+    @IBAction func firstFrameButtonClick(_ sender: Any) {
+        openCamera();
+    }
+    
+    func openCamera() {
         // Has the camera been authorised?
         if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) == AVAuthorizationStatus.authorized {
             // Yes
@@ -134,7 +148,6 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
             }
         }
     }
-    
     
     @IBAction func delete(sender: UIBarButtonItem) {
         tableView.setEditing(!tableView.isEditing, animated: true)
@@ -313,10 +326,6 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_: UITableView, didSelectRowAt: IndexPath) {
         showFrame(frame: project!.frames[didSelectRowAt.row])
     }
-    
-//    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-//        let cell  = tableView.cellForRow(at: indexPath)
-//    }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // If not animating then allow delete

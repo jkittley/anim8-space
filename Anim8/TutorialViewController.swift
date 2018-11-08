@@ -14,6 +14,11 @@ class TutorialViewController: UIPageViewController {
         super.viewDidLoad()
         dataSource = self
         
+        // Custom Title Image
+        self.navigationItem.titleView = UIImageView(image: UIImage(named: "navbar.png"))
+        self.navigationController?.navigationBar.tintColor = UIColor.white;
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(imageLiteralResourceName: "headPattern.png"), for: .default)
+        
         if let firstViewController = orderedViewControllers.first {
             setViewControllers([firstViewController],
                                direction: .forward,

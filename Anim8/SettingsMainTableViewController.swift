@@ -73,6 +73,7 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
         // Custom Title Image
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "navbar.png"))
         self.navigationController?.navigationBar.tintColor = UIColor.white;
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(imageLiteralResourceName: "headPattern.png"), for: .default)
         
         // UI Tweeks
         descriptionText.layer.cornerRadius = 4

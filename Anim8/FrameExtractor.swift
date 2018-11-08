@@ -122,7 +122,9 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
         return UIImage(cgImage: cgImage)
     }
     
-    
+    //
+    // Preview
+    //
     // MARK: AVCaptureVideoDataOutputSampleBufferDelegate
     func captureOutput(_ captureOutput: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection) {
@@ -132,20 +134,22 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
         var resultImage: UIImage? = nil
         
         if let p = self.project {
-            
-                if let project = self.project {
-                    if project.frames.count > 0 {
-                        let keyFrame = project.compareFrameWithFirst ? project.frames.first : project.frames.last
-                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:keyFrame?.image, arg7:p.algDescriptor, arg8:p.orbLimit )
-                    } else {
-                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:nil, arg7:p.algDescriptor, arg8:p.orbLimit)
-                    }
-                    
-                }
+            if let project = self.project {
                 
-            } else {
-                resultImage = uiImage
+                if p.feedback == "none" {
+                    resultImage = uiImage
+                    
+                } else if project.frames.count > 0 {
+                    let keyFrame = project.compareFrameWithFirst ? project.frames.first : project.frames.last
+                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:keyFrame?.image, arg7:p.algDescriptor, arg8:p.orbLimit )
+                } else {
+                    resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:nil, arg7:p.algDescriptor, arg8:p.orbLimit)
+                }
             }
+                
+        } else {
+            resultImage = uiImage
+        }
         
             // Send result to preview
             if resultImage != nil {

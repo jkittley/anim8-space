@@ -14,7 +14,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     // Lock app orientation
-    var orientationLock = UIInterfaceOrientationMask.landscapeRight
+    var orientationLock = UIInterfaceOrientationMask.landscape
+    
     func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         return self.orientationLock
     }

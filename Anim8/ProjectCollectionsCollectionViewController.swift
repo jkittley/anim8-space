@@ -22,7 +22,6 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
     
     required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
-        
         // Load Items
         loadItems()
     }
@@ -33,36 +32,38 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
         // Custom Title Image
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "navbar.png"))
         self.navigationController?.navigationBar.tintColor = UIColor.white;
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(imageLiteralResourceName: "headPattern.png"), for: .default)
         
+        // Version label
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String
         let build = Bundle.main.infoDictionary?[kCFBundleVersionKey as String] as! String
-        
         let versionString = "V" + version + ".b" + build
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: versionString, style: .plain, target: self, action: nil)
+        let verButton = UIBarButtonItem(title: versionString, style: .plain, target: self, action: nil)
+        verButton.tintColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.3)
+        self.navigationItem.leftBarButtonItem = verButton
         
+        // Init Collection
         let numCols = CGFloat(4.0)
         let pad = CGFloat(15)
-        
-        //Define Layout here
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         
         //Get device width
         let width = UIScreen.main.bounds.width
         
-        //set section inset as per your requirement.
+        // Set section inset as per your requirement.
         layout.sectionInset = UIEdgeInsets(top: pad, left: pad, bottom: pad, right: pad)
         
-        //set cell item size here
+        // Set cell item size here
         let w = (width - (numCols * pad)) / numCols
         layout.itemSize = CGSize(width: w, height: w)
         
-        //set Minimum spacing between 2 items
+        // Set Minimum spacing between 2 items
         layout.minimumInteritemSpacing = 0
         
-        //set minimum vertical line spacing here between two lines in collectionview
+        // Set minimum vertical line spacing here between two lines in collectionview
         layout.minimumLineSpacing = 0
         
-        //apply defined layout to collectionview
+        // Apply defined layout to collectionview
         collectionView!.collectionViewLayout = layout
         
     }
@@ -101,8 +102,12 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
     //
     
     @IBAction func toggleDeleteMode(_ sender: Any) {
-        delMode = !delMode
-        print("Delete Mode", delMode)
+        setDeleteMode(!delMode);
+    }
+    
+    func setDeleteMode(_ val: Bool) {
+        print("Delete Mode", val)
+        delMode = val
         self.collectionView?.reloadData()
     }
     
@@ -110,11 +115,6 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
     @IBAction func helpButtonClick(_ sender: Any) {
         performSegue(withIdentifier: "helpSeg", sender: self)
     }
-    
-    @IBAction func AddButtonClicked(_ sender: Any) {
-        performSegue(withIdentifier: "addSeg", sender: self)
-    }
-    
     
     func deleteProject(project: Project, indexPath: IndexPath) {
         print("Deleting ",indexPath.row)
@@ -132,7 +132,6 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
         present(deleteAlert, animated: true, completion: nil)
     }
     
-    
     func openProject(project: Project) {
         // Update Selection
         selection = project
@@ -141,7 +140,6 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
             self.performSegue(withIdentifier: "editSeg", sender: self)
         }
     }
-    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if delMode {
             deleteProject(project: projects[indexPath.row], indexPath:indexPath)
@@ -162,6 +160,8 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // Show hide welcome message
         welcomeImageView.isHidden = (projects.count > 0)
+        // Disable delete if no projects left
+        if projects.count == 0 { setDeleteMode(false) }
         return projects.count
     }
     
@@ -173,26 +173,27 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
         //Sequeue Reusable Cell
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "projCollectCell", for: indexPath) as! ProjectCollectionCell
         
-        cell.thumbView.layer.borderWidth = 1.0
-        cell.thumbView.layer.borderColor = UIColor.black.cgColor
-        cell.thumbView.layer.cornerRadius = 4
-        cell.thumbView.backgroundColor = UIColor.white
-        
         cell.deleteIcon.isHidden = true
         
         cell.numFramesLabel.text = "\(project.frames.count) frames"
         
         // Configure Table View Cell
-        cell.titleText?.text = project.name + " (" + String(project.frames.count) + " frames)"
+        cell.titleText?.text = project.name
         cell.thumbView?.image = project.getThumb()
         
+        let cellColor = UIColor(red: 0.18, green: 0.18, blue: 0.18, alpha: 1.0).cgColor;
+        let cellDeleteColor = UIColor(red: 0.38, green: 0.18, blue: 0.18, alpha: 1.0).cgColor;
+        
+        cell.layer.borderColor = cellColor
+        cell.layer.backgroundColor = cellColor
+        cell.layer.borderWidth = 8.0
+        cell.layer.cornerRadius = 4
+        
         if delMode {
-            cell.thumbView.layer.borderColor = UIColor.red.cgColor
-            cell.thumbView.layer.borderWidth = 4.0
             cell.deleteIcon.isHidden = false
+            cell.layer.borderColor = cellDeleteColor
         } else {
-            cell.thumbView.layer.borderColor = UIColor.black.cgColor
-            cell.thumbView.layer.borderWidth = 1.0
+            cell.layer.borderColor = cellColor
             cell.deleteIcon.isHidden = true
         }
         
@@ -263,6 +264,9 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
     //
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        // Turn off delete mode if we transition away.
+        setDeleteMode(false)
         
         let backItem = UIBarButtonItem()
         backItem.title = "Projects"

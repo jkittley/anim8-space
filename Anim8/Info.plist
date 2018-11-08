@@ -17,13 +17,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.12</string>
+	<string>1.13</string>
 	<key>CFBundleVersion</key>
-	<string>12</string>
+	<string>13</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Capture top motion animation</string>
+	<string>Capture images to create the frames for a stop motion animation</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Sharing your projects</string>
 	<key>UILaunchStoryboardName</key>
