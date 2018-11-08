@@ -767,17 +767,17 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
 //
 
 + (bool)testfirstimage:(nonnull UIImage*)key arg2:(nonnull NSString*)algFeat {
-    cv::Mat bgrKey;
-    UIImageToMat(key, bgrKey);
-    
-    cv::Mat grayKey;
-    cv::cvtColor(bgrKey, grayKey, CV_BGR2GRAY);
-    
-    vector<cv::KeyPoint> keypoints = getKeypoints(grayKey, algFeat);
-    
-    if (keypoints.size() < 20) {
-        return false;
-    }
+//    cv::Mat bgrKey;
+//    UIImageToMat(key, bgrKey);
+//    
+//    cv::Mat grayKey;
+//    cv::cvtColor(bgrKey, grayKey, CV_BGR2GRAY);
+//    
+//    vector<cv::KeyPoint> keypoints = getKeypoints(grayKey, algFeat);
+//    
+//    if (keypoints.size() < 20) {
+//        return false;
+//    }
     return true;
 }
 
