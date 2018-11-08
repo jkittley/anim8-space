@@ -23,7 +23,7 @@
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                             <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="10"/>
                         </collectionViewFlowLayout>
-                        <imageView key="backgroundView" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="welcome.png" id="vOo-U3-U76">
+                        <imageView key="backgroundView" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="welcomeStart.png" id="vOo-U3-U76">
                             <rect key="frame" x="0.0" y="0.0" width="1024" height="698"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1005,7 +1005,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" toolbarHidden="NO" id="PN5-gB-yj2" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="Eo9-yJ-WVT">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="Eo9-yJ-WVT">
                         <rect key="frame" x="0.0" y="20" width="1024" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="1" green="0.46772867439999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1054,7 +1054,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0Nv-Dj-n5y" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="pZd-SQ-MDF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="pZd-SQ-MDF">
                         <rect key="frame" x="0.0" y="20" width="1024" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="1" green="0.46772867439999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1101,6 +1101,6 @@
         <image name="t1.png" width="1050" height="800"/>
         <image name="t2.png" width="1050" height="800"/>
         <image name="t3.png" width="1050" height="800"/>
-        <image name="welcome.png" width="800" height="400"/>
+        <image name="welcomeStart.png" width="800" height="400"/>
     </resources>
 </document>
