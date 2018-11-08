@@ -125,6 +125,7 @@
                     <navigationItem key="navigationItem" id="nGx-WE-WFb"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="deleteButton" destination="dps-cj-YAm" id="kp3-3F-x2T"/>
                         <outlet property="welcomeImageView" destination="vOo-U3-U76" id="Qyf-H4-GBi"/>
                         <segue destination="PN5-gB-yj2" kind="show" identifier="editSeg" id="tOm-Yv-P8m"/>
                         <segue destination="0Nv-Dj-n5y" kind="show" identifier="helpSeg" id="XSp-Ka-mzZ"/>

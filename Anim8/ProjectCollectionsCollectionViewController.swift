@@ -15,6 +15,7 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
     var delMode = false
     
     @IBOutlet weak var welcomeImageView: UIImageView!
+    @IBOutlet weak var deleteButton: UIBarButtonItem!
     
     @IBAction func addNewProjectAction(_ sender: Any) {
         addProject();
@@ -161,7 +162,12 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
         // Show hide welcome message
         welcomeImageView.isHidden = (projects.count > 0)
         // Disable delete if no projects left
-        if projects.count == 0 { setDeleteMode(false) }
+        if projects.count == 0 {
+            setDeleteMode(false)
+            deleteButton.isEnabled = false
+        } else {
+            deleteButton.isEnabled = true
+        }
         return projects.count
     }
     
