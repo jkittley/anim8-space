@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1658864B1F3C4F4C00B05770 /* AddProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1658864A1F3C4F4C00B05770 /* AddProjectViewController.swift */; };
 		1658864D1F3C6C3900B05770 /* EditProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1658864C1F3C6C3900B05770 /* EditProjectViewController.swift */; };
 		165886571F3C8BE400B05770 /* CaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165886561F3C8BE400B05770 /* CaptureViewController.swift */; };
 		1658865B1F3C8CAF00B05770 /* OpenCVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1658865A1F3C8CAF00B05770 /* OpenCVWrapper.mm */; };
@@ -60,7 +59,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1658864A1F3C4F4C00B05770 /* AddProjectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddProjectViewController.swift; sourceTree = "<group>"; };
 		1658864C1F3C6C3900B05770 /* EditProjectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProjectViewController.swift; sourceTree = "<group>"; };
 		165886561F3C8BE400B05770 /* CaptureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureViewController.swift; sourceTree = "<group>"; };
 		165886581F3C8CAF00B05770 /* Anim8-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Anim8-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -275,7 +273,6 @@
 				16898C7B1F56AB05001926B7 /* Settings */,
 				166271DC1F50194D00E8210B /* ProjectCollectionsCollectionViewController.swift */,
 				166271DE1F501E0400E8210B /* ProjectCollectionCell.swift */,
-				1658864A1F3C4F4C00B05770 /* AddProjectViewController.swift */,
 				1658864C1F3C6C3900B05770 /* EditProjectViewController.swift */,
 				166271E41F50544600E8210B /* ProjFrameTableViewCell.swift */,
 				165886561F3C8BE400B05770 /* CaptureViewController.swift */,
@@ -397,7 +394,6 @@
 				16FB280D1F36440100D86823 /* ProjectsViewController.swift in Sources */,
 				165886571F3C8BE400B05770 /* CaptureViewController.swift in Sources */,
 				16FB27FB1F3642BE00D86823 /* AppDelegate.swift in Sources */,
-				1658864B1F3C4F4C00B05770 /* AddProjectViewController.swift in Sources */,
 				1658864D1F3C6C3900B05770 /* EditProjectViewController.swift in Sources */,
 				1662720D1F50AE6500E8210B /* Tut2ViewController.swift in Sources */,
 				166271DF1F501E0400E8210B /* ProjectCollectionCell.swift in Sources */,

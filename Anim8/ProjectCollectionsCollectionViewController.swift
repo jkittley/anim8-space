@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProjectCollectionsCollectionViewController: UICollectionViewController, EditProjectDelegate, AddProjectDelegate {
+class ProjectCollectionsCollectionViewController: UICollectionViewController, EditProjectDelegate {
     
     var projects = [Project]()
     var selection: Project?
@@ -16,7 +16,10 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
     
     @IBOutlet weak var welcomeImageView: UIImageView!
     
-
+    @IBAction func addNewProjectAction(_ sender: Any) {
+        addProject();
+    }
+    
     required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
         
@@ -208,11 +211,15 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
     // Deligates
     //
     
-    func projectAdded(controller: AddProjectViewController, name: String, desc: String) {
+    func addProject() {
         print("Adding project")
+        
+        let date = NSDate()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm E dd MMM yyyy"
+
         // Create Item
-        let project = Project(name: name)
-        project.desc = desc
+        let project = Project(name: dateFormatter.string(from:date as Date))
         
         // Add Item to Items
         projects.append(project)
@@ -261,14 +268,7 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
         backItem.title = "Projects"
         navigationItem.backBarButtonItem = backItem
         
-        
-        if segue.identifier == "addSeg" {
-            if let navigationController = segue.destination as? UINavigationController,
-                let controller = navigationController.viewControllers.first as? AddProjectViewController {
-                controller.addProjectDelegate = self
-            }
-            
-        } else if segue.identifier == "editSeg" {
+        if segue.identifier == "editSeg" {
             if let navigationController = segue.destination as? UINavigationController,
                 let controller = navigationController.viewControllers.first as? EditProjectViewController,
                 let project = selection {
