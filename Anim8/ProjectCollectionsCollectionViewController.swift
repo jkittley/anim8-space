@@ -223,10 +223,11 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
         let project = Project(name: dateFormatter.string(from:date as Date))
         
         // Add Item to Items
-        projects.append(project)
+        projects.insert(project, at: 0)
+        
         // Add Row to Table View
-        let indexPath = IndexPath(row: (projects.count - 1), section: 0)
-        collectionView?.insertItems(at: [indexPath])
+//        let indexPath = IndexPath(row: (projects.count - 1), section: 0)
+//        collectionView?.insertItems(at: [indexPath])
 
         // Save Items
         saveItems()
