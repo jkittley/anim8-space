@@ -41,20 +41,20 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         // Custom Title Image
         self.navigationItem.titleView = UIImageView(image: UIImage(named: "navbar.png"))
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(imageLiteralResourceName: "headPattern.png"), for: .default)
-        // Other
-        tableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: CellIdentifier)
         
         // Back button
         let backButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(self.goBack))
         backButton.tintColor = UIColor.white
         self.navigationItem.leftBarButtonItem = backButton
         
-        // On reload of table
+        // Table
+        tableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: CellIdentifier)
         tableView.reloadData {
             if !self.tableView.isHidden {
                 self.scrollToBottom()
             }
         }
+        
         // Set init frame
         if let hideFrame1 = project?.hideFrame1, let frames = project?.frames, hideFrame1 == true && frames.count == 1 {
             showFrame(frame: nil)
@@ -80,13 +80,13 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     
     //
     func showFrame(frame: Frame?) {
-        imageView.clipsToBounds = true;
+        
         selectedFrame = frame
+        
         // Make sure first frame is always hidden
         if let hideFrame1 = project?.hideFrame1, let frames = project?.frames, hideFrame1 == true && frames.count == 1 {
             selectedFrame = nil;
         }
-        // If frame is nil then hide
         if (selectedFrame == nil) {
             imageView.isHidden = true
             firstFrameButton.isHidden = false;
@@ -95,6 +95,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
             firstFrameButton.isHidden = true
             imageView.isHidden = false
         }
+        
         updateDebugLabel()
     }
     

@@ -21,7 +21,7 @@ protocol NewPhotoDelegate: class {
 class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCapturePhotoCaptureDelegate {
     
     private let position = AVCaptureDevice.Position.back
-    private let quality = AVCaptureSession.Preset.medium
+    private let quality = AVCaptureSession.Preset.iFrame960x540 // was medium
     
     private var permissionGranted = false
     private let sessionQueue = DispatchQueue(label: "session queue")
@@ -90,13 +90,14 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
 //            captureDevice.activeVideoMaxFrameDuration = CMTimeMake(1,2)
 //            captureDevice.unlockForConfiguration()
 //        } catch {
-//        
+//
 //        }
 
         if captureSession.canAddOutput(avCapturePhotoOutput) {
             captureSession.addOutput(avCapturePhotoOutput)
             avCapturePhotoOutput.isHighResolutionCaptureEnabled = true
-            avCapturePhotoOutput.isLivePhotoCaptureEnabled = avCapturePhotoOutput.isLivePhotoCaptureSupported
+//            avCapturePhotoOutput.isLivePhotoCaptureEnabled = avCapturePhotoOutput.isLivePhotoCaptureSupported
+            avCapturePhotoOutput.isLivePhotoCaptureEnabled = false
         } else {
             print("Could not add photo output to the session")
             return
@@ -133,35 +134,47 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
         
         var resultImage: UIImage? = nil
         
-        if let p = self.project {
-            if let project = self.project {
-                
-                if p.feedback == "none" {
-                    resultImage = uiImage
+        do {
+            
+            if let p = self.project {
+                if let project = self.project {
                     
-                } else if project.frames.count > 0 {
-                    let keyFrame = project.compareFrameWithFirst ? project.frames.first : project.frames.last
-                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:keyFrame?.image, arg7:p.algDescriptor, arg8:p.orbLimit )
-                } else {
-                    resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:nil, arg7:p.algDescriptor, arg8:p.orbLimit)
+                    //Does this work???
+                    
+                    if p.feedback == "none" {
+                        resultImage = uiImage
+                        
+                    } else if project.frames.count > 0 {
+                        let keyFrame = project.compareFrameWithFirst ? project.frames.first : project.frames.last
+                        try OpenCVWrapper.catchException {
+                            resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:keyFrame?.image, arg7:p.algDescriptor, arg8:p.orbLimit )
+                        }
+                    } else {
+                        try OpenCVWrapper.catchException {
+                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:nil, arg7:p.algDescriptor, arg8:p.orbLimit)
+                        }
+                    }
                 }
-            }
                 
-        } else {
+            } else {
+                resultImage = uiImage
+            }
+        
+        } catch {
             resultImage = uiImage
         }
-        
-            // Send result to preview
-            if resultImage != nil {
-                DispatchQueue.main.async {
-                    [unowned self] in
-                    self.previewDelegate?.processFrame(image: resultImage!)
-                }
-            } else {
-                close()
-                print("RETURNED IMAGE WAS NULL FOR FEEDBACK")
-                self.newPhotoDeligate?.newPhotoError(message: "Unable to generate selected feedback visualisation", dismiss: true)
+    
+        // Send result to preview
+        if resultImage != nil {
+            DispatchQueue.main.async {
+                [unowned self] in
+                self.previewDelegate?.processFrame(image: resultImage!)
             }
+        } else {
+            close()
+            print("RETURNED IMAGE WAS NULL FOR FEEDBACK")
+            self.newPhotoDeligate?.newPhotoError(message: "Unable to generate selected feedback visualisation", dismiss: true)
+        }
        
     }
     

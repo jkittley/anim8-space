@@ -16,7 +16,7 @@
 + (nullable UIImage *)transform:(nonnull UIImage*)key arg2:(nonnull UIImage*)img arg3:(nonnull NSString*)algFeat arg4:(nonnull NSString*)algDesc arg5:(double)orbLimit;
 + (nonnull UIImage *)rotate:(nonnull UIImage*)img arg2:(double)angle;
 
-+ (BOOL)catchException:(void(^_Nullable)())tryBlock error:(__autoreleasing NSError *_Nullable*)error;
++ (BOOL)catchException:(void(^_Nullable)())tryBlock error:(__autoreleasing NSError *_Nullable*_Nullable)error;
 
 
 @end

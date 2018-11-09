@@ -87,8 +87,245 @@ static UIImage *RestoreUIImageOrientation(UIImage *processed, UIImage *original)
 }
 
 
+// ---------------------------------------------------------------------------------------------------------------
+
+//
+// Get Key points
+//
+static vector<cv::KeyPoint> getKeypoints(cv::Mat &src, NSString* algFeat) {
+    
+    vector<cv::KeyPoint> keypoints;
+    
+    if ([algFeat  isEqual: @"sift"]) {
+        cv::SiftFeatureDetector detector;
+        detector.detect(src, keypoints);
+        
+    } else if ([algFeat  isEqual: @"surf"]) {
+        cv::SurfFeatureDetector detector;
+        detector.detect(src, keypoints);
+    } else if ([algFeat  isEqual: @"orb"]) {
+        cv::OrbFeatureDetector detector = cv::ORB(ORB_KP_NUMBER);
+        detector.detect(src, keypoints);
+        
+    } else if ([algFeat  isEqual: @"harris"]) {
+        cv::cornerHarris(src, keypoints, 2, 3, 0.04);
+        
+    } else if ([algFeat  isEqual: @"fast"]) {
+        cv::FastFeatureDetector detector;
+        detector.detect(src, keypoints);
+        
+    } else {
+        throw "Unknown visualisation algorithm";
+    }
+    
+    return keypoints;
+}
+
+//
+// Get Descriptors
+//
+static cv::Mat getDescriptors(cv::Mat &src, vector<cv::KeyPoint> keypoints, NSString* algDesc) {
+    
+    cv::Mat descriptors;
+    
+    if ([algDesc  isEqual: @"sift"]) {
+        //printf("Using SIFT extractor\n");
+        cv::SiftDescriptorExtractor extractor;
+        extractor.compute(src, keypoints, descriptors);
+    } else if ([algDesc  isEqual: @"surf"]) {
+        //printf("Using SURF extractor\n");
+        cv::SurfDescriptorExtractor extractor;
+        extractor.compute(src, keypoints, descriptors);
+    } else if ([algDesc  isEqual: @"orb"]) {
+        //printf("Using ORB extractor\n");
+        cv::OrbDescriptorExtractor extractor;
+        extractor.compute(src, keypoints, descriptors);
+    } else {
+        throw "Unknown processing algorithm";
+    }
+    
+    return descriptors;
+}
+
+//
+// Rotate Image by 90
+//
+void rot90(cv::Mat &matImage, int rotflag){
+    //1=CW, 2=CCW, 3=180
+    if (rotflag == 1){
+        transpose(matImage, matImage);
+        flip(matImage, matImage,1); //transpose+flip(1)=CW
+    } else if (rotflag == 2) {
+        transpose(matImage, matImage);
+        flip(matImage, matImage,0); //transpose+flip(0)=CCW
+    } else if (rotflag ==3){
+        flip(matImage, matImage,-1);    //flip(-1)=180
+    } else if (rotflag != 0){ //if not 0,1,2,3:
+        cout  << "Unknown rotation flag(" << rotflag << ")" << endl;
+    }
+}
+
+//
+// Test Homography
+//
+static bool isGoodHomography(cv::Mat H) {
+    const double det = H.at<double>(0, 0) * H.at<double>(1, 1) - H.at<double>(1, 0) * H.at<double>(0, 1);
+    if (det < 0)
+        return false;
+    
+    const double N1 = sqrt(H.at<double>(0, 0) * H.at<double>(0, 0) + H.at<double>(1, 0) * H.at<double>(1, 0));
+    if (N1 > 4 || N1 < 0.1)
+        return false;
+    
+    const double N2 = sqrt(H.at<double>(0, 1) * H.at<double>(0, 1) + H.at<double>(1, 1) * H.at<double>(1, 1));
+    if (N2 > 4 || N2 < 0.1)
+        return false;
+    
+    const double N3 = sqrt(H.at<double>(2, 0) * H.at<double>(2, 0) + H.at<double>(2, 1) * H.at<double>(2, 1));
+    if (N3 > 0.002)
+        return false;
+    
+    return true;
+}
+
+//
+// Find matches
+//
+static bool getMatches(cv::Mat grayKey, cv::Mat grayImg, vector<cv::KeyPoint>kpKey, vector<cv::KeyPoint>kpImg, NSString* algFeat, NSString* algDesc, vector<cv::DMatch> &good_matches, std::vector<cv::Point2f> &src_match_points, std::vector<cv::Point2f> &dst_match_points) {
+    
+    cv::Mat desKey;
+    cv::Mat desImg;
+    try {
+        desKey = getDescriptors(grayKey, kpKey, algDesc);
+        desImg = getDescriptors(grayImg, kpImg, algDesc);
+    } catch (...) {
+        printf("Descriptor generation failed\n");
+        //        [NSException raise:@"FrameTransformError"
+        //                    format:@"Internal error - Failed to generate descriptors"];
+        return false;
+    }
+    
+    if ( desKey.empty()) {
+        printf("Key descriptors Empty\n");
+        //        [NSException raise:@"FrameTransformError"
+        //                    format:@"Internal error - Too few key descriptors"];
+        return false;
+    }
+    
+    if ( desImg.empty() ) {
+        printf("Image descriptors Empty\n");
+        //        [NSException raise:@"FrameTransformError"
+        //                    format:@"Internal error - Too few image descriptors"];
+        return false;
+    }
+    
+    if(desKey.type()!=CV_32F) {
+        desKey.convertTo(desKey, CV_32F);
+    }
+    
+    if(desImg.type()!=CV_32F) {
+        desImg.convertTo(desImg, CV_32F);
+    }
+    
+    cv::FlannBasedMatcher matcher;
+    vector< cv::DMatch > matches;
+    matcher.match(desImg, desKey, matches);
+    double max_dist = 0; double min_dist = 10000000;
+    
+    //-- Quick calculation of max and min distances between keypoints
+    for( int i = 0; i < desImg.rows; i++ ) {
+        double dist = matches[i].distance;
+        if( dist < min_dist ) min_dist = dist;
+        if( dist > max_dist ) max_dist = dist;
+    }
+    
+    
+    
+    //-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist,
+    //-- or a small arbitary value ( 0.02 ) in the event that min_dist is very small)
+    //-- PS.- radiusMatch can also be used here.
+    
+    
+    //cout << "MIN DIST:" << min_dist <<endl;
+    
+    // If min dist is too high then the moving objects will affect the transformation
+    for( int i = 0; i < desImg.rows; i++ ) {
+        if( matches[i].distance <= max( GOOD_MIN_DIST_MULTIPLIER * min_dist, 0.02) ) {
+            good_matches.push_back( matches[i] );
+        }
+    }
+    
+    
+    
+    
+    
+    //-- Localize the object
+    for( int i = 0; i < good_matches.size(); i++ ) {
+        //-- Get the keypoints from the good matches
+        src_match_points.push_back( kpImg[ good_matches[i].queryIdx ].pt );
+        dst_match_points.push_back( kpKey[ good_matches[i].trainIdx ].pt );
+    }
+    
+    if (good_matches.size() < 4) {
+        printf("Too few matches\n");
+        //        [NSException raise:@"FrameTransformError"
+        //                    format:@"Insufficient detail to process the photo. Try retaking this photo or the one it is being compared to"];
+        return false;
+    }
+    
+    return true;
+}
+
+static void CannyThreshold(cv::Mat& src_gray, cv::Mat& detected_edges) {
+    int lowThreshold = 5;
+    int ratio = 3;
+    int kernel_size = 3;
+    /// Reduce noise with a kernel 3x3
+    cv::blur( src_gray, detected_edges, cv::Size(3,3) );
+    /// Canny detector
+    cv::Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size);
+}
+
+static void rotateMat(cv::Mat& src, double angle, cv::Mat& dst){
+    cv::Point2f ptCp(src.cols*0.5, src.rows*0.5);
+    cv::Mat M = cv::getRotationMatrix2D(ptCp, angle, 1.0);
+    cv::warpAffine(src, dst, M, cv::Size(src.rows, src.cols), cv::INTER_CUBIC); //Nearest is too rough,
+}
+
+// ---------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------
+// Presentation Tools
+// ---------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------
 
 
+static void SideBySide(cv::Mat &bgrLeft, cv::Mat &bgrRight, cv::Mat &bgrOutput) {
+    cv::resize(bgrRight, bgrRight, bgrLeft.size());
+    cv::Mat sideBySide;
+    cv::hconcat(bgrLeft, bgrRight, sideBySide);
+    cv::copyMakeBorder( sideBySide, bgrOutput, bgrLeft.rows/2, bgrLeft.rows/2, 0, 0, cv::BORDER_CONSTANT, cv::Scalar(0,0,0));
+}
+
+static void PictureInPicture(cv::Mat &bgrBig, cv::Mat &bgrSmall, cv::Mat &bgrOutput) {
+    cv::Mat bgrPip;
+    cv::resize(bgrSmall, bgrPip, cv::Size(), 0.3, 0.3);
+    cv::copyMakeBorder(bgrPip, bgrPip, 2,2,2,2, cv::BORDER_CONSTANT, cv::Scalar(10, 110, 250));
+    cv::resize(bgrBig, bgrOutput, cv::Size(), 1, 1);
+    
+    // Define roi area (it has small image dimensions).
+    cv::Rect roi = cv::Rect(bgrBig.cols - bgrPip.cols - 5, 5, bgrPip.cols, bgrPip.rows);
+    // Take a sub-view of the large image
+    cv::Mat subView = bgrOutput(roi);
+    // Copy contents of the small image to large
+    bgrPip.copyTo(subView);
+    
+}
+
+
+// ---------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------
+// Feedback
+// ---------------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------
 
 //
@@ -130,7 +367,9 @@ static void FeedbackAlgorithmVision(cv::Mat &src, vector<cv::KeyPoint> keypoints
     cv::add(background, foreground, dst);
 }
 
+//
 // Feedback Keypoints Only
+//
 static void FeedbackKeypoints(cv::Mat &src, vector<cv::KeyPoint> keypoints, cv::Mat &dst) {
     for(int i = 0; i < keypoints.size(); i++){
         cv::circle(dst, keypoints[i].pt, 3, cv::Scalar(10, 110, 250), -1);
@@ -138,7 +377,9 @@ static void FeedbackKeypoints(cv::Mat &src, vector<cv::KeyPoint> keypoints, cv::
     }
 }
 
-//FeedbackKeypointDensity(bgrMat, keypoints, bgrMat, 20, 50, 255, FB_MODE_BLURRED, 15)
+//
+// FeedbackKeypointDensity(bgrMat, keypoints, bgrMat, 20, 50, 255, FB_MODE_BLURRED, 15)
+//
 static void FeedbackKeypointDensity(cv::Mat &src, vector<cv::KeyPoint> keypoints, cv::Mat &dst, int bin_factor, int thresh_low, int thresh_high, int mode, int blur_kernal_w) {
     
     
@@ -227,185 +468,9 @@ static void FeedbackKeypointDensity(cv::Mat &src, vector<cv::KeyPoint> keypoints
     cv::add(background, foreground, dst);
 }
 
-
-
-
-
-static vector<cv::KeyPoint> getKeypoints(cv::Mat &src, NSString* algFeat) {
-    
-    vector<cv::KeyPoint> keypoints;
-    
-    if ([algFeat  isEqual: @"sift"]) {
-        cv::SiftFeatureDetector detector;
-        detector.detect(src, keypoints);
-        
-    } else if ([algFeat  isEqual: @"surf"]) {
-        cv::SurfFeatureDetector detector;
-        detector.detect(src, keypoints);
-    } else if ([algFeat  isEqual: @"orb"]) {
-        cv::OrbFeatureDetector detector = cv::ORB(ORB_KP_NUMBER);
-        detector.detect(src, keypoints);
-        
-    } else if ([algFeat  isEqual: @"harris"]) {
-        cv::cornerHarris(src, keypoints, 2, 3, 0.04);
-        
-    } else if ([algFeat  isEqual: @"fast"]) {
-        cv::FastFeatureDetector detector;
-        detector.detect(src, keypoints);
-
-    } else {
-        throw "Unknown visualisation algorithm";
-    }
-    
-    return keypoints;
-}
-
-
-static cv::Mat getDescriptors(cv::Mat &src, vector<cv::KeyPoint> keypoints, NSString* algDesc) {
-    
-    cv::Mat descriptors;
-    
-    if ([algDesc  isEqual: @"sift"]) {
-        //printf("Using SIFT extractor\n");
-        cv::SiftDescriptorExtractor extractor;
-        extractor.compute(src, keypoints, descriptors);
-    } else if ([algDesc  isEqual: @"surf"]) {
-        //printf("Using SURF extractor\n");
-        cv::SurfDescriptorExtractor extractor;
-        extractor.compute(src, keypoints, descriptors);
-    } else if ([algDesc  isEqual: @"orb"]) {
-        //printf("Using ORB extractor\n");
-        cv::OrbDescriptorExtractor extractor;
-        extractor.compute(src, keypoints, descriptors);
-    } else {
-        throw "Unknown processing algorithm";
-    }
-    
-    return descriptors;
-}
-
-void rot90(cv::Mat &matImage, int rotflag){
-    //1=CW, 2=CCW, 3=180
-    if (rotflag == 1){
-        transpose(matImage, matImage);
-        flip(matImage, matImage,1); //transpose+flip(1)=CW
-    } else if (rotflag == 2) {
-        transpose(matImage, matImage);
-        flip(matImage, matImage,0); //transpose+flip(0)=CCW
-    } else if (rotflag ==3){
-        flip(matImage, matImage,-1);    //flip(-1)=180
-    } else if (rotflag != 0){ //if not 0,1,2,3:
-        cout  << "Unknown rotation flag(" << rotflag << ")" << endl;
-    }
-}
-
-static bool isGoodHomography(cv::Mat H) {
-    const double det = H.at<double>(0, 0) * H.at<double>(1, 1) - H.at<double>(1, 0) * H.at<double>(0, 1);
-    if (det < 0)
-        return false;
-    
-    const double N1 = sqrt(H.at<double>(0, 0) * H.at<double>(0, 0) + H.at<double>(1, 0) * H.at<double>(1, 0));
-    if (N1 > 4 || N1 < 0.1)
-        return false;
-    
-    const double N2 = sqrt(H.at<double>(0, 1) * H.at<double>(0, 1) + H.at<double>(1, 1) * H.at<double>(1, 1));
-    if (N2 > 4 || N2 < 0.1)
-        return false;
-    
-    const double N3 = sqrt(H.at<double>(2, 0) * H.at<double>(2, 0) + H.at<double>(2, 1) * H.at<double>(2, 1));
-    if (N3 > 0.002)
-        return false;
-    
-    return true;
-}
-
-static bool getMatches(cv::Mat grayKey, cv::Mat grayImg, vector<cv::KeyPoint>kpKey, vector<cv::KeyPoint>kpImg, NSString* algFeat, NSString* algDesc, vector<cv::DMatch> &good_matches, std::vector<cv::Point2f> &src_match_points, std::vector<cv::Point2f> &dst_match_points) {
-    
-    cv::Mat desKey;
-    cv::Mat desImg;
-    try {
-        desKey = getDescriptors(grayKey, kpKey, algDesc);
-        desImg = getDescriptors(grayImg, kpImg, algDesc);
-    } catch (...) {
-        printf("Descriptor generation failed\n");
-//        [NSException raise:@"FrameTransformError"
-//                    format:@"Internal error - Failed to generate descriptors"];
-        return false;
-    }
-    
-    if ( desKey.empty()) {
-        printf("Key descriptors Empty\n");
-//        [NSException raise:@"FrameTransformError"
-//                    format:@"Internal error - Too few key descriptors"];
-        return false;
-    }
-    
-    if ( desImg.empty() ) {
-        printf("Image descriptors Empty\n");
-//        [NSException raise:@"FrameTransformError"
-//                    format:@"Internal error - Too few image descriptors"];
-        return false;
-    }
-    
-    if(desKey.type()!=CV_32F) {
-        desKey.convertTo(desKey, CV_32F);
-    }
-    
-    if(desImg.type()!=CV_32F) {
-        desImg.convertTo(desImg, CV_32F);
-    }
-    
-    cv::FlannBasedMatcher matcher;
-    vector< cv::DMatch > matches;
-    matcher.match(desImg, desKey, matches);
-    double max_dist = 0; double min_dist = 10000000;
-    
-    //-- Quick calculation of max and min distances between keypoints
-    for( int i = 0; i < desImg.rows; i++ ) {
-        double dist = matches[i].distance;
-        if( dist < min_dist ) min_dist = dist;
-        if( dist > max_dist ) max_dist = dist;
-    }
-    
-    
-    
-    //-- Draw only "good" matches (i.e. whose distance is less than 2*min_dist,
-    //-- or a small arbitary value ( 0.02 ) in the event that min_dist is very small)
-    //-- PS.- radiusMatch can also be used here.
-    
-    
-    //cout << "MIN DIST:" << min_dist <<endl;
-    
-    // If min dist is too high then the moving objects will affect the transformation
-    for( int i = 0; i < desImg.rows; i++ ) {
-        if( matches[i].distance <= max( GOOD_MIN_DIST_MULTIPLIER * min_dist, 0.02) ) {
-            good_matches.push_back( matches[i] );
-        }
-    }
-    
-    
-    
-    
-
-    //-- Localize the object
-    for( int i = 0; i < good_matches.size(); i++ ) {
-        //-- Get the keypoints from the good matches
-        src_match_points.push_back( kpImg[ good_matches[i].queryIdx ].pt );
-        dst_match_points.push_back( kpKey[ good_matches[i].trainIdx ].pt );
-    }
-    
-    if (good_matches.size() < 4) {
-        printf("Too few matches\n");
-//        [NSException raise:@"FrameTransformError"
-//                    format:@"Insufficient detail to process the photo. Try retaking this photo or the one it is being compared to"];
-        return false;
-    }
-    
-    return true;
-}
-    
-
+//
 // Feedback Matches
+//
 static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyImage, cv::Mat &outMat, NSString* algFeat, NSString* algDesc, bool showAll) {
     
     cv::Mat bgrMatKey;
@@ -459,47 +524,9 @@ static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage
     }
 }
 
-static void CannyThreshold(cv::Mat& src_gray, cv::Mat& detected_edges) {
-    int lowThreshold = 5;
-    int ratio = 3;
-    int kernel_size = 3;
-    /// Reduce noise with a kernel 3x3
-    cv::blur( src_gray, detected_edges, cv::Size(3,3) );
-    /// Canny detector
-    cv::Canny( detected_edges, detected_edges, lowThreshold, lowThreshold*ratio, kernel_size);
-}
-
-static void rotateMat(cv::Mat& src, double angle, cv::Mat& dst){
-    cv::Point2f ptCp(src.cols*0.5, src.rows*0.5);
-    cv::Mat M = cv::getRotationMatrix2D(ptCp, angle, 1.0);
-    cv::warpAffine(src, dst, M, cv::Size(src.rows, src.cols), cv::INTER_CUBIC); //Nearest is too rough,
-}
-
-
-static void SideBySide(cv::Mat &bgrLeft, cv::Mat &bgrRight, cv::Mat &bgrOutput) {
-    cv::resize(bgrRight, bgrRight, bgrLeft.size());
-    cv::Mat sideBySide;
-    cv::hconcat(bgrLeft, bgrRight, sideBySide);
-    cv::copyMakeBorder( sideBySide, bgrOutput, bgrLeft.rows/2, bgrLeft.rows/2, 0, 0, cv::BORDER_CONSTANT, cv::Scalar(0,0,0));
-}
-
-static void PictureInPicture(cv::Mat &bgrBig, cv::Mat &bgrSmall, cv::Mat &bgrOutput) {
-    cv::Mat bgrPip;
-    cv::resize(bgrSmall, bgrPip, cv::Size(), 0.3, 0.3);
-    cv::copyMakeBorder(bgrPip, bgrPip, 2,2,2,2, cv::BORDER_CONSTANT, cv::Scalar(10, 110, 250));
-    cv::resize(bgrBig, bgrOutput, cv::Size(), 1, 1);
-    
-    // Define roi area (it has small image dimensions).
-    cv::Rect roi = cv::Rect(bgrBig.cols - bgrPip.cols - 5, 5, bgrPip.cols, bgrPip.rows);
-    // Take a sub-view of the large image
-    cv::Mat subView = bgrOutput(roi);
-    // Copy contents of the small image to large
-    bgrPip.copyTo(subView);
-    
-}
-
-
+//
 // Feedback Pipeline End
+//
 static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyImage, cv::Mat &outMat, NSString* algFeat, NSString* algDesc, int showMode) {
     
     // No Keyimage i.e. this is the first image to be captured
@@ -606,10 +633,11 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
 }
 
 
-
-// ---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------
 // Functions available to SWIFT wrapper
 // ---------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------
 
 
 @implementation OpenCVWrapper
@@ -618,7 +646,6 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
 //
 // Feedback - Provide feedback based on algorithm and feedback type
 //
-
 + (nullable UIImage *)feedback:(nonnull UIImage *)image arg2:(nonnull NSString *)algFeat arg3:(nonnull NSString *)fb arg4:(bool)kpon arg5:(bool)kpadv arg6:(nullable UIImage *)keyImage arg7:(nonnull NSString *)algDesc arg8:(double)orbLimit {
     cv::initModule_nonfree();
    
@@ -698,8 +725,6 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
             outMat = bgrMat;
         }
         
-        
-        
         // Extra Keypoints
         if (kpon) {
             if (kpadv) {
@@ -726,7 +751,6 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
 //
 // Transform an image to match its predicesor
 //
-
 + (nonnull UIImage *)cvtColorBGR2GRAY:(nonnull UIImage *)image {
     cv::Mat bgrMat;
     UIImageToMat(image, bgrMat);
