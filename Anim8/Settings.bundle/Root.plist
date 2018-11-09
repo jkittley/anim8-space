@@ -24,7 +24,7 @@
 			<key>Key</key>
 			<string>allow_visualisation_options</string>
 			<key>DefaultValue</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -34,7 +34,7 @@
 			<key>Key</key>
 			<string>allow_algorithm_options</string>
 			<key>DefaultValue</key>
-			<true/>
+			<false/>
 		</dict>
 		<dict>
 			<key>Type</key>
