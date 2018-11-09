@@ -50,7 +50,7 @@
 			<key>Key</key>
 			<string>defaultAlgFeatures</string>
 			<key>DefaultValue</key>
-			<string>orb</string>
+			<string>sift</string>
 			<key>Titles</key>
 			<array>
 				<string>ORB</string>
@@ -72,7 +72,7 @@
 			<key>Key</key>
 			<string>defaultAlgDescriptors</string>
 			<key>DefaultValue</key>
-			<string>orb</string>
+			<string>sift</string>
 			<key>Titles</key>
 			<array>
 				<string>ORB</string>
