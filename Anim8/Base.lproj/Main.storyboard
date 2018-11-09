@@ -721,7 +721,7 @@
                             <constraint firstItem="zMc-66-aNH" firstAttribute="top" secondItem="MRX-YZ-t2W" secondAttribute="bottom" id="XL8-it-sQc"/>
                             <constraint firstItem="Z0c-VZ-AxH" firstAttribute="top" secondItem="MRX-YZ-t2W" secondAttribute="bottom" id="cNb-tF-1Ig"/>
                             <constraint firstItem="waZ-V4-5Hs" firstAttribute="trailing" secondItem="aWj-lD-oSA" secondAttribute="trailingMargin" constant="-300" id="cyJ-OC-lBx"/>
-                            <constraint firstItem="zMc-66-aNH" firstAttribute="leading" secondItem="Z0c-VZ-AxH" secondAttribute="trailing" constant="5" id="k2b-3j-mRH"/>
+                            <constraint firstAttribute="trailing" secondItem="Z0c-VZ-AxH" secondAttribute="trailing" constant="205" id="k2b-3j-mRH"/>
                         </constraints>
                     </view>
                     <toolbarItems>
