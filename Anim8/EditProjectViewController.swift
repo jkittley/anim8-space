@@ -155,6 +155,16 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     @IBAction func share(sender: UIBarButtonItem) {
+        
+        // Loading message
+        let alert = UIAlertController(title: nil, message: " Creating Animated GIF...", preferredStyle: .alert)
+        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
+        loadingIndicator.startAnimating();
+        alert.view.addSubview(loadingIndicator)
+        present(alert, animated: true, completion: nil)
+        
         var images = [UIImage]()
         let frames = project?.frames
         for frame in frames! {
@@ -168,13 +178,18 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         // Make gif
         createGIF(with: images, name: gifPath, frameDelay: (project?.playbackFrameRate)!)
         
+        dismiss(animated: false, completion: nil)
+        
         let pathURL = URL(fileURLWithPath: gifPath.path)
         do {
             let imageData: NSData = try NSData(contentsOf: pathURL)
-            let objectsToShare: [AnyObject] = [imageData]
-            let vc = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            
+            let vc = UIActivityViewController(activityItems: [imageData, "Checkout the Animation I just created with #Anim8!"], applicationActivities: nil)
+            
             vc.popoverPresentationController?.barButtonItem = sender
             self.present(vc, animated: true, completion: nil)
+            
+            
         } catch {
             let title = "Something went wrong!"
             let message = "The animated GIF creation failed, Please try again."
