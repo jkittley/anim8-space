@@ -256,7 +256,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Feedback" id="Xlf-tv-Rex" userLabel="Algorithms">
+                            <tableViewSection headerTitle="Feedback - Warning: These features are experimental and may not work as expected." id="Xlf-tv-Rex" userLabel="Algorithms">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="IMQ-Cv-2r6">
                                         <rect key="frame" x="0.0" y="355.5" width="1024" height="44"/>
@@ -322,7 +322,7 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
-                            <tableViewSection headerTitle="Visualisations" id="pGh-Xz-jT9">
+                            <tableViewSection headerTitle="Visualisations  - Warning: These features are experimental and may not work as expected." id="pGh-Xz-jT9">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="hqv-iB-qh7">
                                         <rect key="frame" x="0.0" y="499.5" width="1024" height="44"/>
