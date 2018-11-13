@@ -1,0 +1,18 @@
+/**
+* 33. App Stats
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-stats {
+	& .stat {
+		margin-bottom: 0;
+	}
+	& .ui-icon-block {
+		margin-bottom: 0;
+		@media (max-width: 739px) {
+			&:nth-child(1), &:nth-child(2) {
+				margin-bottom: 2rem;
+			}
+		}
+	}
+}

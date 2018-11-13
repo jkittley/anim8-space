@@ -1,0 +1,146 @@
+/**
+* 21. Icon Blocks
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-icon-blocks {
+    list-style: none;
+	& .ui-icon-block {
+		position: relative;
+		margin-bottom: 2rem;
+		& p {
+			display: inline-block;
+			max-width: 360px;
+			margin-bottom: 0;
+		}
+		// No Margin On Medium Screens And Up
+		&.mb-0-md-up {
+			@include breakpoint(md) {
+				margin-bottom: 0;
+			}
+		}
+		&.mb-0-md-dwn {
+			@media (min-width: 739px) {
+				margin-bottom: 0;
+			}
+		}
+		// Max Widths On <p>
+		&.col-6 {
+			& p {
+				max-width: 260px;
+				@include breakpoint(md) {
+					max-width: 360px;
+				}
+			}
+		}
+        & .btn-link{
+            margin-top: 1rem;
+        }
+	}
+	// Block Icons
+	&  .ui-icon-block > .icon {
+		font-size: 1.2rem;
+		color: $primary;
+		// Circle Icons
+		&.icon-circle {
+			width: 4.8rem;
+			height: 4.8rem;
+			line-height: 4.8rem;
+			border-radius: 100%;
+			background-color: #FFF;
+			@include shadow(xl);
+			@include breakpoint(sm) {
+				width: 5rem;
+				height: 5rem;
+				line-height: 5rem;
+			}
+			@include breakpoint(md) {
+				width: 5.2rem;
+				height: 5.2rem;
+				line-height: 5.2rem;
+			}
+		}
+	}
+	// Horizontal Blocks
+	&.ui-blocks-h {
+		text-align: center;
+		&  .ui-icon-block > .icon {
+			display: inline-block;
+			margin-bottom: 1.25rem;
+		}
+	}
+	// Vertical Blocks
+	&.ui-blocks-v {
+		padding-left: 2rem;
+		&  .ui-icon-block > .icon {
+			position: absolute;
+			left: -2rem;
+			top: .25rem;
+		}
+        // Center Align on Medium Screen
+        &.center-on-md{
+            @media (max-width:991px){
+                text-align: left;
+                max-width: 600px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+	}
+	// Medium Icons
+	&.icons-md {
+		&  .ui-icon-block > .icon {
+			font-size: 2rem;
+			@include breakpoint(sm) {
+				font-size: 2.1rem;
+			}
+			@include breakpoint(md) {
+				font-size: 2.2rem;
+			}
+		}
+		// Vertical Blocks
+		&.ui-blocks-v {
+			padding-left: 4rem;
+			& .ui-icon-block > .icon {
+				left: -4rem;
+				top: .5rem;
+			}
+		}
+	}
+	// Large Icons
+	&.icons-lg {
+		& .ui-icon-block > .icon {
+			font-size: 2.3rem;
+			@include breakpoint(sm) {
+				font-size: 2.5rem;
+			}
+			@include breakpoint(md) {
+				font-size: 2.8rem;
+			}
+		}
+		// Vertical Blocks
+		&.ui-blocks-v {
+			padding-left: 5rem;
+			& .ui-icon-block > .icon {
+				left: -5rem;
+				top: .5rem;
+			}
+		}
+	}
+    
+    // Small Vertical Blocks
+	&.ui-blocks-v.icons-sm {
+		padding-left: 2rem;
+        & .ui-icon-block{
+            & p{
+                max-width: 100%;
+            }
+            & > .icon {
+                position: absolute;
+                left: -2rem;
+                top: .125rem;
+                font-size: 1.25rem;
+            }
+		}
+	}
+}

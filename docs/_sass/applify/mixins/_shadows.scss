@@ -1,0 +1,1 @@
+// Shadows@mixin shadow($size){	@each $class, $shadow in $shadows {		@if($class == $size){			box-shadow: $shadow;		}	}}

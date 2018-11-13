@@ -1,0 +1,147 @@
+
+.app {
+  width: 100%;
+  position: relative;
+  border: 5px solid #474747;
+  -moz-border-radius: 35px;
+  -webkit-border-radius: 35px;
+  border-radius: 35px; /* future proofing */
+  -khtml-border-radius: 35px; /* for old Konqueror browsers */
+  margin-top: 30px;
+  margin-bottom: -250px;
+}
+
+@media screen and (max-width: 1199px) { 
+  .app { margin-bottom: -190px; }
+}
+@media screen and (max-width: 991px) { 
+  .app {margin-bottom: -150px; }
+}
+@media screen and (max-width: 767px) { 
+  .app {margin-bottom: -130px; }
+}
+@media screen and (max-width: 575px) { 
+  .app {margin-bottom: -100px; }
+}
+
+.app:before {
+  content: "";
+  width: 10%;
+  height: 10px;
+  top: -10px;
+  left: 10%;
+  position: absolute;
+  background-color: #474747;
+}
+
+.app-frame {
+  width: 100%;
+  position: relative;
+  border: 30px solid black;
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;
+  border-radius: 30px; /* future proofing */
+  -khtml-border-radius: 30px; /* for old Konqueror browsers */
+  background-color: black;
+}
+
+.app-header {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 6%;
+  background-color: #FF7700;
+  border-bottom: 2px solid black;
+  background-image: url(../assets/img/app/navbar.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.app-header img {
+  position: relative;
+  padding: 0;
+  margin: 5px auto;
+}
+
+.app-preview {
+  position: absolute;
+  left: 0;
+  width: 80%;
+  top: 6%;
+  bottom: 6%;
+  background-size: cover;
+}
+
+.app-preview div {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-size: cover;
+}
+
+.app-thumbs {
+  position: absolute;
+  left: 80%;
+  top: 6%;
+  bottom: 6%;
+  width: 20%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  padding: 0;
+  margin: 0;
+  border-left: 3px solid black;
+}
+
+.app-thumbs div.thumb {
+  position: relative;
+  float: left;
+  width: 100%;
+  margin: 0;
+  padding:0;
+  padding-bottom: 70%;
+}
+
+.app-thumbs div.thumb.active img {
+  border-left: 8px solid #FF7700;
+}
+
+.app-thumbs div.thumb img {
+  width: 100%;
+  margin: 0;
+  padding:0;
+}
+
+.app-footer {
+  position: absolute;
+  width: 100%;
+  height: 6%;
+  bottom: 0;
+  background-color: #474747;
+  margin: 0;
+  padding: 6px;
+  font-size: 18px;
+}
+
+.app-footer a {
+  position: relative;
+}
+
+@media screen and (max-width: 1199px) { 
+  .app-footer { font-size: 16px; padding: 6px; } 
+}
+@media screen and (max-width: 991px) { 
+  .app-footer { font-size: 12px; padding: 4px; } 
+}
+@media screen and (max-width: 767px) { 
+  .app-footer { font-size: 10px; padding: 2px;} 
+}
+@media screen and (max-width: 575px) { 
+  .app-footer { font-size: 8px; padding: 2px; } 
+}
+
+.app-footer a.disabled {
+  color: #343434;
+}

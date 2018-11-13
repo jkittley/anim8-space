@@ -1,0 +1,117 @@
+<!-- Footer -->
+<footer class="ui-footer bg-orange">
+		<div class="container pt-5 pb-5  align-content-center">
+			<div class="row justify-content-center align-content-center">
+
+				<div class="col-md-2 col-sm-6 footer-about footer-col center-on-sm">
+					<img src="assets/img/logo/anim8-logo-white.png" alt="Anim8"/>
+				</div>
+
+				<div class="col-md-8 col-sm-5 col-md-6 footer-about footer-col center-on-sm">
+					<p class="mt-1 p-2 text-center">
+							
+							<a href="{% if page.url == "/" %}#{% else %}/#features{% endif %}" {% if page.url == "/" %}data-scrollto="features"{% endif %}>Features </a>
+							|
+							<a href="{% if page.url == "/" %}#{% else %}/#how-to{% endif %}" {% if page.url == "/" %}data-scrollto="how-to"{% endif %}>Getting Started</a>
+							|
+							<a href="{% if page.url == "/" %}#{% else %}/#showcase{% endif %}" {% if page.url == "/" %}data-scrollto="showcase"{% endif %}>User Showcase</a>
+
+					</p>
+				</div>
+
+				<div class="col-6 col-sm-3 col-md-2 footer-col text-right center-on-sm ">
+					<a href="http://kittley.com" target="_blank" title="Kittley Ltd">
+						<img src="assets/img/logo/kittley.png" class="w-100" />
+					</a>
+				</div>
+
+			</div><!-- .row -->
+		</div><!-- .container -->
+
+		<!-- Footer Copyright -->
+		<div class="footer-copyright ui-gradient-dark">
+			<div class="container">
+				<div class="row">
+					<!-- Copyright -->
+					<div class="col-sm-6 center-on-sm">
+						<p>
+							&copy; 2018 <a href="http://kittley.com" target="_blank" title="Kittley Ltd">Kittley Ltd</a>
+						</p>
+					</div>
+					<!-- Social Icons -->
+					<div class="col-sm-6 text-right">
+						<ul class="footer-nav">
+							<li>
+								<a href="privacy.html">
+									Privacy Policy
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div><!-- .container -->
+		</div><!-- .footer-copyright -->
+	</footer><!-- .ui-footer -->
+
+	<!-- Scripts -->
+	<script src="assets/js/libs/jquery/jquery-3.2.1.min.js"></script>
+	<script src="assets/js/libs/waypoints/jquery.waypoints.min.js"></script>
+	<script src="assets/js/libs/slider-pro/jquery.sliderPro.min.js"></script>
+	<script src="assets/js/libs/owl.carousel/owl.carousel.min.js"></script>
+	<script src="assets/js/libs/prism/prism.js"></script>
+
+	<script src="assets/js/applify/ui-map.js"></script>
+	<script src="assets/js/libs/form-validator/form-validator.min.js"></script>
+	<script src="assets/js/libs/bootstrap.js"></script>
+	<script src="assets/js/applify/build/applify.js"></script>
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js"></script>
+	<script src="assets/js/app.js"></script>
+
+
+<!-- <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">{{ site.title | escape }}</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li>
+            {% if site.author %}
+              {{ site.author | escape }}
+            {% else %}
+              {{ site.title | escape }}
+            {% endif %}
+            </li>
+            {% if site.email %}
+            <li><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+            {% endif %}
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+        <ul class="social-media-list">
+          {% if site.github_username %}
+          <li>
+            {% include icon-github.html username=site.github_username %}
+          </li>
+          {% endif %}
+
+          {% if site.twitter_username %}
+          <li>
+            {% include icon-twitter.html username=site.twitter_username %}
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="footer-col footer-col-3">
+        <p>{{ site.description | escape }}</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer> -->

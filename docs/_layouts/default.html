@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+  {% include head.html %}
+
+  <body class="ui-transparent-nav" data-fade_in="on-load">
+
+    {% include header.html %}
+
+    <div id="verytop" class="main" role="main">
+        {{ content }}
+    </div>
+    
+    {% include footer.html %}
+
+  </body>
+
+</html>

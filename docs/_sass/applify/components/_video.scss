@@ -1,0 +1,67 @@
+/**
+* 27. Video
+* ----------------------------------------------------------------------- *
+*/
+
+.video-player {
+	position: relative;
+	padding-bottom: 56.245%;
+	height: 0;
+	border-radius: $border-radius;
+	background-color: $gray-base;
+	& iframe {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 1;
+	}
+}
+
+.ui-video-toggle,
+.section .section-heading .ui-video-toggle{
+    display: inline-block;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: .95rem;
+    cursor: pointer;
+    & span{
+        line-height: 40px;
+        display: inline-block;
+        vertical-align: top ;
+    }
+    & .icon{
+        font-size: 18px;
+        height: 40px;
+        width: 40px;
+        line-height: 40px;
+        border-radius: 100%;
+        padding: 0 .8rem;
+        margin-right: .5rem;
+        margin-bottom: 0;
+        @include shadow(xl);
+        &::before{
+            display: inline-block;
+            margin-left: 2px;
+        }
+    }
+    
+    &.video-toggle-lg{
+        & .icon{
+            height: 52px;
+            width: 52px;
+            line-height: 54px;
+            font-size: 26px;
+        }
+    }
+}
+
+.video-modal {
+	& .dialog {
+		overflow: hidden;
+	}
+	& .close {
+		color: #FFF;
+	}
+}

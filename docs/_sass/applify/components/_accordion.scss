@@ -1,0 +1,59 @@
+/**
+* 14 Accordion
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-accordion-panel {
+	margin-bottom: 2rem;
+}
+.ui-accordion {
+	margin-bottom: 1rem;
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+	& .toggle {
+		font-family: $headings-font-family;
+		position: relative;
+		margin-bottom: 0;
+		margin-top: 0;
+		padding: 1rem 1.5rem;
+		font-size: 1.1rem;
+		font-weight: $headings-font-weight;
+		cursor: pointer;
+		@include transition( color .25s ease-out);
+		&:hover {
+			color: $indigo;
+		}
+		&::after {
+			font-family: 'FontAwesome';
+			content: '\f0d7';
+			position: absolute;
+			top: 1.15rem;
+			font-size: 20px;
+			line-height: 16px;
+			right: 1.5rem;
+			color: $gray-light;
+			@include transition( transform .25s ease-out, color .25s ease-out);
+		}
+		& .icon {
+			font-size: 1.2rem;
+			margin-right: .25rem;
+			line-height: .5;
+		}
+	}
+	& .body {
+		display: none;
+		padding: 0 1.5rem 1rem 1.5rem;
+		& p {
+			margin-bottom: .25rem;
+		}
+	}
+	&.active {
+		& .toggle {
+			color: $indigo;
+			&::after {
+				color: $indigo;
+				@include rotate(-180);
+			}
+		}
+	}
+}

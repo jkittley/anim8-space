@@ -1,0 +1,431 @@
+/**
+* 20. Hero
+* ----------------------------------------------------------------------- *
+*/
+.ui-hero {
+	position: relative;
+	&.hero-sm {
+		padding: 4rem 0 6rem 0;
+		@include media-breakpoint-up(lg) {
+			padding: 5rem 0 7rem 0;
+		}
+		@include media-breakpoint-up(xl) {
+			padding: 5rem 0 7rem 0;
+		}
+		@include media-breakpoint-up(xxl) {
+			padding: 6rem 0 8rem 0;
+		}
+	} 
+    &.page-hero{
+        & .heading{
+            font-size: 2.2rem;
+            margin-bottom: 0;
+            max-width: 100%;
+			@include media-breakpoint-down(sm) {
+                margin-bottom: 2rem;
+            }
+			@include media-breakpoint-up(sm) {
+                font-size: 2.4rem;
+            }
+            @include media-breakpoint-up(md) {
+                font-size: 2.5rem;
+            }
+            @include media-breakpoint-up(xl) {
+                font-size: 2.6rem;
+            }
+        }
+		& p{
+			@include media-breakpoint-up(md){
+				margin-top: 2rem;
+			}
+		}
+    }
+	&.hero-lg {
+		padding: 2rem 0;
+		@include media-breakpoint-up(sm) {
+			padding: 2rem 0;
+		}
+		@include media-breakpoint-up(md) {
+			padding: 2rem 0;
+		}
+		@include media-breakpoint-up(xl) {
+			padding: 8rem 0;
+		}
+		& .heading, & .paragraph {
+			@include media-breakpoint-down(sm){
+				margin-left: auto;
+				margin-right: auto;
+				text-align: center;
+			}
+			@include media-breakpoint-up(md) {
+				max-width: 500px;
+			}
+		}
+	}
+	& .container {
+		padding-top: 50px;
+		position: relative;
+		z-index: 2;
+		@include media-breakpoint-up(sm) {
+			padding-top: $navbar-height;
+		}
+	}
+	& .heading, & .paragraph {
+		max-width: 500px;
+	}
+	&.hero-center {
+		text-align: center;
+		margin-bottom: 3rem;
+		& .heading, & .paragraph {
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 800px;
+		}
+		& .actions{
+			text-align: center;
+		}
+		& img {
+			margin-bottom: -14rem;
+			@include media-breakpoint-up(md){
+				margin-top: 4rem;
+			}
+		}
+        & form {
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 520px;
+            & .input-group{
+                border-radius: 50px;
+                @include shadow(xl);
+            }
+		}
+        & .ui-video-toggle{
+            @include flex_justify_center();
+            margin-left: auto;
+			margin-right: auto;
+        }
+	}
+	& .heading {
+		margin-bottom: 1rem;
+		font-size: 2.6rem;
+		@include media-breakpoint-up(sm) {
+			margin-bottom: 1rem;
+			font-size: 3rem;
+		}
+		@include media-breakpoint-up(md) {
+			margin-bottom: 1.25rem;
+		}
+		@include media-breakpoint-up(lg) {
+			margin-bottom: 1.25rem;
+		}
+	}
+	& .paragraph {
+		margin-bottom: 0;
+		font-size: 1.1rem;
+	}
+	& .actions {
+		margin-top: 1.75rem;
+		text-align: center;
+		margin-bottom: 3rem;
+		@include media-breakpoint-up(sm) {
+			margin-top: 1.75rem;
+		}
+		@include media-breakpoint-up(md) {
+			margin-top: 2rem;
+			margin-bottom: 0;
+			text-align: left;
+		}
+		@include media-breakpoint-up(lg) {
+			margin-top: 2rem;
+		}
+	}
+	& img {
+		display: block;
+		@media (max-width: 739px) {
+			margin-left: auto;
+			margin-right: auto;
+		}
+	}
+	&.hero-bg{
+		background-position: bottom center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		&::before{
+			content: '';
+			position: absolute;
+			top:0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 1;
+			opacity: 0.75;
+		}
+	}
+    &[class^="hero-svg-layer-"], 
+    &[class*=" hero-svg-layer-"]{
+        &::before{
+            content: '';
+            position: absolute;
+			top:0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 1;
+            
+            background-size: contain;
+            background-repeat: no-repeat;
+            @include media-breakpoint-up(lg) {
+                background-size: 1300px;
+            }
+            @include media-breakpoint-up(xl) {
+                background-size: 1600px;
+            }
+        }
+    }
+    &.hero-svg-layer-1{
+        &::before{
+            background-size: cover;
+            background-image: url('../assets/img/svg-layers/svg-layer-1.svg');
+            background-position: center center;
+            opacity: 0.4;
+        }
+    }
+    &.hero-svg-layer-2{
+        &::before{
+            left: -10%;
+            right: -10%;
+            background-image: url('../assets/img/svg-layers/svg-layer-2.svg');
+            background-position: top center;
+            opacity: 0.4;
+        }
+    }
+    &.hero-svg-layer-3{
+        &::before{
+            background-size: 1000px;
+            background-repeat: repeat;
+            background-image: url('../assets/img/svg-layers/svg-layer-3.svg');
+            background-position: center center;
+            opacity: 0.3;
+        }
+    }
+    &.hero-svg-layer-4{
+        &::before{
+            left: 10%;
+            right: 10%;
+            background-size: contain;
+            background-image: url('../assets/img/svg-layers/svg-layer-4.svg?v-10');
+            background-position: center center;
+            @include media-breakpoint-up(lg) {
+                background-size: 1200px;
+            }
+        }
+    }
+    
+    & form .input-group {
+        & input.form-control{
+            padding: 11px 1rem 11px 1.5rem;
+        }
+        & .btn{
+            line-height: 41px;
+        }
+    }
+    
+    & .hero-price{
+        font-family: $headings-font-family;
+        font-weight: 700;
+        font-size: 1.6rem;
+        vertical-align: middle;
+    }
+}
+.ui-hero.ui-hero-slider {
+	padding: 2rem 0 3rem 0;
+	@include media-breakpoint-up(sm) {
+		padding: 2rem 0 3rem 0;
+	}
+	@include media-breakpoint-up(md) {
+		padding: 4rem 0 3rem 0;
+	}
+	@include media-breakpoint-up(xl) {
+		padding: 5rem 0;
+	}
+	@include media-breakpoint-up(xxl) {
+		padding: 8rem 0;
+	}
+	& .sp-slides {
+        position: relative;
+        z-index: 1;    
+		opacity: 1;
+		@include transition(opacity .35s ease-out);
+		&.fade {
+			opacity: 0;
+		}
+	}
+	& .sp-buttons {
+		bottom: 1rem;
+        z-index: 2;
+		@include media-breakpoint-up(md) {
+			bottom: 1rem;
+		}
+		@include media-breakpoint-up(xl) {
+			bottom: 4rem;
+		}
+	}
+    &.ui-waves .sp-buttons {
+		bottom: 4rem;
+		@include media-breakpoint-up(md) {
+			bottom: 6rem;
+		}
+		@include media-breakpoint-up(xl) {
+			bottom: 8rem;
+		}
+	}
+} 
+
+.ui-hero.ui-waves {
+	margin: 0 0 -2rem 0;
+	padding: 4rem 0 6rem 0;
+	@include media-breakpoint-up(sm) {
+		padding: 5rem 0 8rem 0;
+	}
+	@include media-breakpoint-up(md) {
+		padding: 5rem 0 10rem 0;
+	}
+	@include media-breakpoint-up(xl) {
+		padding: 5rem 0 13rem 0;
+	}
+	@include media-breakpoint-up(xxl) {
+		padding: 8rem 0 14rem 0;
+	}
+	&::after {
+		display: block;
+		content: '';
+		height: 100%;
+		background: url(../assets/img/svg-layers/waves.svg) bottom no-repeat;
+		background-size: contain;
+		position: absolute;
+		bottom: -1px;
+		left: -20%;
+		right: -20%;
+		z-index: 1;
+		@include media-breakpoint-up(md) {
+			left: -1px;
+			right: -1px;
+		}
+	}
+	&.hero-center {
+		& img {
+			margin-bottom: -14rem;
+		}
+
+		@include media-breakpoint-down(sm){
+			& img {
+				margin-bottom: -6rem;
+			}
+		}
+	}
+}
+
+.ui-hero.ui-curve {
+	padding: 3rem 0 2rem 0;
+	@include media-breakpoint-up(md) {
+		padding: 3rem 0 6rem 0;
+	}
+	@include media-breakpoint-up(xl) {
+		padding: 7rem 0 8rem 0;
+	}
+	&::after {
+		display: block;
+		content: '';
+		height: 100%;
+		background: url(../assets/img/svg-layers/curve-layer.svg) bottom no-repeat;
+		background-size: contain;
+		position: absolute;
+		bottom: -3px;
+		left: -1px;
+		right: -1px;
+		z-index: 1;
+		@include media-breakpoint-up(lg) {
+			left: -10%;
+			right: -10%;
+		}
+		@include media-breakpoint-up(xl) {
+			left: -20%;
+			right: -20%;
+		}
+		@media (min-width: 1500px) {
+			left: -30%;
+			right: -30%;
+		}
+	}
+	&.hero-center {
+		padding: 3rem 0 6rem 0;
+		@include media-breakpoint-up(md) {
+			padding: 3rem 0 10rem 0;
+		}
+		@include media-breakpoint-up(xl) {
+			padding: 7rem 0 14rem 0;
+		}
+		@include media-breakpoint-down(sm){
+			margin-bottom: 2rem;
+		}
+	}
+}
+
+.ui-hero.ui-tilt {
+	margin: 0 0 -8rem 0;
+	padding: 2rem 0 4rem 0;
+	@include media-breakpoint-up(sm) {
+		padding: 3rem 0 5rem 0;
+	}
+	@include media-breakpoint-up(md) {
+		padding: 4rem 0 6rem 0;
+	}
+	@include media-breakpoint-up(xl) {
+		padding: 6rem 0 12rem 0;
+	}
+	@include media-breakpoint-up(xxl) {
+		padding: 8rem 0 16rem 0;
+	}
+	&::after {
+		display: block;
+		content: '';
+		position: absolute;
+		left: -8rem;
+		right: -8rem;
+		height: 16rem;
+		background-color: #FFF;
+		@include rotate(-10);
+		z-index: 1;
+		@include media-breakpoint-up(md) {
+			@include rotate(-8.5);
+		}
+		@include media-breakpoint-up(lg) {
+			@include rotate(-5.5);
+		}
+	}
+	&::after {
+		bottom: -8rem;
+	}
+	
+	&.hero-center {
+		margin-bottom: 0;
+		& img {
+			margin-bottom: -6rem;
+			@include media-breakpoint-up(md) {
+				margin-bottom: -8rem;
+			}
+			@include media-breakpoint-up(xl) {
+				margin-bottom: -16rem;
+			}
+		}
+	}
+}
+
+.ui-hero.ui-gradient-animator {
+	background: linear-gradient(45deg, $pink, $purple, $indigo, $purple, $red, $orange, $red, $indigo, $blue);
+	background-size: 450% 100%;
+	@include animation-name('animate_gradient');
+	@include animation-duration(35s);
+	@include animation-timing-function(linear);
+	@include animation-iteration-count(infinite);
+}

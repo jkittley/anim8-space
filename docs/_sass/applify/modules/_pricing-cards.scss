@@ -1,0 +1,113 @@
+/**
+* 37. Pricing Cards
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-pricing-cards {
+	max-width: 1000px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.ui-pricing-card {
+	& .ui-card {
+		// Card Header
+		& .card-header {
+			// Heading
+			& .heading {
+				margin-bottom: .75rem;
+			}
+			// Price
+			& .price {
+				font-family: $headings-font-family;
+				margin-bottom: 1rem;
+				& .curency, & .period {
+					font-size: 1.1rem;
+					font-weight: 600;
+				}
+				& .price {
+					font-size: $font-size-h1;
+					line-height: 1;
+					font-weight: 700;
+				}
+			}
+		}
+		// Features
+		& ul {
+			list-style: none;
+			padding-left: 0;
+			margin-top: .75rem;
+			margin-bottom: 1.5rem;
+			& li {
+				line-height: 2;
+				font-weight: 600;
+			}
+		}
+	}
+}
+
+.ui-pricing-footer {
+	text-align: center;
+	margin-top: 6rem;
+	& .paragraph {
+		display: inline-block;
+		max-width: 800px;
+	}
+}
+
+.ui-pricing-cards.owl-carousel {
+	width: 250px;
+	margin: 0 auto;
+	& .owl-stage-outer {
+		overflow: visible;
+	}
+	// Owl Items
+	& .owl-stage>div {
+		// Index
+		&:nth-child(1), &:nth-child(3) {
+			z-index: 1;
+		}
+		&:nth-child(2) {
+			z-index: 2;
+		}
+		// Overlap Cards
+		&:nth-child(1) {
+			& .ui-card {
+				margin-right: -3rem;
+				margin-left: 3rem;
+			}
+		}
+		&:nth-child(3) {
+			& .ui-card {
+				margin-right: 3rem;
+				margin-left: -3rem;
+			}
+		}
+		// Taller Center Card
+		&:nth-child(2) {
+			& .ui-card {
+				margin-top: -1rem;
+				& .card-header {
+					padding-top: 3rem;
+				}
+				& .card-body {
+					padding-bottom: 3rem;
+				}
+			}
+		}
+	}
+	& .owl-dots {
+		margin-top: 3rem;
+	}
+	@include breakpoint(sm) {
+		width: 333.3333333px;
+	}
+	@include breakpoint(md) {
+		margin: 0 -5%;
+		width: 110%;
+	}
+	@media (min-width: 1200px) {
+		margin: 0 auto;
+		width: 1000px;
+	}
+}

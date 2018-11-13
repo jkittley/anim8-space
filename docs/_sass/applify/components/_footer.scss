@@ -1,0 +1,206 @@
+/**
+* 19. Footer
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-footer {
+	position: relative;
+    z-index: 2;
+	& .footer-bg {
+		padding: 8rem 0;
+	}
+	& .heading, & .paragraph {
+		margin-top: 0;
+	}
+	& .heading {
+		margin-bottom: 1rem;
+	}
+	& .paragraph {
+		margin-bottom: 0;
+	}
+	& .actions {
+		margin-top: 2.25rem;
+		&.social-links {
+			margin-top: 4rem;
+			margin-bottom: 4rem;
+		}
+	}
+    & .footer-col{
+        @media (max-width:739px){
+            margin-bottom: 4rem;
+        }
+    }
+	& .footer-copyright {
+		padding: 1.25rem 0;
+		& p {
+			font-size: .9rem;
+			margin-bottom: 0;
+			line-height: 40px;
+		}
+        & ul{
+            &.footer-nav{
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                align-items: center;
+                height: 40px;
+                @media (max-width:739px){
+                    justify-content: center;
+                }
+                & li{
+                    margin-bottom: 0;
+                    margin-left: 1rem;
+                    &:nth-child(1){
+                        margin-left: 0;
+                    }
+                }
+            }
+        }
+	}
+	& .download-section {
+		padding-top: 4rem
+	}
+	// Smaller Screens
+	@include breakpoint(sm) {
+		& .heading {
+			margin-bottom: 1.25rem;
+		}
+	}
+	// Medium Screens
+	@include breakpoint(md) {
+		& .heading {
+			margin-bottom: 1.5rem;
+		}
+	}
+	// Larger Screens
+	@include breakpoint(lg) {
+		& .heading {
+			margin-bottom: 1.75rem;
+		}
+	}
+    
+    & .footer-heading{
+        text-transform: uppercase;
+    }
+    
+    & ul{
+        list-style: none;
+        margin-bottom: 0;
+        padding-left: 0;
+        &.footer-nav{
+            & li{
+                margin-bottom: .35rem;
+                & a{
+                    display: block;
+                    font-family: $headings-font-family;
+                    font-weight: 600;
+                    font-size: .95rem;
+                }
+            }
+        }
+    }
+    
+    // Footer About Us
+    .footer-about{
+		& img{
+			height: 40px;
+			width: auto;
+			margin-bottom: .15rem;
+		}
+        & p{
+            font-size: .9rem;
+        }
+    }
+}
+.ui-footer.subscribe-footer {
+	padding-top: 6rem;
+	& .form-card {
+		max-width: 600px;
+		margin: -14rem auto 2rem auto;
+		text-align: center;
+		& .heading {
+			margin-bottom: 1rem;
+		}
+	}
+}
+.input-group {
+    & input.form-control {
+        padding: 8px 1rem 8px 1.5rem;
+        border-top-left-radius: 2rem;
+        border-bottom-left-radius: 2rem;
+    }
+    & .btn {
+        padding: 0 1rem;
+        line-height: 35px;
+    }
+}
+.ui-footer.contact-footer {
+	padding-top: 6rem;
+	// Footer Form Cards
+	& .form-card {
+		margin: 0 0 2rem 0;
+		& .heading {
+			margin-bottom: 0;
+		}
+		&.form-card-1 {
+			margin: -14rem 0 2rem 0;
+		}
+		@include breakpoint(md) {
+			margin: -14rem 0 2rem 0;
+		}
+		& .ui-icon-block {
+			margin-bottom: 1rem;
+		}
+	}
+}
+
+.ui-footer.maps-footer, .ui-footer.contact-footer.maps-footer {
+	margin-top: 0;
+	padding-top: 0;
+}
+// Gmaps
+.ui-map {
+    transform: translateZ(0px);
+    height: 440px;
+}
+
+.ui-footer.ui-waves {
+	margin-top: -2rem;
+	&.subscribe-footer, &.contact-footer {
+		padding-top: 0;
+	}
+	& .container {
+		position: relative;
+		z-index: 2;
+	}
+	& .footer-bg {
+		padding: 16rem 0 8rem 0;
+	}
+	&::after {
+		display: block;
+		content: '';
+		height: 100%;
+		background: url(../assets/img/svg-layers/waves2.svg) top no-repeat;
+		background-size: contain;
+		position: absolute;
+		top: -5px;
+		left: -1px;
+		right: -1px;
+		z-index: 1;
+	}
+}
+
+.ui-footer.mini-footer {
+	& .footer-bg {
+		padding: 2rem 0;
+	}
+	& .footer-logo {
+		& img {
+			height: 40px;
+			width: auto;
+		}
+	}
+	& .footer-copyright {
+		text-align: right;
+	}
+}

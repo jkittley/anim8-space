@@ -1,0 +1,137 @@
+/**
+* 42. Api Docs
+* ----------------------------------------------------------------------- *
+*/
+
+#ui-api-docs{
+    
+    & p{
+        font-size: 15px;
+        & a{
+            text-decoration: underline;
+        }
+    }
+    
+    // Sections
+    & .docs-section{
+        margin-top: 3rem;
+        padding-bottom: 3rem;
+        border-bottom: 2px solid $gray-lighter;
+        &:nth-child(1){
+            margin-top: 0;
+        }
+        
+        & .row{
+            margin-left: -.5rem;
+            margin-right: -.5rem;
+        }
+        & div[class^="col-"], 
+        & div[class*=" col-"]{
+            padding-left: .5rem;
+            padding-right: .5rem;
+        }
+        
+        & .actions{   
+            & a{
+                margin-right: 1rem;
+                &:nth-last-child(1){
+                    margin-right: 0;
+                }
+            }
+        }
+        
+        & pre{
+            background-color: $gray-lighter;
+            & .line-numbers-rows{
+                background-color: lighten($gray-light, 25%);
+            }
+        }
+    }
+    
+    // Sidebar
+    & .docs-sidebar{
+        & .heading{
+            margin-bottom: 1rem;
+            font-size: 14px;
+            color: $gray;
+            text-transform: uppercase;
+        }
+        & ul{
+            list-style: none;
+            margin-bottom: 2rem;
+            padding-left: 0;
+            & li{
+                margin-bottom: .5rem;
+                & a{
+                    color: $gray-darker;
+                    font-family: $headings-font-family;
+                    font-weight: 600;
+                    &:hover{
+                        color: $indigo;
+                    }
+                }
+                & i{
+                    display: inline-block;
+                    margin-right: .25rem;
+                }
+            }
+        }
+    }
+    
+    // Action Cards
+    .doc-action-cards{
+        & div[class^="col-"], 
+        & div[class*=" col-"]{
+            margin-bottom: 1rem;
+        }
+        & .row:nth-child(2){
+            & div[class^="col-"], 
+            & div[class*=" col-"]{
+                @include breakpoint(sm){
+                    margin-bottom: 0rem;
+                }
+            }
+        }
+        
+        & .ui-action-card{
+            background-color: $gray-lighter;
+            transition: background-color .35s ease-out;
+            &:hover{
+                background-color: lighten($gray-light, 25%);
+            }
+        }
+        
+    }
+   
+    & .docs-notice{
+        padding: 1.5rem;
+        background-color: rgba($red, 0.2);
+    }
+    
+    
+    & .docs-article-links{
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 0;
+        
+        & li{
+            display: block;
+            //border: 1px solid $indigo;
+            padding: .25rem 1rem;
+            margin-bottom: .5rem;
+            border-radius: .25rem;
+            @include shadow(sm);
+            
+            & a{
+                display: block;
+                font-family: $headings-font-family;
+                font-weight: 600;
+            }
+            & i{
+                display: block;
+                line-height: 22px;
+                float: right; 
+            }
+        }
+    }
+}

@@ -1,0 +1,90 @@
+/**
+* 39. Testimonials
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-testimonials {
+	// Carousel Track
+	& .owl-stage-outer {
+		margin: 0 -8px;
+		padding-left: 8px;
+		padding-top: .35rem;
+	}
+	// Testimonial Item
+	& .item {
+		// Testimonial User
+		& .user {
+			padding: 2rem 0;
+			padding-left: .25rem;
+			@include clearfix();
+			// User Avatar
+			& .avatar {
+				width: 60px;
+				height: 60px;
+				border-radius: 100%;
+				margin-right: 1rem;
+				float: left;
+				overflow: hidden;
+				// Avatar Img
+				& img {
+					width: 100%;
+					max-width: 100%;
+					height: auto;
+				}
+			}
+			// User Info
+			& .info {
+				float: left;
+				& .heading {
+					line-height: 1;
+					margin-bottom: .25rem;
+					margin-top: .25rem;
+				}
+				& .sub-heading {
+					margin-bottom: 0;
+					font-size: .95rem;
+				}
+			}
+		}
+		// Speach Bubble Card
+		& .ui-card {
+			position: relative;
+			padding: 1.5rem;
+			overflow: visible;
+			text-align: center;
+			& p {
+				font-family: "Source Sans Pro", sans-serif;
+				color: $gray-darker;
+				margin-bottom: 0;
+				font-weight: 600;
+			}
+			// Quotes Icon
+			&::before {
+				display: block;
+				position: absolute;
+				content: '';
+				background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIxLjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+Cgkuc3Qwe2ZpbGw6IzgwODlGRjt9Cjwvc3R5bGU+CjxnIGlkPSJRdW90ZW1hcmtzLWxlZnQiPgoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTQwNSwyMDkuOGMtMS0xMS4xLTAuMi00MS41LDI4LjgtODMuNmMyLjItMy4yLDEuOC03LjUtMC45LTEwLjJjLTExLjgtMTEuOC0xOS4yLTE5LjMtMjQuMy0yNC41CgkJYy02LjgtNi45LTkuOC0xMC0xNC40LTE0LjFjLTMtMi43LTcuNi0yLjgtMTAuNi0wLjFjLTUwLjYsNDQtMTA2LjgsMTM1LTk4LjcsMjQ2LjVjNC44LDY1LjUsNTIuNSwxMTMsMTEzLjUsMTEzCgkJYzYyLjYsMCwxMTMuNS01MC45LDExMy41LTExMy41QzUxMiwyNjIuOCw0NjQuNiwyMTMuMiw0MDUsMjA5Ljh6Ii8+Cgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTIwLjksMjA5LjhjLTEtMTEuMS0wLjMtNDEuNCwyOC44LTgzLjZjMi4yLTMuMiwxLjgtNy41LTAuOS0xMC4yYy0xMS44LTExLjgtMTkuMS0xOS4zLTI0LjMtMjQuNQoJCWMtNi44LTYuOS05LjktMTAuMS0xNC40LTE0LjJjLTMtMi43LTcuNi0yLjctMTAuNi0wLjFjLTUwLjYsNDQtMTA2LjgsMTM1LTk4LjcsMjQ2LjV2MGM0LjgsNjUuNCw1Mi41LDExMywxMTMuNSwxMTMKCQljNjIuNiwwLDExMy41LTUwLjksMTEzLjUtMTEzLjVDMjI3LjksMjYyLjgsMTgwLjUsMjEzLjIsMTIwLjksMjA5Ljh6Ii8+CjwvZz4KPC9zdmc+Cg==');
+				background-size: cover;
+				top: .75rem;
+				left: 1rem;
+				width: 40px;
+				height: 40px;
+				opacity: 0.2;
+			}
+			// Arrow Down
+			&::after {
+				display: block;
+				font-family: 'FontAwesome';
+				content: '\f0d7';
+				position: absolute;
+				top: 100%;
+				font-size: 50px;
+				height: 10px;
+				line-height: 10px;
+				left: 1rem;
+				color: #FFF;
+				text-shadow: 0 5px 5px rgba(0, 9, 128, 0.05), 0 5px 10px rgba(0, 9, 128, 0.05);
+			}
+		}
+	}
+}

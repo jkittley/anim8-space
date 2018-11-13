@@ -1,0 +1,77 @@
+/**
+* 13. Base
+* ----------------------------------------------------------------------- *
+*/
+html {
+    font-size: 14px;
+    font-weight: 400;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    speak: none;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100%;
+}
+
+@include media-breakpoint-up(md){
+    html {
+        font-size: 15px;
+    }
+}
+@include media-breakpoint-up(lg){
+    html {
+        font-size: 16px;
+    }
+}
+
+.main{
+	overflow: hidden;
+}
+body[data-fade_in="on-load"],
+[data-show]{
+	opacity: 0;
+}
+*:focus {
+    outline: 0!important;
+}
+
+.flex-break{
+    flex-basis: 100%;
+    width: 0px; 
+    height: 0px; 
+    overflow: hidden;
+}
+.center-on-xs{
+    @include media-breakpoint-down(xs){
+        text-align: center;
+    }
+}
+.center-on-sm{
+    @include media-breakpoint-down(sm){
+        text-align: center;
+    }
+}
+.center-on-md{
+    @include media-breakpoint-down(md){
+        text-align: center;
+    }
+}
+
+@include media-breakpoint-only(sm){
+    .container{
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+[data-vertical_center="true"]{
+    display: flex ;
+    flex-direction: column ;
+    justify-content: center ;
+}
+.section.z-index-2{
+    z-index: 2;
+}
+.section.z-index-3{
+    z-index: 3;
+}

@@ -1,0 +1,54 @@
+@mixin flex(){
+	
+}
+@mixin flex_row(){
+    display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: row;
+	-ms-flex-direction: row;
+	flex-direction: row
+}
+@mixin flex_row_end(){
+    display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: reverse ;
+	-webkit-flex-direction: row-reverse;
+	-ms-flex-direction: row-reverse;
+	flex-direction: row-reverse;
+}
+@mixin flex_col(){
+    display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	-ms-flex-direction: column;
+	flex-direction: column 
+}
+
+@mixin flex_justify_between(){
+	-webkit-box-pack: justify ;
+	-webkit-justify-content: space-between ;
+	-ms-flex-pack: justify ;
+	justify-content: space-between 
+}
+@mixin flex_justify_center(){
+    -ms-flex-pack: center;
+    justify-content: center 
+}
+
+@mixin flex_v_center(){
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center
+}

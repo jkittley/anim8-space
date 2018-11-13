@@ -1,0 +1,101 @@
+/**
+* 12. Typography
+* ----------------------------------------------------------------------- *
+*/
+html {
+	font-size: $font-size-small;
+	font-weight: 400;
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+	text-rendering: optimizeLegibility;
+	speak: none;
+	-webkit-font-smoothing: antialiased;
+	@include breakpoint(sm) {
+		font-size: $font-size-base;
+	}
+	@include breakpoint(md) {
+		font-size: $font-size-medium;
+	}
+	@include breakpoint(lg) {
+		font-size: $font-size-large;
+	}
+}
+body {
+	font-size: 1rem;
+}
+.icon-lg {
+	font-size: $font-size-h1;
+}
+.lead{
+    font-size: 1.1rem;
+}
+.text-left{
+    text-align: left
+}
+blockquote {
+	position: relative;
+	margin: 2.5rem 0;
+	border-left: 5px solid $lime;
+	padding: 1rem 2rem;
+	font-size: 1.05rem;
+	color: $gray-dark;
+	font-style: italic;
+	&::before {
+		display: block;
+		position: absolute;
+		content: '';
+		background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIxLjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+Cgkuc3Qwe2ZpbGw6IzgwODlGRjt9Cjwvc3R5bGU+CjxnIGlkPSJRdW90ZW1hcmtzLWxlZnQiPgoJPHBhdGggY2xhc3M9InN0MCIgZD0iTTQwNSwyMDkuOGMtMS0xMS4xLTAuMi00MS41LDI4LjgtODMuNmMyLjItMy4yLDEuOC03LjUtMC45LTEwLjJjLTExLjgtMTEuOC0xOS4yLTE5LjMtMjQuMy0yNC41CgkJYy02LjgtNi45LTkuOC0xMC0xNC40LTE0LjFjLTMtMi43LTcuNi0yLjgtMTAuNi0wLjFjLTUwLjYsNDQtMTA2LjgsMTM1LTk4LjcsMjQ2LjVjNC44LDY1LjUsNTIuNSwxMTMsMTEzLjUsMTEzCgkJYzYyLjYsMCwxMTMuNS01MC45LDExMy41LTExMy41QzUxMiwyNjIuOCw0NjQuNiwyMTMuMiw0MDUsMjA5Ljh6Ii8+Cgk8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTIwLjksMjA5LjhjLTEtMTEuMS0wLjMtNDEuNCwyOC44LTgzLjZjMi4yLTMuMiwxLjgtNy41LTAuOS0xMC4yYy0xMS44LTExLjgtMTkuMS0xOS4zLTI0LjMtMjQuNQoJCWMtNi44LTYuOS05LjktMTAuMS0xNC40LTE0LjJjLTMtMi43LTcuNi0yLjctMTAuNi0wLjFjLTUwLjYsNDQtMTA2LjgsMTM1LTk4LjcsMjQ2LjV2MGM0LjgsNjUuNCw1Mi41LDExMywxMTMuNSwxMTMKCQljNjIuNiwwLDExMy41LTUwLjksMTEzLjUtMTEzLjVDMjI3LjksMjYyLjgsMTgwLjUsMjEzLjIsMTIwLjksMjA5Ljh6Ii8+CjwvZz4KPC9zdmc+Cg==');
+		background-size: cover;
+		top: 0;
+		left: 1rem;
+		width: 60px;
+		height: 60px;
+		opacity: 0.2;
+	}
+	& p {
+		margin-bottom: 0;
+	}
+	& .author {
+		color: $lime;
+		font-weight: 600;
+		margin-top: 1rem;
+		font-style: normal;
+	}
+}
+
+.ui-checklist {
+	list-style: none;
+	padding-left: 0;
+	margin-bottom: 2rem;
+	& li {
+		position: relative;
+		padding-left: 2rem;
+		margin-bottom: 1rem;
+		&:nth-last-child(1) {
+			margin-bottom: 0;
+			border-bottom: none;
+		}
+		// Check Icon
+		&::before {
+			content: '\f058';
+			font-family: 'FontAwesome';
+			position: absolute;
+			left: 0;
+			top: 50%;
+			line-height: 1;
+			margin-top: -0.5rem;
+			font-size: 1.2rem;
+		}
+		& .heading {
+			font-size: 1rem;
+			font-weight: 600;
+			margin-bottom: .05rem;
+		}
+		& p {
+			margin-bottom: 0;
+		}
+	}
+}
+.ui-turncate-text{
+	overflow: hidden;
+}

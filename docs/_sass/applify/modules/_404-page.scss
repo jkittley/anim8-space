@@ -1,0 +1,42 @@
+/**
+* 44. 404 Page
+* ----------------------------------------------------------------------- *
+*/
+
+.error404-page{
+    & .main{
+        @include flex_row();
+        @include flex_justify_center();
+        @include flex_v_center();
+
+        min-height: 100vh;
+        text-align: center;
+        padding: 4rem 0;
+
+        & .error404-wrapper{
+            max-width: 600px;
+            width: 100%;
+            padding: 4rem 1rem 0 1rem;
+            
+            @include breakpoint(md){
+				max-width: 800px;
+			}
+            @include breakpoint(lg){
+				max-width: 900px;
+			}
+            @include breakpoint(xl){
+				max-width: 1000px;
+			}
+
+            & img{
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+            }
+            & .heading{
+                font-size: 3.6rem;
+                margin: 2rem 0;    
+            }
+        }
+    }
+}

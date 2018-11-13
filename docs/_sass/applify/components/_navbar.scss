@@ -1,0 +1,326 @@
+/**
+* 24. Navigation Bar
+* ----------------------------------------------------------------------- *
+*/
+
+.navbar {
+	display: block;
+    position: fixed;
+    width: 100%;
+	font-family: $headings-font-family;
+	align-items: inherit;
+	@include shadow(lg);
+	@include transition(box-shadow .35s ease-out, background-color .35s ease-out);
+	@media(max-width: 481px) {
+		min-height: 50px;
+	}
+    z-index: 9;
+	// Logo
+	& .navbar-brand {
+		position: relative;
+		font-size: 1.4rem;
+		& img {
+			height: 30px;
+			width: auto;
+			position: absolute;
+			top: 50%;
+			left: 0;
+			margin-top: -15px;
+			@include transition(opacity .35s ease-out);
+			@include breakpoint(sm) {
+				height: 36px;
+				margin-top: -18px;
+			}
+			@include breakpoint(md) {
+				height: 40px;
+				margin-top: -20px;
+
+			}
+		}
+		@media(max-width:481px) {
+			height: 50px;
+		}
+		@include media-breakpoint-down(md){
+			flex: 1;
+		}
+	}
+	// Links
+	& a {
+		font-size: .95rem;
+		font-weight: 600;
+		@include breakpoint(md) {
+			font-size: 1rem;
+		}
+	}
+    .nav{
+        display: flex;
+        flex-direction: row;
+    }
+	.nav > li > a {
+		color: $gray_darker;
+		padding-left: 10px;
+		padding-right: 10px;
+		@include breakpoint(lg) {
+			padding-left: 16px;
+			padding-right: 16px;
+		}
+		&:hover,
+		&:active{
+			color: $primary;
+		}
+	}
+	.nav > li.active > a {
+		color: $primary;
+	}
+	&.navbar-dark .nav > li.active > a {
+		color: #fff;
+	}
+
+	&.navbar-dark .nav > li > a {
+		color: #fff;
+	}
+
+	// Nav Dropdown
+    & .dropdown-toggle:after{
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: .200em;
+        vertical-align: .155em;
+        content: "";
+        border-top: .3em solid;
+        border-right: .3em solid transparent;
+        border-bottom: 0;
+        border-left: .3em solid transparent
+    }
+	& .dropdown-menu {
+		background-color: transparent;
+		@include breakpoint(md) {
+			background-color: #FFF;
+			@include shadow(xl);
+		}
+		& a {
+			font-size: .9rem;
+		}
+
+	}
+	// Nav Download Button
+	& .btn {
+		@include transition(background .35s ease-out);
+		padding: .4rem 1rem;
+		margin: 9px 0 9px 1rem;
+		color: #FFF;
+		@include breakpoint(sm) {
+			margin: 13px 0 13px 1.25rem;
+		}
+		@include breakpoint(md) {
+			margin: 13px 0 13px 1.5rem;
+		}
+	}
+    & .ui-navigation{
+        flex: 1;
+		@include media-breakpoint-up(md){
+			display: flex;
+			align-items: center;
+
+			&.navbar-center{
+				justify-content: center;
+			}
+
+			&.navbar-right{
+				justify-content: flex-end;
+			}
+		}
+		@include media-breakpoint-up(lg){
+			height: 60px;
+		}
+    }
+    & .ui-navigation.navbar-center .navbar-nav{
+        @include breakpoint(md) {
+            display: flex ;
+            align-items: center ;
+            flex-direction: row ;
+            justify-content: center ;
+            float: none;
+        }
+    }
+
+	// Navbar right
+	& .ui-navigation.navbar-right{
+		display: flex ;
+		justify-content: flex-end ;
+	}
+}
+
+.navbar {
+	&.transparent, &.transparent.dark, &.transparent.light, &.transparent.bg-primary{
+		box-shadow: none;
+		background-color: transparent;
+        &:not(.text-dark){
+            & .navbar-brand {
+                color: #FFF;
+            }
+            & .navbar-nav>li>a {
+                color: #FFF;
+                &:hover {
+                    color: #FFF;
+                }
+            }
+            & .navbar-nav>li.active>a {
+                color: #FFF;
+            }
+            & .btn {
+                background: #FFF;
+                color: $primary;
+            }
+        }
+	}
+}
+
+.navbar {
+	& .ui-variable-logo {
+		& .logo-default {
+			opacity: 1;
+		}
+		& .logo-transparent {
+			opacity: 0;
+		}
+	}
+	&.transparent {
+		& .ui-variable-logo {
+			& .logo-default {
+				opacity: 0;
+			}
+			& .logo-transparent {
+				opacity: 1;
+			}
+		}
+	}
+}
+
+.ui-navigation {
+	@include media-breakpoint-down(md){
+		display: none;
+		clear: both;
+		padding-top: 1.25rem;
+		padding-bottom: 1.25rem;
+		border-top: 1px solid rgba(0, 0, 0, 0.05);
+	}
+}
+@include media-breakpoint-down(md){
+	.navbar .ui-navigation {
+		& .nav.navbar-nav{
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			align-items: center;
+			text-align: center;
+			& li{
+				flex: 1;
+				width: 100%;
+				opacity: 0;
+			}
+			& a{
+				font-size: 1rem;
+				line-height: 2;
+				display: block;
+			}
+			& .dropdown-menu{
+				box-shadow: none;
+				text-align: center;
+				background-color: $gray_lighter;
+				& li{
+					padding: 0;
+					& a{
+						color: $gray-darker;
+					}
+					&.active{
+						& a{
+							background-color: $primary;
+							display: block;
+							color: #fff;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+.mobile-nav-active {
+
+	& .navbar-nav {
+		& .dropdown-menu{
+			padding: 0 0 .75rem 0;
+
+		}
+		&.nav > li > a{
+			&:hover{
+				background-color: rgba($darkest, 0.1);
+			}
+		}
+	}
+}
+.ui-mobile-nav-toggle {
+	margin-left: 1rem;
+	@include breakpoint(sm) {
+		margin-left: 2rem;
+	}
+	@include media-breakpoint-up(lg) {
+		display: none;
+	}
+	&>div {
+		position: relative;
+		width: $nav-toggle-width;
+		height: $nav-toggle-height;
+		margin: $nav-toggle-padding 0;
+		&>span {
+			display: block;
+			position: absolute;
+			height: $nav-toggle-bar-height;
+			width: 100%;
+			background-color: $gray-darker;
+			border-radius: 4px;
+			left: 0;
+			@include rotate(0);
+			@include transition(.25s ease-out);
+		}
+		&>span:nth-child(1) {
+			top: 0px;
+		}
+		&>span:nth-child(2), &>span:nth-child(3) {
+			top: 5.83333px;
+		}
+		&>span:nth-child(4) {
+			top: 11.66667px;
+		}
+		@media(max-width:481px) {
+			margin: 17px 0;
+		}
+	}
+	//Nav Toggle Is Active
+	&.active {
+		&>div {
+			&>span:nth-child(1) {
+				top: $nav-toggle-bar-height * 3.3333333;
+				width: 0%;
+				left: 50%;
+			}
+			&>span:nth-child(2) {
+				@include rotate(45);
+			}
+			&>span:nth-child(3) {
+				@include rotate(-45);
+			}
+			&>span:nth-child(4) {
+				top: $nav-toggle-bar-height * 3.3333333;
+				width: 0%;
+				left: 50%;
+			}
+		}
+	}
+}
+.transparent, .navbar-dark {
+	& .ui-mobile-nav-toggle>div>span {
+		background-color: #FFF;
+	}
+}

@@ -1,0 +1,61 @@
+/**
+* 26. Tabs
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-tabs {
+	& .nav-tabs {
+		font-family: $headings-font-family;
+		margin-bottom: 2rem;
+		& li {
+			margin-right: .25rem;
+			&:nth-last-child(1) {
+				margin-right: 0;
+			}
+			& a.active {
+				background-color: $primary;
+				@include shadow(lg);
+				color: #fff;
+			}
+			& a {
+				border-radius: $border-radius-sm;
+				@include transition(background-color .35s ease-out, box-shadow .35s ease-out);
+				color: $gray_dark;
+				font-weight: $headings-font-weight;
+				text-transform: uppercase;
+			}
+		}
+	}
+	& .tab-pane {
+		padding-top: 1rem;
+		& .sub-heading {
+			font-weight: 600;
+			margin-bottom: 2rem;
+		}
+	}   
+}
+
+.ui-api-demo{
+    & .tab-pane {
+        padding-top: 1rem;
+    }
+    & .nav-vertical{
+        & li {
+            display: inline-block;
+            width: auto;
+            margin-bottom: 0;
+        }
+    }
+    @include breakpoint(md){
+        & .tab-pane {
+            padding-top: 0;
+        }
+        & .nav-vertical{
+            & li {
+                display: block;
+                width: 100%;
+                margin-bottom: .25rem;
+            }
+        }
+    }
+}

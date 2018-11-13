@@ -1,0 +1,46 @@
+<!-- Navbar Fixed + Default -->
+<nav class="navbar navbar-fixed-top transparent navbar-light">
+  <div class="container">
+
+    <!-- Navbar Logo -->
+    <a class="ui-variable-logo navbar-brand" href="index.html" title="Anim8 - A stop motion animation tool">
+      <!-- Default Logo -->
+      <img class="logo-default" src="assets/img/logo/anim8-logo.png"
+            alt="Anim8 - Create stop motion animations with your smartphone or tablet" data-uhd>
+      <!-- Transparent Logo -->
+      <img class="logo-transparent" src="assets/img/logo/anim8-logo-white.png"
+            alt="Anim8 - Create stop motion animations with your smartphone or tablet" data-uhd>
+    </a><!-- .navbar-brand -->
+
+    <!-- Navbar Navigation -->
+    
+    <div class="ui-navigation navbar-center">
+      <ul class="nav navbar-nav">
+   
+        <!-- Nav Item -->
+        <li>
+          <a href="{% if page.url == "/" %}#{% else %}/#features{% endif %}" {% if page.url == "/" %}data-scrollto="features"{% endif %}>Features </a>
+        </li>
+        <!-- Nav Item -->
+        <li>
+          <a href="{% if page.url == "/" %}#{% else %}/#how-to{% endif %}" {% if page.url == "/" %}data-scrollto="how-to"{% endif %}>Getting Started</a>
+        </li>
+        <!-- Nav Item -->
+        <li>
+          <a href="{% if page.url == "/" %}#{% else %}/#showcase{% endif %}" {% if page.url == "/" %}data-scrollto="showcase"{% endif %}>User Showcase</a>
+        </li>
+     
+      </ul><!--.navbar-nav -->
+    </div><!--.ui-navigation -->
+    
+
+    <!-- Navbar Toggle -->
+    <a href="#" class="ui-mobile-nav-toggle pull-right"></a>
+
+    <!-- Navbar Button -->
+    <a href="https://itunes.apple.com/us/app/anim8-space/id1274020469?ls=1&mt=8"
+        class="btn btn-sm ui-gradient-orange pull-right">Download</a>
+  
+
+  </div><!-- .container -->
+</nav> <!-- nav -->

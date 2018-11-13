@@ -1,0 +1,108 @@
+/**
+* 07. Animations
+* ----------------------------------------------------------------------- *
+*/
+
+// Fade In
+@include keyframes(fade_in) {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+// Fade Out
+@include keyframes(fade_out) {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+// Fade In Up
+@include keyframes(fade_in_up) {
+	0% {
+		opacity: 0;
+		@include translateY(20%);
+	}
+	100% {
+		opacity: 1;
+		@include translateY(0%);
+	}
+}
+// Fade In Up Big
+@include keyframes(fade_in_up_big) {
+	0% {
+		opacity: 0;
+		@include translateY(50%);
+	}
+	100% {
+		opacity: 1;
+		@include translateY(0%);
+	}
+}
+// Fade In Left
+@include keyframes(fade_in_left) {
+	0% {
+		opacity: 0;
+		@include translateX(10%);
+	}
+	100% {
+		opacity: 1;
+		@include translateX(0%);
+	}
+}
+// Fade In Right
+@include keyframes(fade_in_right) {
+	0% {
+		opacity: 0;
+		@include translateX(-10%);
+	}
+	100% {
+		opacity: 1;
+		@include translateX(0%);
+	}
+}
+.animate {
+	@include animation-duration(1250ms);
+	@include animation-timing-function(cubic-bezier(0.215, 0.61, 0.355, 1));
+	@include animation-fill-mode(both);
+}
+.animate-fast {
+	@include animation-duration(500ms);
+}
+.fade-in {
+	@include animation-name('fade_in');
+}
+.fade-out {
+	@include animation-name('fade_out');
+}
+.fade-in-up {
+	@include animation-name('fade_in_up');
+}
+.fade-in-up-big {
+	@include animation-name('fade_in_up_big');
+}
+.fade-out-down {
+	@include animation-name('fade_out_down');
+}
+.fade-in-left {
+	@include animation-name('fade_in_left');
+}
+.fade-in-right {
+	@include animation-name('fade_in_right');
+}
+// Gradient Animation
+@include keyframes(animate_gradient) {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}

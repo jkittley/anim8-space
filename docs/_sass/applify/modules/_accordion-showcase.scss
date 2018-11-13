@@ -1,0 +1,21 @@
+/**
+* 30. Accordion Showcase
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-accordion-showcase{
+	// Small Screens Only
+	@media (max-width: 739px) {
+		& > div{
+			&:nth-child(1){
+				margin-bottom: 4rem;	
+			}
+		}
+	}
+	// Medium Screens & Up
+	@include breakpoint(md){
+		& > div{
+			float: right;
+		}
+	}
+}

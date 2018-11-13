@@ -1,0 +1,31 @@
+/**
+* 32. App Showcase
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-app-showcase {
+	// Small Screen Only
+	@media (max-width: 739px) {
+		// Icon Blocks Margins
+		& .ui-icon-blocks.icons-md .ui-icon-block, & .ui-icon-blocks.icons-lg .ui-icon-block {
+			margin-bottom: 2rem;
+		}
+		& [data-col="text_a"] .ui-icon-blocks.icons-md, & [data-col="text_a"] .ui-icon-blocks.icons-lg {
+			margin-bottom: 0;
+		}
+	}
+}
+
+/* Image Block 
+ * Keep Image True Width 
+ * And Move Off Canvas */
+.ui-app-showcase [data-col="img"] {
+	// Small Screens Only
+	@media (max-width: 739px) {
+		& img {
+			display: block;
+			float: right;
+			min-width: 275px;
+		}
+	}
+}

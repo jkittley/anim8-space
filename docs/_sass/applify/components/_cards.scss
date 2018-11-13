@@ -1,0 +1,81 @@
+/**
+* 16. Cards
+* ----------------------------------------------------------------------- *
+*/
+.ui-card {
+	background-color: #FFF;
+	border-radius: $border-radius;
+	// Card Image
+	& .card-image {
+		border-top-left-radius: $border-radius;
+		border-top-right-radius: $border-radius;
+		overflow: hidden;
+		background-size: cover;
+		background-position: center center;
+		& img {
+			max-width: 100%;
+		}
+	}
+	// Card Header
+	& .card-header {
+		padding: 2rem;
+		border-top-left-radius: $border-radius;
+		border-top-right-radius: $border-radius;
+	}
+	// Card Body
+	& .card-body {
+		padding: 2rem;
+		border-bottom-left-radius: $border-radius;
+		border-bottom-right-radius: $border-radius;
+	}
+	// Card Footer
+	& .card-footer {
+		padding: 2rem;
+	}
+}
+.ui-card.ui-action-card {
+	cursor: pointer;
+    display: block;
+	@include transition(box-shadow .35s ease-out);
+    & p{
+        color: $gray;
+        margin-bottom: 0;
+    }
+}
+.ui-card.ui-curve {
+	& .card-header {
+		position: relative;
+		background: #fff;
+		overflow: hidden;
+		&::after {
+			display: block;
+			content: '';
+			height: 100%;
+			background: url(../assets/img/svg-layers/curve-layer-gray.svg) bottom no-repeat;
+			background-size: contain;
+			position: absolute;
+			bottom: -2px;
+			left: -6px;
+			right: -6px;
+			z-index: 1;
+		}
+		& .paragraph {
+			display: inline-block;
+			max-width: 350px;
+			margin-bottom: .25rem;
+		}
+	}
+	& .card-body {
+		background-color: $gray-lighter;
+	}
+	&.color-card {
+		& .card-header {
+			&::after {
+				background: url(../assets/img/svg-layers/curve-layer.svg) bottom no-repeat;
+			}
+		}
+		& .card-body {
+			background-color: #FFF;
+		}
+	}
+}

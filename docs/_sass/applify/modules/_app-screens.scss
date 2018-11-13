@@ -1,0 +1,29 @@
+/**
+* 31. App Screens
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-app-screens{
+	// Carousel Track
+	& .owl-stage-outer{
+		padding: 1rem 0 2rem 0;
+	}
+	& .ui-card{
+		width: 275px;
+		overflow: hidden;
+		border-radius: $border-radius-lg;
+	}
+	
+	& .owl-item .ui-card{
+		opacity: 0.75;
+		filter: blur(0.5px);
+		@include scale(0.85);
+		@include transition(transform .35s ease-out, filter .35s ease-out, box-shadow .35s ease-out, opacity .35s ease-out);
+	}
+	& .owl-item.center .ui-card{
+		opacity: 1;
+		filter: blur(0);
+		@include shadow(xl);
+		@include scale(1);
+	}
+}

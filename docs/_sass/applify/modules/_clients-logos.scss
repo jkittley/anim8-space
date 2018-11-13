@@ -1,0 +1,45 @@
+/**
+* 35. Client Logos
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-clients-logos {
+	text-align: center;
+	padding: 4rem 0 0 0;
+	&.section.section-sm {
+		padding: 1.5rem 0;
+		@include breakpoint(xl) {
+			padding: 2rem 0;
+		}
+	}
+	& img {
+		display: inline-block;
+		height: 16px;
+		width: auto;
+		@include breakpoint(md) {
+			height: 20px;
+		}
+		@include breakpoint(lg) {
+			height: 24px;
+		}
+		@include breakpoint(xl) {
+			height: 26px;
+		}
+	}
+	& .d-flex  > div, & .d-flex  > div {
+		@include media-breakpoint-down(sm){
+			& img{
+				height: 14px;
+			}
+			&:nth-last-child(1) {
+				display: none;
+			}
+		}
+		@include media-breakpoint-down(xs){
+			&:nth-last-child(2) {
+				display: none;
+			}
+		}
+	}
+
+}

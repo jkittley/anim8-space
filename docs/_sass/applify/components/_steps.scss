@@ -1,0 +1,124 @@
+/**
+* 29. Steps
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-steps{
+    .row{
+        margin-left: -6rem;
+        margin-right: -6rem;
+    }
+    div[class^="col-"], 
+    div[class*=" col-"]{
+        padding-left: 6rem;
+        padding-right: 6rem;
+        &:nth-child(1){
+            margin-bottom: 2rem;
+            @include breakpoint(md){
+                margin-bottom: 0;
+            }
+        }
+    }
+    @include breakpoint(md){
+        margin-top: 0;
+    }
+    // The Step
+    & .step-wrapper{
+        position: relative;
+        padding-left: 6rem;
+        text-align: left;
+        padding-top: 0;
+        padding-bottom: 2rem;
+        
+        @include breakpoint(md){
+            padding-left: 0;
+            padding-top: 2rem;
+            &:nth-child(1){
+                margin-top: -2rem;
+            }
+        }
+        // The Line
+        &::before,
+        &::after{
+            content: ' ';
+            position: absolute;
+            left: 26px;
+            margin-left: 0;
+            width: 4px;
+            border-radius: 4px;
+            background-color: lighten($gray, 30%);
+            
+            @include breakpoint(md){
+				left: 50%;
+                margin-left: -2px;
+			}
+        }
+        &::before{
+            top: -1rem;
+            bottom: calc(50% + (25px + 1rem));
+            display: none;
+            @include breakpoint(md){
+                display: block;
+            }
+        }
+        &::after{
+            top: calc(50px + 1rem);
+            bottom: 1rem;
+            
+            @include breakpoint(md){
+                top: calc(50% + (25px + 1rem));
+                bottom: -1rem;
+            }
+        }
+        &:nth-child(1){
+            &::before{ display: none }
+        }
+        &:nth-last-child(1){
+            &::after{ display: none }
+        }
+        
+        // The Number
+        & .step-number{
+            position: absolute;
+            top: 10px;
+            left: 1rem;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            color: #fff;
+            font-family: $headings-font-family;
+            font-size: 1.4rem;
+            font-weight: 600;
+            text-align: center;
+            z-index: 2;
+            &::before{
+                content: ' ';
+                position: absolute;
+                top:-10px;
+                left:-10px;
+                width: 50px;
+                height: 50px;
+                opacity: 0.25;
+                z-index: -1; 
+            }
+            @include breakpoint(md){
+                top: calc(50% - 20px);
+				left: calc(50% - 20px);
+                width: 40px;
+                height: 40px;
+                line-height: 40px;
+                font-size: 1.8rem;
+                &::before{
+                    width: 60px;
+                    height: 60px;
+                    top:-10px;
+                    left:-10px;
+                }
+			}
+        }
+        & .step-number,
+        & .step-number::before{
+            border-radius: 100%;
+        }
+    }
+}

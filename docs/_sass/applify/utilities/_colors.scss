@@ -1,0 +1,198 @@
+/**
+* 08. Colors
+* ----------------------------------------------------------------------- *
+*/
+
+body {
+	color: $text-color;
+}
+.heading, h1, h2, h3, h4, h5, h6 {
+	color: $gray-darker;
+}
+.section-heading .paragraph, .lead{
+	color: $gray-dark;
+}
+a, a .heading {
+	@include transition(color .25s ease-out);
+}
+a:hover, .btn:hover{
+	color: $primary;
+}
+.ui-pricing-card .card-header {
+	& .sub-heading {
+		color: $gray-dark;
+	}
+}
+
+@each $class, $color in $ui_color {
+	.text-#{$class}, .ui-icon-blocks .icon.text-#{$class}, .ui-card .card-header .heading.text-#{$class}, .pricing-items li .text-#{$class}{
+		color: $color;
+	}
+    .ui-icon-blocks .ui-icon-block > .icon.text-#{$class} {
+        color: $color;
+    }
+	.bg-#{$class}, .ui-card.bg-#{$class}, .ui-card.bg-#{$class} .card-body p {
+		@if $class == lime{
+			color: #FFF;
+		}
+        @elseif $class == blue{
+			color: #FFF;
+		}
+		@else{
+			color: rgba(#FFF, 0.85);
+		}
+		
+		background-color: $color;
+		& .heading, & .sub-heading, & .ui-icon-blocks .ui-icon-block > .icon, & a, & .price {
+			color: #FFF;
+		}
+		& .section-heading .paragraph, & .lead{
+			color: #FFF;
+		}
+		& .ui-card {
+			color: $gray-light;
+			& .heading, & .sub-heading {
+				color: $gray-darker;
+			}
+			& .ui-icon-block > .icon {
+				color: $primary;
+			}
+		}
+        &.btn{
+            color: #fff;
+            &:hover{
+                color: #fff;
+            }
+        }
+	}
+    .ui-accordion-panel.ui-#{$class} .ui-accordion.active .toggle,
+    .ui-accordion-panel.ui-#{$class} .ui-accordion:hover .toggle{
+        color: $color;
+        &::after{
+            color: $color;
+        }
+    } 
+    .ui-tabs.ui-#{$class} .nav-tabs li.active{
+        background-color: $color;
+        color: #fff;
+    }
+    .ui-pricing-table .pricing-block.ui-#{$class}{
+        background-color: rgba($color, 0.1 );
+        & .promo{
+            background-color: $color;
+            color: #fff;
+        }
+    }
+    .ui-card.ui-curve .card-header.bg-#{$class}{
+        color: rgba(#FFF, 0.85);
+        background-color: $color;
+		& .heading, & .sub-heading, & .ui-icon-block .icon {
+			color: #FFF;
+		}
+    }
+    .ui-icon-blocks .ui-icon-block > .icon.icon-circle.bg-#{$class}{
+        background-color: $color;
+        color: #fff;
+    }
+}
+
+@each $class, $color_a, $color_b, $color_c in $ui_gradient {
+	.ui-#{$class} {
+		@include gradient($color_a, $color_b, $color_c);
+	}
+	.hero-bg.ui-#{$class}::before {
+		@include gradient_dark($color_a, $color_b, $color_c);
+	}
+	.ui-card.ui-#{$class}{
+		& p.paragraph, p{
+			color: #FFF;
+		}
+	}
+	.ui-gradient-animator, .ui-#{$class}, .ui-card.ui-#{$class} {
+		color: rgba(#FFF, 0.85);
+		& .heading, & .sub-heading, & .ui-icon-blocks .ui-icon-block > .icon, & a, & .price {
+			color: #FFF;
+		}
+		& .section-heading .paragraph, & .lead{
+			color: #FFF;
+		}
+		& .ui-card {
+			color: $gray-light;
+			& .heading, & .sub-heading {
+				color: $gray-darker;
+			}
+			& .ui-icon-block .icon {
+				color: $primary;
+			}
+		}
+		& .ui-tabs .nav-tabs {
+			& li.nav-item {
+
+				& a.nav-link {
+					color: #FFF;
+					background-color: rgba(#FFF, 0);
+					&.active {
+						background-color: rgba(#FFF, 0.25);
+						color: #FFF;
+					}
+				}
+			}
+		}
+		& .ui-checklist li {
+			border-bottom-color: rgba(#FFF, 0.2);
+		}
+		& .owl-theme .owl-dots .owl-dot span {
+			background-color: rgba(#FFF, 0.5);
+		}
+		& .owl-theme .owl-dots .owl-dot.active span {
+			background-color: rgba(#FFF, 1);
+		}
+		& .owl-theme .owl-nav [class*='owl-'] {
+			color: rgba(#FFF, 0.5);
+		}
+		& .owl-theme .owl-nav [class*='owl-']:hover {
+			color: rgba(#FFF, 1);
+		}
+		& .btn-link,
+		& .btn-link:hover{
+			color: #fff;
+		}
+	}
+	.btn.ui-#{$class} {
+		color: #FFF;
+	}
+	.bg-overlay-#{$class} {
+		color: rgba(#FFF, 0.85);
+		& .heading, & .sub-heading, & .ui-icon-blocks .ui-icon-block > .icon, & .section-heading .paragraph, & .lead {
+			color: #FFF;
+		}
+		&::before {
+			@include gradient($color_a, $color_b, $color_c);
+		}
+	}
+	.ui-card.ui-curve .card-header.ui-#{$class} {
+		color: rgba(#FFF, 0.85);
+		& .heading, & .sub-heading, & .ui-icon-block .icon {
+			color: #FFF;
+		}
+		@include gradient($color_a, $color_b, $color_c);
+	}
+    .step-number.ui-#{$class},
+    .step-number.ui-#{$class}::before{
+        @include gradient($color_a, $color_b, $color_c);
+    }
+    .ui-icon-blocks .ui-icon-block > .icon.ui-#{$class}{
+        color: #FFF;
+    }
+}
+.bg-light {
+	background-color: $gray-lighter;
+}
+.btn-default{
+    color: $indigo;
+    &:hover,
+    &:active{
+        border: none;
+        background-color: #fff; 
+    }
+}

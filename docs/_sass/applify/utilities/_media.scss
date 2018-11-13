@@ -1,0 +1,80 @@
+/**
+* 09. Media
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-app-icon{
+	display: inline-block;
+	width: 90px;
+	height: 90px;
+	margin: 0 auto 2rem auto;
+	border-radius: $border-radius-lg;
+	overflow: hidden;
+	& img{
+		width: 90px;
+		height: 90px;
+	}
+}
+
+img.img-responsive{
+	height: auto;
+	width: 100%;
+	max-width: 100%;
+}
+
+img.responsive-on-xs{
+	@include breakpoint(xs){
+		height: auto;
+		width: 100%;
+		max-width: 100%;
+	}
+}
+img.responsive-on-sm{
+	@media(max-width: 739px){
+		height: auto;
+		width: 100%;
+		max-width: 100%;
+	}
+}
+img.responsive-on-md{
+	@media(max-width: 991px){
+		height: auto;
+		width: 100%;
+		max-width: 100%;
+	}
+}
+img.responsive-on-lg{
+	@media(max-width: 1366px){
+		height: auto;
+		width: 100%;
+		max-width: 100%;
+	}
+}
+[data-max_width]{
+	margin-left: auto ;
+	margin-right: auto ;
+	display: block ;
+    &.img-fluid{
+        height: auto;
+		width: 100%;
+    }
+}
+
+.img-wrapper{
+    position: relative;
+}
+
+.section.intro-image{
+    margin-top: -12rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+	@include media-breakpoint-up(md){
+		margin-top: -16rem;
+	}
+	@include media-breakpoint-up(xl){
+		margin-top: -20rem;
+	}
+    & img{
+        border-radius: .5rem;
+    }
+}

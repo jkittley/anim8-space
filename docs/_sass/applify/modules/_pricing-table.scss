@@ -1,0 +1,281 @@
+/**
+* 41. Pricing Table
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-pricing-table{
+
+    // Bigger Screens
+    @include media-breakpoint-up(md){
+        display: flex;
+        justify-content: space-between;
+
+    }
+    
+    // Sidebar
+    & .pricing-sidebar{
+        @include media-breakpoint-up(md){
+            padding-top: 40px;
+        }
+        @include media-breakpoint-down(sm){
+            margin-bottom: 4rem;
+        }
+        & .pricing-header{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            
+            & .btn-group{
+                margin-bottom: 1rem;
+                & a{
+                    color: #fff;
+                }
+            }
+            & p{
+                max-width: 180px;
+                text-align: center;
+                margin-bottom: 0;
+            }
+        }
+        & .pricing-items{
+            @include media-breakpoint-down(sm){
+                display: none;
+            }
+        }
+    }
+    
+    // Pricing Block
+    & .pricing-block{
+        flex: 1;
+        text-align: center;
+        border-radius: 0.5rem;
+        @include media-breakpoint-up(md){
+            padding-top: 40px;
+        }
+
+        // Price Promo Block 
+        & .promo{
+            text-transform: uppercase;
+            padding: 0 1rem;
+            font-family: $headings-font-family;
+            font-weight: 600;
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+            height: 40px;
+            line-height: 40px;
+            @include media-breakpoint-up(md){
+                margin-top: -40px;
+            }
+        }
+        // Price Header
+        & .pricing-header{
+            padding: 1rem;
+
+            @include media-breakpoint-down(sm){
+                //background-color: lighten($gray, 35%);
+            }
+            
+            // The Plan
+            & .price-plan{
+                font-family: $headings-font-family;
+                font-weight: 600;
+            }
+
+            // The Price
+            & .price-wrapper{
+                font-family: $headings-font-family;
+                font-weight: 600;
+                font-size: 1.3rem;
+                height: 46px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                & .curency{
+                    
+                }
+                & .price{
+                    font-size: 3.6rem;
+                    font-weight: 700;
+                    line-height: .8;
+                }
+                & .price-postfix{
+                    
+                }
+                & p{
+                    font-size: 1.1rem;
+                    margin-bottom: 0;
+                    max-width: 200px;
+                    display: inline-block;
+                    & a{
+                        font-weight: 600;
+                    }
+                }
+            }
+            // The Price Description
+            & .price-description{
+                margin-bottom: 0;
+                margin-top: 1rem;
+                padding: 0 1rem;
+            }
+        }
+        
+        & .btn{
+            @include media-breakpoint-down(md){
+                margin: 2rem 0;
+            }
+            @include media-breakpoint-up(md){
+                margin: 1rem 0;
+            }
+        }
+
+        @include media-breakpoint-down(sm){
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2rem;
+            background-color: $gray-lighter;
+
+            border-bottom-left-radius: 0.5rem;
+            border-bottom-right-radius: 0.5rem;
+
+            @include shadow(xl);
+            &:nth-last-child(1){
+                margin-bottom: 0;
+            }
+
+            & .pricing-header{
+                position: relative;
+                background-color: #fff;
+                padding: 3rem 2rem 4rem 2rem;
+
+                border-top-left-radius: 0.5rem;
+                border-top-right-radius: 0.5rem;
+
+                &::after{
+                    display: block;
+                    content: '';
+                    height: 100%;
+                    background: url(../assets/img/svg-layers/curve-layer-gray.svg) bottom no-repeat;
+                    background-size: contain;
+                    position: absolute;
+                    bottom: -2px;
+                    left: -6px;
+                    right: -6px;
+                    z-index: 1;
+                }
+
+                & .price-plan{
+                    font-family: $headings-font-family;
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                }
+                & .price-wrapper{
+                    align-items: flex-end;
+
+                    & .curency{
+                        padding-right: .25rem;
+                    }
+                }
+
+                .price-description{
+                    max-width: 260px;
+                    margin-left: auto;
+                    margin-right: auto;
+                }
+            }
+
+            .pricing-items li{
+                line-height: 34px;
+            }
+
+        }
+    }
+    // Pricing Items
+    & .pricing-items{
+        display: block;
+        list-style: none;
+        margin-bottom: 0;
+        padding-left: 0;
+        @include media-breakpoint-down(sm){
+            margin-top: 1rem;
+        }
+        & li{
+            line-height: 40px;
+            height: 40px;
+            font-weight: 600;
+            color: $gray-darker;
+            @include media-breakpoint-up(md){
+                border-bottom: 1px solid lighten($gray, 35%);
+            }
+            & i{
+                display: inline-block;
+                margin-right: .5rem;
+                font-weight: normal;
+                @include media-breakpoint-up(md){
+                    display: none;
+                }
+            }
+        }
+    }
+    & i{
+        font-style:normal;
+    }
+}
+
+.ui-pricing-extras{
+    @include media-breakpoint-up(md){
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    & .icon{
+        @include media-breakpoint-down(sm){
+            margin-bottom: 1rem;
+        }
+        @include media-breakpoint-up(md){
+            padding-right: 2rem;
+        }
+        & > span{
+            font-size: 4rem;
+        }
+    }
+    & .text{
+        flex: 1;
+        @include media-breakpoint-down(sm){
+            display: inline-block;
+            width: auto;
+            & .ui-checklist li{
+                display: inline-block;
+                width: auto;
+                padding-left: 1.5rem;
+                padding-right: 2rem;
+            }
+        }
+    }
+
+    .ui-checklist{
+        text-align: left;
+        @include media-breakpoint-down(xs){
+            display: flex;
+            align-items: center;
+            margin-bottom: .5rem;
+            & li{
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+.info-blocks{
+    & .ui-card{
+        height: 100%;
+    }
+
+    @include media-breakpoint-down(sm){
+        & .col-md-4:not(:nth-last-child(1)){
+            margin-bottom: 2rem;
+        }
+    }
+}

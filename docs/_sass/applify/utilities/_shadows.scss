@@ -1,0 +1,34 @@
+/**
+* 10. Shadows
+* ----------------------------------------------------------------------- *
+*/
+@each $class, $shadow in $shadows {
+	.shadow-#{$class} {
+		box-shadow: $shadow;
+	}
+	.btn.shadow-#{$class} {
+		box-shadow: $shadow, inset 0 1px 1px rgba(255, 255, 255, 0.1), inset 0 -1px 1px rgba(0, 0, 0, 0.075);
+	}
+}
+.ui-action-card{
+	&.shadow-sm{
+		&:hover{
+			@include shadow(lg);
+		}
+	}
+	&.shadow-md{
+		&:hover{
+			@include shadow(xl);
+		}	
+	}
+	&.shadow-lg{
+		&:hover{
+			box-shadow: 0 8px 18px rgba($shadow-color-base,0.15), 0 15px 35px rgba($shadow-color-base,0.2);
+		}	
+	}
+	&.shadow-xl{
+		&:hover{
+			box-shadow: 0 10px 20px rgba($shadow-color-base,0.15), 0 20px 48px rgba($shadow-color-base,0.2);
+		}	
+	}
+}

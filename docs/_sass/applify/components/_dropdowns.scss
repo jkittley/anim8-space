@@ -1,0 +1,25 @@
+/**
+* 18. Drop-downs
+* ----------------------------------------------------------------------- *
+*/
+
+.dropdown{
+	& .dropdown-header{
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+	& .dropdown-menu li a{
+		font-weight: 600;
+	}
+}
+@include media-breakpoint-up(lg){
+	.ui-navigation .dropdown .dropdown-menu{
+		position: absolute;
+
+		& .dropdown-item.active{
+			& a{
+				color: #fff;
+			}
+		}
+	}
+}

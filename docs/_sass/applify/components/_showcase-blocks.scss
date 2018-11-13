@@ -1,0 +1,65 @@
+/**
+* 28. Showcase Blocks
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-showcase-blocks{
+    text-align: center;
+    & > .row,
+    & > .step-wrapper > .row{
+        margin-bottom: 4rem;
+        &:nth-last-child(1){
+            margin-bottom: 0;
+        }
+        & > div:nth-child(1){
+            margin-bottom: 4rem
+        }
+    }
+    & > .row{
+        & > div:nth-child(1){
+            margin-bottom: 4rem
+        }
+    }
+    & > .step-wrapper > .row{
+        & > div:nth-child(1){
+            margin-bottom: 2rem
+        }
+    }
+    @include breakpoint(md){
+        & > .row,
+        & > .step-wrapper > .row{
+            & > div:nth-child(1){
+                margin-bottom: 0
+            }
+        }
+        & > .row:nth-child(even),
+        & > .step-wrapper:nth-child(even) > .row{
+            flex-direction: row-reverse;
+        }
+        text-align: left;
+    }
+    
+    & img{
+        width: 100%;
+        height: auto;
+    }   
+}
+.laptop-showcase{
+    & img.laptop{
+        margin-bottom: -6rem;
+
+        @include media-breakpoint-down(md){
+            margin-top: 4rem;
+        }
+
+        @include media-breakpoint-up(md){
+            margin-right: -16rem;
+        }
+        @include media-breakpoint-up(lg){
+            margin-right: -14rem;
+        }
+        @include media-breakpoint-up(xl){
+            margin-right: -12rem;
+        }
+    }
+}

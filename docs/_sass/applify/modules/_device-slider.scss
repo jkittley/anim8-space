@@ -1,0 +1,41 @@
+/**
+* 36. Device Slider
+* ----------------------------------------------------------------------- *
+*/
+
+.ui-device-slider{
+	position: relative;
+	width: 300px;
+	margin: 0 auto;
+	padding-bottom: 2rem;
+	& .device{
+		& img{
+			max-width: 100%;
+			height: auto;
+			width: 100%;
+		}
+	}
+	& .screens{
+		position: absolute;
+		width: 231px;
+		top: 12.5%;
+		left: 11.5%;
+		right: 11.5%;
+		bottom: 14%;
+		& .item{
+			width: 231px;
+			& img{
+				max-width: 100%;
+				height: auto;
+				width: 100%;
+				background-color: #FFF;
+			}
+		}
+	}
+	& .owl-carousel.owl-theme .owl-dots{
+		margin-top: 5rem;
+	}
+}
+.section .row > div .ui-device-slider .device img{
+	float: none;
+}

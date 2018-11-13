@@ -1,0 +1,45 @@
+/**
+* 23. Modal
+* ----------------------------------------------------------------------- *
+*/
+
+.modal {
+	display: none;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 9999;
+	padding: 1rem;
+	background-color: rgba($gray-base, .75);
+	@include breakpoint(md) {
+		padding: 0;
+	}
+	& .dialog {
+		position: relative;
+		padding-left: 0;
+		padding-right: 0;
+		border-radius: $border-radius;
+		@include shadow(xl);
+		@include breakpoint(md) {
+			margin-top: 6rem;
+		}
+	}
+	& .close {
+		cursor: pointer;
+		position: absolute;
+		top: .5rem;
+		right: 1rem;
+		z-index: 9;
+		opacity: 0.75;
+		font-size: 1.4rem;
+		&:hover {
+			opacity: 1;
+			@include transition(opacity .25s);
+		}
+	}
+}
+body.modal-open {
+	overflow: hidden;
+}

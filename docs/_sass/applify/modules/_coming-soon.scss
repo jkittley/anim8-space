@@ -1,0 +1,140 @@
+/**
+* 40. Coming Soon
+* ----------------------------------------------------------------------- *
+*/
+
+body.coming-soon{
+	& .ui-hero{
+		padding: 4rem 0 14rem 0;
+		@include media-breakpoint-up(md) {
+			padding: 6rem 0 14rem 0;
+		}
+		@include media-breakpoint-up(xl) {
+			padding: 8rem 0 16rem 0;
+		}
+		& .container{
+			padding-top: 0;
+		}
+        & .ui-app-icon{
+            margin-bottom: .5rem;
+            & img{
+                margin-bottom: 0;
+                margin-top: 0;
+            }
+        }
+	}
+
+	& .app-logo{
+		display: block;
+		margin: 0 auto 2rem auto;
+	}
+	& .form-card{
+		position: relative;
+		max-width: 500px;
+		margin: 4rem auto -16rem auto;
+		
+		& .heading{
+			font-size: 2rem;
+			margin-bottom: 0;
+		}
+		& input.form-control {
+			padding: 8px 1rem 8px 1.5rem;
+			border-top-left-radius: 2rem;
+			border-bottom-left-radius: 2rem;
+		}
+		& .btn {
+			padding: 0 1rem;
+			line-height: 35px;
+		}
+	}
+	& .actions{
+		padding-top: 6rem;
+	}
+}
+
+body.coming-soon .ui-counter {
+	margin-top: 3rem;
+    & > div {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        @include shadow(lg);
+        background-color: rgba(255, 255, 255, 0.075);
+        padding: 8px 0 4px 0;
+        margin-left: 1rem;
+		border-radius: .5rem;
+        &:nth-child(1) {
+            margin-left: 0;
+        } 
+        & .value {
+            font-weight: 700;
+            color: #FFF;
+            height: 18px;
+            line-height: 18px;
+            margin-bottom: 2px;
+            font-size: 1.4rem;
+        }
+        & .label {
+            margin-bottom: 0;
+            height: 18px;
+            line-height: 16px;
+            font-size: .8rem;
+            font-weight: 600;
+        }
+        // Xtra-Small Screen Up
+        @media (min-width: 376px) {
+            width: 70px;
+            height: 70px;
+            padding: 10px 0 5px 0;
+            & .value {
+                height: 26px;
+                line-height: 26px;
+                margin-bottom: 4px;
+                font-size: 1.8rem;
+            }
+            & .label {
+                line-height: 17px;
+                font-size: 9;
+            }
+        }
+        // Small Screen Up
+        @include media-breakpoint-up(sm) {
+            width: 80px;
+            height: 80px;
+            padding: 14px 0 8px 0;
+            & .value {
+                height: 32px;
+                line-height: 32px;
+                margin-bottom: 6px;
+                font-size: 2.4rem;
+            }
+            & .label {
+                line-height: 18px;
+                font-size: 1;
+            }
+        }
+        // Medium Screen Up
+        @include breakpoint(md) {
+            width: 86px;
+            height: 86px;
+            padding: 16px 0 9px 0;
+            & .value {
+                height: 34px;
+                line-height: 34px;
+                margin-bottom: 8px;
+                font-size: 2.8rem;
+            }
+        }
+        // Large Screen Up
+        @include breakpoint(lg) {
+            width: 92px;
+            height: 92px;
+            padding: 18px 0 10px 0;
+            & .value {
+                line-height: 36px;
+                margin-bottom: 8px;
+                font-size: 3rem;
+            }
+        }
+    }
+}

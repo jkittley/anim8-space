@@ -171,7 +171,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
             if let image:UIImage = frame.image {
                 images.append(image)
             }
-        }
+        } 
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let gifPath = documentsURL!.appendingPathComponent("anim8.gif")
         
