@@ -23,6 +23,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     weak var playTimer: Timer?
     var playPos = 0
     var selectedFrame: Frame?
+    var exportAlert: UIAlertController?
     
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var tableView: UITableView!
@@ -33,7 +34,6 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet var pauseButton: UIBarButtonItem!
     @IBOutlet var shareButton: UIBarButtonItem!
     @IBOutlet weak var firstFrameButton: UIButton!
-    
     
     
     override func viewDidLoad() {
@@ -154,77 +154,129 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.setEditing(!tableView.isEditing, animated: true)
     }
     
+    
+    //
+    // Share as GIF / Movie
+    //
     @IBAction func share(sender: UIBarButtonItem) {
-        
-        // Loading message
-        let alert = UIAlertController(title: nil, message: " Creating Animated GIF...", preferredStyle: .alert)
-        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.whiteLarge
-        loadingIndicator.startAnimating();
-        alert.view.addSubview(loadingIndicator)
-        present(alert, animated: true, completion: nil)
-        
+        DispatchQueue.global(qos: .background).async {
+            self.createVideo(sender: sender)
+            //let pathURL = createGIF(with: collectImages(), frameDelay: (project?.playbackFrameRate)!)
+            //openShareSheet(pathURL, sender: sender);
+        }
+    }
+    
+    func openShareSheet(_ pathURL: URL, sender: UIBarButtonItem) {
+        DispatchQueue.main.async {
+            let vc = UIActivityViewController(activityItems: [pathURL, "Checkout the Animation I just created with #Anim8!"], applicationActivities: nil)
+            vc.excludedActivityTypes = [UIActivity.ActivityType.addToReadingList, UIActivity.ActivityType.assignToContact ]
+            vc.popoverPresentationController?.barButtonItem = sender
+            self.present(vc, animated: false, completion: nil)
+        }
+        //do {
+        //    let imageData: NSData = try NSData(contentsOf: pathURL)
+        //} catch {
+        //    let title = "Something went wrong!"
+        //    let message = "The animated GIF creation failed, Please try again."
+        //    let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        //    let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        //    alertController.addAction(OKAction)
+        //    present(alertController, animated: true, completion: nil)
+        //}
+    }
+    
+    
+    //
+    // Create array of images
+    //
+    func collectImages() -> [UIImage] {
         var images = [UIImage]()
         let frames = project?.frames
         for frame in frames! {
             if let image:UIImage = frame.image {
                 images.append(image)
             }
-        } 
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let gifPath = documentsURL!.appendingPathComponent("anim8.gif")
-        
-        // Make gif
-        createGIF(with: images, name: gifPath, frameDelay: (project?.playbackFrameRate)!)
-        
-        dismiss(animated: false, completion: nil)
-        
-        let pathURL = URL(fileURLWithPath: gifPath.path)
-        do {
-            let imageData: NSData = try NSData(contentsOf: pathURL)
-            
-            let vc = UIActivityViewController(activityItems: [imageData, "Checkout the Animation I just created with #Anim8!"], applicationActivities: nil)
-            
-            vc.popoverPresentationController?.barButtonItem = sender
-            self.present(vc, animated: true, completion: nil)
-            
-            
-        } catch {
-            let title = "Something went wrong!"
-            let message = "The animated GIF creation failed, Please try again."
-            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alertController.addAction(OKAction)
-            present(alertController, animated: true, completion: nil)
         }
+        return images
     }
     
-    
     //
-    // Create GIF
+    // Generate Video from images
     //
+    func createVideo(sender: UIBarButtonItem) {
+        
+        DispatchQueue.main.async {
+            self.exportAlert = UIAlertController(title: nil, message: "Exporting...", preferredStyle: .alert)
+            let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+            loadingIndicator.hidesWhenStopped = true
+            loadingIndicator.style = UIActivityIndicatorView.Style.gray
+            loadingIndicator.startAnimating()
+            self.exportAlert!.view.addSubview(loadingIndicator)
+            self.present(self.exportAlert!, animated: true, completion: nil)
+        }
+        
+        let images = collectImages()
+        let movPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("anim8.mp4")
+        let frameDelay = project?.playbackFrameRate ?? 0.25
+        
+        VideoGenerator.current.videoOutputURL = movPath
+        VideoGenerator.current.videoImageWidthForMultipleVideoGeneration = 960
+        VideoGenerator.current.shouldOptimiseImageForVideo = true
+        VideoGenerator.current.videoDurationInSeconds = Double(images.count) * frameDelay
+                
+        VideoGenerator.current.generate(withImages: images, andAudios: [], andType: .multiple, { (progress) in
+            print(progress)
+//            alert.message =  "Processing frame \(progress.completedUnitCount) of \(progress.totalUnitCount)"
+        }, success: { (url) in
+            if let alert = self.exportAlert {
+                DispatchQueue.main.async {
+                    alert.dismiss(animated: true, completion: {
+                        DispatchQueue.main.async {
+                            self.openShareSheet(url, sender: sender);
+                        }
+                    })
+                }
+            }
+            print(url)
+        }, failure: { (error) in
+            print(error)
+            if let alert = self.exportAlert {
+                DispatchQueue.main.async {
+                    alert.dismiss(animated: true, completion: {
+                        DispatchQueue.main.async {
+                            let title = "Export failed"
+                            let message = "Please try again. \(error.localizedDescription)"
+                            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                            let OKAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                            alertController.addAction(OKAction)
+                            let currentTopVC: UIViewController = self.currentTopViewController()
+                            currentTopVC.present(alertController, animated: true, completion: nil)
+                        }
+                    })
+                }
+            }
+        })
+    }
 
-    func createGIF(with images: [UIImage], name: URL, loopCount: Int = 0, frameDelay: Double)  {
-        let destinationURL = name
-        let destinationGIF = CGImageDestinationCreateWithURL(destinationURL as CFURL, kUTTypeGIF, images.count, nil)!
+    //
+    // Generate GIF from images
+    //
+    func createGIF(with images: [UIImage], loopCount: Int = 0, frameDelay: Double) -> URL  {
+        let gifPath = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("anim8.gif") as NSURL
+        let destinationGIF = CGImageDestinationCreateWithURL(gifPath as CFURL, kUTTypeGIF, images.count, nil)!
         // This dictionary controls the delay between frames
         // If you don't specify this, CGImage will apply a default delay
-        let properties = [
-            (kCGImagePropertyGIFDictionary as String): [(kCGImagePropertyGIFDelayTime as String): frameDelay]
-        ]
+        let properties = [(kCGImagePropertyGIFDictionary as String): [(kCGImagePropertyGIFDelayTime as String): frameDelay]]
         for img in images {
-            // Convert an UIImage to CGImage, fitting within the specified rect
-      
             let rot = OpenCVWrapper.rotate(img, arg2: 270)
             let cgImage = rot.cgImage
-        
             // Add the frame to the GIF image
             CGImageDestinationAddImage(destinationGIF, cgImage!, properties as CFDictionary?)
         }
         // Write the GIF file to disk
-      
         CGImageDestinationFinalize(destinationGIF)
+        //return URL(fileURLWithPath: gifPath.path)
+        return gifPath as URL
     }
 
     
@@ -353,7 +405,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         return (playTimer == nil)
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
     
             var newRowToSelect = -1
@@ -394,7 +446,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     func scrollToBottom() {
         if let project = self.project, project.frames.count > 0 {
             let lastIndex = IndexPath(row: project.frames.count - 1, section: 0)
-            self.tableView.scrollToRow(at: lastIndex, at: UITableViewScrollPosition.bottom, animated: true)
+            self.tableView.scrollToRow(at: lastIndex, at: UITableView.ScrollPosition.bottom, animated: true)
         }
     }
     

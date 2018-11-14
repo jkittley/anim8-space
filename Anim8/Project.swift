@@ -101,7 +101,7 @@ class Project: NSObject, NSCoding {
     
     static func getFeatureAlgorithmOptions() -> [String] {
         if let prefData = getSettingsPlistData(forKey: "defaultAlgFeatures")  {
-            print(prefData["Values"])
+            //print(prefData["Values"])
             return prefData["Values"] as! [String]
         }
         return[String]()
@@ -109,7 +109,7 @@ class Project: NSObject, NSCoding {
     
     static func getDescriptorAlgorithmOptions() -> [String] {
         if let prefData = getSettingsPlistData(forKey: "defaultAlgDescriptors")  {
-            print(prefData["Values"])
+            //print(prefData["Values"])
             return prefData["Values"] as! [String]
         }
         return [String]()
@@ -117,7 +117,7 @@ class Project: NSObject, NSCoding {
     
     static func getVisualisationOptions() -> [String] {
         if let prefData = getSettingsPlistData(forKey: "defaultVisualisation")  {
-            print(prefData["Values"])
+            //print(prefData["Values"])
             return prefData["Values"] as! [String]
         }
         return [String]()
@@ -125,7 +125,7 @@ class Project: NSObject, NSCoding {
     
     static func getPlaybackIntervals() -> [Double] {
         if let prefData = getSettingsPlistData(forKey: "defaultPlaybackInterval")  {
-            print(prefData["Values"])
+            //print(prefData["Values"])
             return prefData["Values"] as! [Double]
         }
         return [Double]()

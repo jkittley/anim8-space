@@ -10,6 +10,10 @@
 		16157E1C2194370500874D2B /* headPattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 16157E1B2194370500874D2B /* headPattern.png */; };
 		16157E1E219458DF00874D2B /* wood.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 16157E1D219458DF00874D2B /* wood.jpg */; };
 		16157E2021946D9700874D2B /* firstCapture.png in Resources */ = {isa = PBXBuildFile; fileRef = 16157E1F21946D9700874D2B /* firstCapture.png */; };
+		16222815219B19990082F604 /* VideoGeneratorError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16222810219B19990082F604 /* VideoGeneratorError.swift */; };
+		16222816219B19990082F604 /* VideoGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16222811219B19990082F604 /* VideoGenerator.swift */; };
+		16222817219B19990082F604 /* AVAssetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16222813219B19990082F604 /* AVAssetExtension.swift */; };
+		16222818219B19990082F604 /* ImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16222814219B19990082F604 /* ImageExtension.swift */; };
 		1658864D1F3C6C3900B05770 /* EditProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1658864C1F3C6C3900B05770 /* EditProjectViewController.swift */; };
 		165886571F3C8BE400B05770 /* CaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165886561F3C8BE400B05770 /* CaptureViewController.swift */; };
 		1658865B1F3C8CAF00B05770 /* OpenCVWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1658865A1F3C8CAF00B05770 /* OpenCVWrapper.mm */; };
@@ -70,6 +74,10 @@
 		16157E1B2194370500874D2B /* headPattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = headPattern.png; sourceTree = "<group>"; };
 		16157E1D219458DF00874D2B /* wood.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = wood.jpg; sourceTree = "<group>"; };
 		16157E1F21946D9700874D2B /* firstCapture.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = firstCapture.png; sourceTree = "<group>"; };
+		16222810219B19990082F604 /* VideoGeneratorError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoGeneratorError.swift; sourceTree = "<group>"; };
+		16222811219B19990082F604 /* VideoGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VideoGenerator.swift; path = VideoGen/VideoGenerator.swift; sourceTree = "<group>"; };
+		16222813219B19990082F604 /* AVAssetExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AVAssetExtension.swift; sourceTree = "<group>"; };
+		16222814219B19990082F604 /* ImageExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageExtension.swift; sourceTree = "<group>"; };
 		1658864C1F3C6C3900B05770 /* EditProjectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProjectViewController.swift; sourceTree = "<group>"; };
 		165886561F3C8BE400B05770 /* CaptureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureViewController.swift; sourceTree = "<group>"; };
 		165886581F3C8CAF00B05770 /* Anim8-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Anim8-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -156,6 +164,25 @@
 				16D915C21F3F7CFE0094F4AF /* defaultThumb.png */,
 			);
 			name = messages;
+			sourceTree = "<group>";
+		};
+		1622280F219B19990082F604 /* Error */ = {
+			isa = PBXGroup;
+			children = (
+				16222810219B19990082F604 /* VideoGeneratorError.swift */,
+			);
+			name = Error;
+			path = VideoGen/Error;
+			sourceTree = "<group>";
+		};
+		16222812219B19990082F604 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				16222813219B19990082F604 /* AVAssetExtension.swift */,
+				16222814219B19990082F604 /* ImageExtension.swift */,
+			);
+			name = Extensions;
+			path = VideoGen/Extensions;
 			sourceTree = "<group>";
 		};
 		165886641F3D978200B05770 /* images */ = {
@@ -286,6 +313,9 @@
 		16FB27F91F3642BE00D86823 /* Anim8 */ = {
 			isa = PBXGroup;
 			children = (
+				1622280F219B19990082F604 /* Error */,
+				16222812219B19990082F604 /* Extensions */,
+				16222811219B19990082F604 /* VideoGenerator.swift */,
 				1662720E1F50AE7000E8210B /* Tutorial */,
 				166271E31F50417F00E8210B /* storyboards */,
 				166271E21F50415300E8210B /* imageProcessing */,
@@ -415,11 +445,15 @@
 				1658864D1F3C6C3900B05770 /* EditProjectViewController.swift in Sources */,
 				1662720D1F50AE6500E8210B /* Tut2ViewController.swift in Sources */,
 				166271DF1F501E0400E8210B /* ProjectCollectionCell.swift in Sources */,
+				16222818219B19990082F604 /* ImageExtension.swift in Sources */,
+				16222817219B19990082F604 /* AVAssetExtension.swift in Sources */,
 				168DB91A1F4EB741005C8A36 /* TutorialViewController.swift in Sources */,
 				1658865D1F3C93D900B05770 /* FrameExtractor.swift in Sources */,
 				1658865B1F3C8CAF00B05770 /* OpenCVWrapper.mm in Sources */,
 				16FB280F1F364F0A00D86823 /* Project.swift in Sources */,
 				16898C7A1F56AAF7001926B7 /* SettingsMainTableViewController.swift in Sources */,
+				16222815219B19990082F604 /* VideoGeneratorError.swift in Sources */,
+				16222816219B19990082F604 /* VideoGenerator.swift in Sources */,
 				166271E51F50544600E8210B /* ProjFrameTableViewCell.swift in Sources */,
 				1658865F1F3D24EA00B05770 /* Frame.swift in Sources */,
 			);
@@ -496,7 +530,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -549,7 +583,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -572,7 +606,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Anim8/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kittley.Anim8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -581,7 +615,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Anim8/Anim8-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -599,7 +633,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = Anim8/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kittley.Anim8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -607,7 +641,7 @@
 				STRIP_INSTALLED_PRODUCT = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Anim8/Anim8-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};

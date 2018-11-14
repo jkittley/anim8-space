@@ -120,7 +120,7 @@ class ProjectCollectionsCollectionViewController: UICollectionViewController, Ed
     func deleteProject(project: Project, indexPath: IndexPath) {
         print("Deleting ",indexPath.row)
         
-        let deleteAlert = UIAlertController(title: "Are You Sure?", message: "All photos from '\(project.name)' will be perminantly deleted.", preferredStyle: UIAlertControllerStyle.alert)
+        let deleteAlert = UIAlertController(title: "Are You Sure?", message: "All photos from '\(project.name)' will be perminantly deleted.", preferredStyle: UIAlertController.Style.alert)
         deleteAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
             // Delete project
             self.projects.remove(at: indexPath.row)

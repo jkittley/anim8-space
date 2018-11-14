@@ -133,7 +133,7 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
             print("Making")
             return 100.0
         }
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -144,7 +144,7 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
         } else if section == section_visualisations && !showVisualisationOptions {
             return CGFloat.leastNonzeroMagnitude
         }
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
     
     override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
