@@ -165,7 +165,7 @@ public class VideoGenerator: NSObject {
             print ("--> frameDuration", frameDuration)
             
             /// declare a temporary array to hold all as of yet unused images
-            var remainingPhotos = [UIImage](VideoGenerator.current.images)
+//            var remainingPhotos = [UIImage](VideoGenerator.current.images)
             
             var nextStartTimeForFrame: CMTime! = CMTime(seconds: 0, preferredTimescale: 1000)
             var imageForVideo: UIImage!
