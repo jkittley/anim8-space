@@ -40,7 +40,7 @@ public class VideoGenerator: NSObject {
   /// public property to set the name of the finished video file
   open var fileName = "tmp"
   open var videoOutputURL: URL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent("tmp.mp4")
-  
+    
   /// public property to set a multiple type video's background color
   open var videoBackgroundColor: UIColor = UIColor.black
   
@@ -54,8 +54,9 @@ public class VideoGenerator: NSObject {
   open var maxVideoLengthInSeconds: Double?
   
   /// public property to set a width to which to resize the images for multiple video generation. Default value is 800
-  open var videoImageWidthForMultipleVideoGeneration = 800
-  
+  open var videoImageWidthForMultipleVideoGeneration = 960
+  open var videoImageHeightForMultipleVideoGeneration = 540
+    
   /// public property to set the video duration when there is no audio
   open var videoDurationInSeconds: Double = 0 {
     didSet {
@@ -85,6 +86,8 @@ public class VideoGenerator: NSObject {
 
     let inputSize = VideoGenerator.current.minSize
     let outputSize = VideoGenerator.current.minSize
+    
+    print(outputSize)
     
     // Delete existing tmp file if it exists
     do {
@@ -170,46 +173,26 @@ public class VideoGenerator: NSObject {
             /// if the input writer is ready and we have not yet used all imaged
             while (videoWriterInput.isReadyForMoreMediaData && frameCount < numImages) {
               
-              if VideoGenerator.current.type == .single {
-                /// pick the next photo to be loaded
-                imageForVideo = remainingPhotos.remove(at: 0)
-                
-                /// calculate the beggining time of the next frame; if the frame is the first, the start time is 0, if not, the time is the number of the frame multiplied by the frame duration in seconds
-                nextStartTimeForFrame = frameCount == 0 ? CMTime(seconds: 0, preferredTimescale: 1000) : CMTimeMultiply(frameDuration, multiplier: Int32(Int(frameCount)))
-                
-              } else {
                 /// get the right photo from the array
                 imageForVideo = VideoGenerator.current.images[frameCount]
                 
-                if VideoGenerator.current.type == .multiple {
-                  /// calculate the start of the frame; if the frame is the first, the start time is 0, if not, get the already elapsed time
-                  nextStartTimeForFrame = frameCount == 0 ? CMTime(seconds: 0, preferredTimescale: 1000) : CMTimeMultiply(frameDuration, multiplier: Int32(Int(frameCount)))
-                  /// add the max between the audio duration time or a minimum duration to the elapsed time
-                  elapsedTime += VideoGenerator.current.audioDurations[frameCount] <= 1 ? VideoGenerator.current.minSingleVideoDuration : VideoGenerator.current.audioDurations[frameCount]
+                /// calculate the start of the frame; if the frame is the first, the start time is 0, if not, get the already elapsed time
+                nextStartTimeForFrame = frameCount == 0 ? CMTime(seconds: 0, preferredTimescale: 1000) : CMTimeMultiply(frameDuration, multiplier: Int32(Int(frameCount)))
+                /// add the max between the audio duration time or a minimum duration to the elapsed time
+                elapsedTime += VideoGenerator.current.audioDurations[frameCount] <= 1 ? VideoGenerator.current.minSingleVideoDuration : VideoGenerator.current.audioDurations[frameCount]
                 
-                } else {
-                  nextStartTimeForFrame = frameCount == 0 ? CMTime(seconds: 0, preferredTimescale: 1000) : CMTimeMultiply(frameDuration, multiplier: Int32(Int(frameCount)))
-
-                  let audio_Time = VideoGenerator.current.audioDurations[0]
-                  let total_Images = VideoGenerator.current.images.count
-                  elapsedTime += audio_Time / Double(total_Images)
+                // append the image to the pixel buffer at the right start time
+                if !VideoGenerator.current.appendPixelBufferForImage(imageForVideo, pixelBufferAdaptor: pixelBufferAdaptor, presentationTime: nextStartTimeForFrame) {
+                    failure(VideoGeneratorError(error: .kFailedToAppendPixelBufferError))
                 }
-              }
-              
-                print("nextStartTimeForFrame", nextStartTimeForFrame)
                 
-              /// append the image to the pixel buffer at the right start time
-              if !VideoGenerator.current.appendPixelBufferForImage(imageForVideo, pixelBufferAdaptor: pixelBufferAdaptor, presentationTime: nextStartTimeForFrame) {
-                failure(VideoGeneratorError(error: .kFailedToAppendPixelBufferError))
-              }
+                // increise the frame count
+                frameCount += 1
               
-              // increise the frame count
-              frameCount += 1
+                currentProgress.completedUnitCount = Int64(frameCount)
               
-              currentProgress.completedUnitCount = Int64(frameCount)
-              
-              // after each successful append of an image track the current progress
-              progress(currentProgress)
+                // after each successful append of an image track the current progress
+                progress(currentProgress)
             }
             
             // after all images are appended the writting shoul be marked as finished
@@ -222,26 +205,8 @@ public class VideoGenerator: NSObject {
             // the completion is made with a completion handler which will return the url of the generated video or an error
             videoWriter.finishWriting { () -> Void in
               if self.audioURLs.isEmpty {
-                if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-                  
-//                  let documentDirectory = URL(fileURLWithPath: path)
-//                  let newPath = documentDirectory.appendingPathComponent("\(self.fileName).m4v")
-                  
-//                  do {
-//                    let fileURLs = try FileManager.default.contentsOfDirectory(at: documentDirectory, includingPropertiesForKeys: nil)
-//
-//                    if fileURLs.contains(newPath) {
-//                      try FileManager.default.removeItem(at: newPath)
-//                    }
-//
-//                    try FileManager.default.moveItem(at: self.videoOutputURL, to: newPath)
-//                  } catch let error {
-//                    failure(error)
-//                  }
-                  
                   print("finished")
                   success(self.videoOutputURL)
-                }
               } else {
                 /// if the writing is successfull, go on to merge the video with the audio files
                 VideoGenerator.current.mergeAudio(withVideoURL: self.videoOutputURL, success: { (videoURL) in
@@ -251,7 +216,6 @@ public class VideoGenerator: NSObject {
                   failure(error)
                 })
               }
-              
               VideoGenerator.current.videoWriter = nil
             }
           })
@@ -298,7 +262,7 @@ public class VideoGenerator: NSObject {
       }
     } else {
       for _image in _images {
-        self.images.append(_image.scaleImageToSize(newSize: CGSize(width: videoImageWidthForMultipleVideoGeneration, height: videoImageWidthForMultipleVideoGeneration)))
+        self.images.append(_image.scaleImageToSize(newSize: CGSize(width: videoImageWidthForMultipleVideoGeneration, height: videoImageHeightForMultipleVideoGeneration)))
       }
     }
     
