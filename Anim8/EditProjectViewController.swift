@@ -33,7 +33,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet var playButton: UIBarButtonItem!
     @IBOutlet var pauseButton: UIBarButtonItem!
     @IBOutlet var shareButton: UIBarButtonItem!
-    @IBOutlet weak var firstFrameButton: UIButton!
+    @IBOutlet weak var helpView: UIView!
     
     
     override func viewDidLoad() {
@@ -89,10 +89,10 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         }
         if (selectedFrame == nil) {
             imageView.isHidden = true
-            firstFrameButton.isHidden = false;
+            helpView.isHidden = false;
         } else {
             imageView.image = selectedFrame?.image
-            firstFrameButton.isHidden = true
+            helpView.isHidden = true
             imageView.isHidden = false
         }
         
@@ -115,11 +115,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     @IBAction func capture(sender: UIBarButtonItem) {
         openCamera();
     }
-    
-    @IBAction func firstFrameButtonClick(_ sender: Any) {
-        openCamera();
-    }
-    
+        
     func openCamera() {
         // Has the camera been authorised?
         if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) == AVAuthorizationStatus.authorized {
