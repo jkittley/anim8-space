@@ -115,7 +115,8 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     @IBAction func capture(sender: UIBarButtonItem) {
         openCamera();
     }
-        
+    
+
     func openCamera() {
         // Has the camera been authorised?
         if AVCaptureDevice.authorizationStatus(for: AVMediaType.video) == AVAuthorizationStatus.authorized {

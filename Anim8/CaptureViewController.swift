@@ -17,7 +17,7 @@ class CaptureViewController: UIViewController, PreviewFrameExtractorDelegate {
     
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var debugLabel: UILabel!
-    @IBOutlet var processingLabel: UILabel!
+    @IBOutlet weak var processingView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,11 +29,6 @@ class CaptureViewController: UIViewController, PreviewFrameExtractorDelegate {
         frameExtractor.parentController = self
         
         debugLabel.text = (project?.algFeatures)! + " - " + (project?.feedback)!
-        
-        processingLabel.layer.borderColor = UIColor.black.cgColor
-        processingLabel.layer.cornerRadius = 4
-        processingLabel.layer.borderWidth = 1
-        processingLabel.layer.backgroundColor = UIColor.white.cgColor
         
         hideProcessingMessage()
         
@@ -67,11 +62,11 @@ class CaptureViewController: UIViewController, PreviewFrameExtractorDelegate {
     }
 
     func showProcessingMessage() {
-        processingLabel.isHidden = false
+        processingView.isHidden = false
     }
     
     func hideProcessingMessage() {
-        processingLabel.isHidden = true
+        processingView.isHidden = true
     }
 
     
