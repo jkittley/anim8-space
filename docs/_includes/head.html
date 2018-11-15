@@ -49,9 +49,31 @@
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
     <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}" href="{{ "/feed.xml" | relative_url }}">
     
-    {% if jekyll.environment == 'production' and site.google_analytics %}
+    {% if jekyll.environment == 'production' %}
     {% include google-analytics.html %}
     {% endif %}
+
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.1.0/cookieconsent.min.js"></script>
+    <script>
+    window.addEventListener("load", function(){
+    window.cookieconsent.initialise({
+      "palette": {
+        "popup": {
+          "background": "#000000",
+          "text": "#ffffff"
+        },
+        "button": {
+          "background": "transparent",
+          "text": "#ff7700",
+          "border": "#ff7700"
+        }
+      },
+      "content": {
+        "href": "anim8.space/privacy.html"
+      }
+    })});
+    </script>
 
   </head>
 
