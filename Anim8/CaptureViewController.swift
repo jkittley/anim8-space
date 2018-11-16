@@ -65,7 +65,6 @@ class CaptureViewController: UIViewController, PreviewFrameExtractorDelegate {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         frameExtractor.close()
-        frameExtractor = nil;
         dismiss(animated: false, completion: nil)
         newPhotoDeligate?.newPhotoError(message:"Memory Low!", dismiss: false)
     }

@@ -471,6 +471,15 @@ static void FeedbackKeypointDensity(cv::Mat &src, vector<cv::KeyPoint> keypoints
     cv::bitwise_and(foreground, mask, foreground);
     cv::Mat finalmat;
     cv::add(background, foreground, dst);
+    
+    heatmap.release();
+    background.release();
+    foreground.release();
+    finalmat.release();
+    resized.release();
+    blurred.release();
+    mask.release();
+    invMask.release();
 }
 
 //
@@ -485,11 +494,11 @@ static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage
     
     float scale = 1;
     if ([algDesc  isEqual: @"sift"]) {
-        scale = 0.5;
+        scale = 0.3;
     } else if ([algDesc  isEqual: @"surf"]) {
-        scale = 0.8;
+        scale = 0.5;
     } else if ([algDesc  isEqual: @"orb"]) {
-        scale = 1;
+        scale = 0.7;
     }
     
     cv::resize(grayMatKey, grayMatKey, cv::Size(), scale, scale);
@@ -527,6 +536,9 @@ static void FeedbackMatchingKeypoints(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage
             
         //}
     }
+    
+    bgrMatKey.release();
+    grayMatKey.release();
 }
 
 //
@@ -551,11 +563,11 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
     // Scale image to speed up based on algorithm used
     float scale = 1;
     if ([algDesc  isEqual: @"sift"]) {
-        scale = 0.5;
+        scale = 0.3;
     } else if ([algDesc  isEqual: @"surf"]) {
-        scale = 0.8;
+        scale = 0.5;
     } else if ([algDesc  isEqual: @"orb"]) {
-        scale = 1;
+        scale = 0.7;
     }
     if (scale != 1) {
         cv::resize(grayMatKey, grayMatKey, cv::Size(), scale, scale);
@@ -569,11 +581,13 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
     if (showMode==1) {
         cv::Mat errorMat(bgrMat.rows, bgrMat.cols, CV_8UC3, cv::Scalar(139,0,0));;
         SideBySide(bgrMat, errorMat, outMat);
+        errorMat.release();
     } else if (showMode==2) {
         outMat = bgrMat;
     } else if (showMode==3) {
         cv::Mat errorMat(bgrMat.rows, bgrMat.cols, CV_8UC3, cv::Scalar(139,0,0));;
         PictureInPicture(bgrMat, errorMat, outMat);
+        errorMat.release();
     } else {
         outMat = bgrMat;
     }
@@ -627,7 +641,8 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
         CannyThreshold(merged, canny);
         cv::cvtColor(canny, canny, CV_GRAY2BGR);
         addWeighted( bgrMat, 1.0, canny, 0.8, 0.0, outMat);
-    
+        canny.release();
+        
     } else if (showMode==3) {
         PictureInPicture(bgrMat, merged, outMat);
    
@@ -635,6 +650,8 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
         outMat = bgrMat;
     }
     
+    bgrMatKey.release();
+    grayMatKey.release();
 }
 
 
@@ -666,7 +683,8 @@ static void FeedbackOvelays(cv::Mat &bgrMat, UIImage* keyImage, cv::Mat &outMat,
         CannyThreshold(bgrMatKeyGray, canny);
         cv::cvtColor(canny, canny, CV_GRAY2BGR);
         addWeighted(canny, 1.0, bgrMat, 0.6, 0.0, outMat);
-        
+        canny.release();
+        bgrMatKeyGray.release();
     // Compare
     } else if (showMode == 3) {
         outMat = bgrMatKey.clone();
@@ -683,6 +701,7 @@ static void FeedbackOvelays(cv::Mat &bgrMat, UIImage* keyImage, cv::Mat &outMat,
         PictureInPicture(bgrMat, bgrMatKey, outMat);
     }
     
+    bgrMatKey.release();
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -720,7 +739,9 @@ static void FeedbackOvelays(cv::Mat &bgrMat, UIImage* keyImage, cv::Mat &outMat,
         }
         if (kpon) keypointsRequired = true;
         
-        
+        if (kpon) {
+            cv::resize(bgrMat, bgrMat, cv::Size(), 0.6, 0.6);
+        }
         
         // If kepoints are needed then create them
         vector<cv::KeyPoint> keypoints;
@@ -809,8 +830,14 @@ static void FeedbackOvelays(cv::Mat &bgrMat, UIImage* keyImage, cv::Mat &outMat,
             }
         }
         
+
         // Return
         UIImage *kpImage = MatToUIImage(outMat);
+        
+        outMat.release();
+        bgrMat.release();
+        grayMat.release();
+        
         return RestoreUIImageOrientation(kpImage, image);
         
     } catch (const std::exception &exc) {
