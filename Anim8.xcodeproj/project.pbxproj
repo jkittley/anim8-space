@@ -47,6 +47,8 @@
 		169F77311F746867004E3299 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 169F77301F746867004E3299 /* opencv2.framework */; };
 		16C1F4E1219C5D1F00325CDA /* helpView.png in Resources */ = {isa = PBXBuildFile; fileRef = 16C1F4E0219C5D1F00325CDA /* helpView.png */; };
 		16C1F4E3219C5E5B00325CDA /* helpViewArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 16C1F4E2219C5E5B00325CDA /* helpViewArrow.png */; };
+		16C1F4E5219EB0A700325CDA /* camVisToggle.png in Resources */ = {isa = PBXBuildFile; fileRef = 16C1F4E4219EB0A700325CDA /* camVisToggle.png */; };
+		16C1F4E7219EB0F200325CDA /* camVisToggleOn.png in Resources */ = {isa = PBXBuildFile; fileRef = 16C1F4E6219EB0F200325CDA /* camVisToggleOn.png */; };
 		16D915C11F3F79490094F4AF /* navbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 16D915C01F3F79490094F4AF /* navbar.png */; };
 		16D915C31F3F7CFE0094F4AF /* defaultThumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 16D915C21F3F7CFE0094F4AF /* defaultThumb.png */; };
 		16D915C61F3F7DCC0094F4AF /* camCapture.png in Resources */ = {isa = PBXBuildFile; fileRef = 16D915C41F3F7DCC0094F4AF /* camCapture.png */; };
@@ -118,6 +120,8 @@
 		16A449981F74657800957A68 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		16C1F4E0219C5D1F00325CDA /* helpView.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = helpView.png; sourceTree = "<group>"; };
 		16C1F4E2219C5E5B00325CDA /* helpViewArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = helpViewArrow.png; sourceTree = "<group>"; };
+		16C1F4E4219EB0A700325CDA /* camVisToggle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camVisToggle.png; sourceTree = "<group>"; };
+		16C1F4E6219EB0F200325CDA /* camVisToggleOn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = camVisToggleOn.png; sourceTree = "<group>"; };
 		16CF644E1F74545300987866 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		16CF64501F7454A600987866 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		16D915C01F3F79490094F4AF /* navbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navbar.png; sourceTree = "<group>"; };
@@ -191,6 +195,8 @@
 		165886641F3D978200B05770 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				16C1F4E6219EB0F200325CDA /* camVisToggleOn.png */,
+				16C1F4E4219EB0A700325CDA /* camVisToggle.png */,
 				16C1F4E2219C5E5B00325CDA /* helpViewArrow.png */,
 				16C1F4E0219C5D1F00325CDA /* helpView.png */,
 				16FC4FF721948542002E394A /* welcomeStart.png */,
@@ -401,6 +407,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16C1F4E5219EB0A700325CDA /* camVisToggle.png in Resources */,
 				16157E2021946D9700874D2B /* firstCapture.png in Resources */,
 				166272141F50C50E00E8210B /* t3.png in Resources */,
 				1662720B1F50AE0000E8210B /* a14.png in Resources */,
@@ -431,6 +438,7 @@
 				16D915C71F3F7DCC0094F4AF /* camClose.png in Resources */,
 				16D915C11F3F79490094F4AF /* navbar.png in Resources */,
 				16898C7F1F56EB0D001926B7 /* Settings.bundle in Resources */,
+				16C1F4E7219EB0F200325CDA /* camVisToggleOn.png in Resources */,
 				16157E1C2194370500874D2B /* headPattern.png in Resources */,
 				16FC4FFB219487CF002E394A /* t1.png in Resources */,
 				16D915C31F3F7CFE0094F4AF /* defaultThumb.png in Resources */,

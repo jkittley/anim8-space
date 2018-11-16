@@ -74,6 +74,11 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
         self.tableView.reloadData()
     }
     
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        print ("Memory Low");
+    }
+    
     //
     // UI Interactions
     //
@@ -165,7 +170,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
     
     func openShareSheet(_ pathURL: URL, sender: UIBarButtonItem) {
         DispatchQueue.main.async {
-            let vc = UIActivityViewController(activityItems: [pathURL, "Checkout the Animation I just created with #Anim8!"], applicationActivities: nil)
+            let vc = UIActivityViewController(activityItems: [pathURL, "Check out the #Anim8 I just created with @Anim8Space!"], applicationActivities: nil)
             vc.excludedActivityTypes = [UIActivity.ActivityType.addToReadingList, UIActivity.ActivityType.assignToContact ]
             vc.popoverPresentationController?.barButtonItem = sender
             self.present(vc, animated: false, completion: nil)
@@ -527,6 +532,7 @@ class EditProjectViewController: UIViewController, UITableViewDelegate, UITableV
             if let captureViewController = segue.destination as? CaptureViewController {
                 captureViewController.project = project
                 captureViewController.newPhotoDeligate = self
+                captureViewController.editProjectDelegate = editProjectDelegate
             }
         }
         

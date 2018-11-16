@@ -34,7 +34,7 @@ class SettingsMainTableViewController: UITableViewController, SettingsPickerDele
     let section_save_as_default = 6
     
     var showDeveloperDebugOptions = false
-    var showAlgorithmOptions = true
+    var showAlgorithmOptions = false
     var showVisualisationOptions = true
     var hideFrame1Option = false
     

@@ -255,10 +255,6 @@ static bool getMatches(cv::Mat grayKey, cv::Mat grayImg, vector<cv::KeyPoint>kpK
         }
     }
     
-    
-    
-    
-    
     //-- Localize the object
     for( int i = 0; i < good_matches.size(); i++ ) {
         //-- Get the keypoints from the good matches
@@ -277,7 +273,7 @@ static bool getMatches(cv::Mat grayKey, cv::Mat grayImg, vector<cv::KeyPoint>kpK
 }
 
 static void CannyThreshold(cv::Mat& src_gray, cv::Mat& detected_edges) {
-    int lowThreshold = 5;
+    int lowThreshold = 15;
     int ratio = 3;
     int kernel_size = 3;
     /// Reduce noise with a kernel 3x3
@@ -287,9 +283,19 @@ static void CannyThreshold(cv::Mat& src_gray, cv::Mat& detected_edges) {
 }
 
 static void rotateMat(cv::Mat& src, double angle, cv::Mat& dst){
-    cv::Point2f ptCp(src.cols*0.5, src.rows*0.5);
-    cv::Mat M = cv::getRotationMatrix2D(ptCp, angle, 1.0);
-    cv::warpAffine(src, dst, M, cv::Size(src.rows, src.cols), cv::INTER_CUBIC); //Nearest is too rough,
+    //cv::Point2f ptCp(src.cols*0.5, src.rows*0.5);
+//    cv::Point2f ptCp(src.cols/2.-0.5, src.rows/2.-0.5);
+//    cv::Mat M = cv::getRotationMatrix2D(ptCp, angle, 1.0);
+//    cv::warpAffine(src, dst, M, cv::Size(src.rows, src.cols), cv::INTER_CUBIC); //Nearest is too rough,
+
+    cv::Point2f center(src.cols/2.0F, src.rows/2.0F);
+    cv::Mat rot = cv::getRotationMatrix2D(center, angle, 1.0);
+    // determine bounding rectangle
+    cv::Rect bbox = cv::RotatedRect(center,src.size(), angle).boundingRect();
+    // adjust transformation matrix
+    rot.at<double>(0,2) += bbox.width/2.0 - center.x;
+    rot.at<double>(1,2) += bbox.height/2.0 - center.y;
+    cv::warpAffine(src, dst, rot, bbox.size());
 }
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -313,12 +319,11 @@ static void PictureInPicture(cv::Mat &bgrBig, cv::Mat &bgrSmall, cv::Mat &bgrOut
     cv::resize(bgrBig, bgrOutput, cv::Size(), 1, 1);
     
     // Define roi area (it has small image dimensions).
-    cv::Rect roi = cv::Rect(bgrBig.cols - bgrPip.cols - 5, 5, bgrPip.cols, bgrPip.rows);
+    cv::Rect roi = cv::Rect((bgrBig.cols - bgrPip.cols) - 10, 0, bgrPip.cols, bgrPip.rows);
     // Take a sub-view of the large image
     cv::Mat subView = bgrOutput(roi);
     // Copy contents of the small image to large
     bgrPip.copyTo(subView);
-    
 }
 
 
@@ -633,6 +638,53 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
 }
 
 
+//
+// Feedback Overlay
+//
+static void FeedbackOvelays(cv::Mat &bgrMat, UIImage* keyImage, cv::Mat &outMat, int showMode) {
+    
+    // No Keyimage i.e. this is the first image to be captured
+    if (keyImage == NULL) {
+        outMat = bgrMat;
+        return;
+    }
+    
+    cv::Mat bgrMatKey;
+    UIImageToMat(keyImage, bgrMatKey);
+    rotateMat(bgrMatKey, 270.0, bgrMatKey);
+    cv::resize(bgrMatKey, bgrMatKey, bgrMat.size());
+
+    // Ghost
+    if (showMode == 1) {
+        addWeighted(bgrMat, 1.0, bgrMatKey, 0.8, 0.0, outMat);
+        
+    // Outline
+    } else if (showMode == 2) {
+        cv::Mat canny;
+        cv::Mat bgrMatKeyGray;
+        cv::cvtColor(bgrMatKey, bgrMatKeyGray, CV_BGR2GRAY);
+        CannyThreshold(bgrMatKeyGray, canny);
+        cv::cvtColor(canny, canny, CV_GRAY2BGR);
+        addWeighted(canny, 1.0, bgrMat, 0.6, 0.0, outMat);
+        
+    // Compare
+    } else if (showMode == 3) {
+        outMat = bgrMatKey.clone();
+//        cv::copyMakeBorder(outMat, outMat, 2,2,2,2, cv::BORDER_CONSTANT, cv::Scalar(10, 110, 250));
+    }
+    
+    // Side by side
+    else if (showMode == 4) {
+        SideBySide(bgrMat, bgrMatKey, outMat);
+    }
+    
+    //Picture in picture
+    else if (showMode == 5) {
+        PictureInPicture(bgrMat, bgrMatKey, outMat);
+    }
+    
+}
+
 // ---------------------------------------------------------------------------------------------------------------
 // ---------------------------------------------------------------------------------------------------------------
 // Functions available to SWIFT wrapper
@@ -651,7 +703,7 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
    
     // Set orb limit
     ORB_KP_NUMBER = orbLimit;
-    cout << "ORB_KP_NUMBER:" << ORB_KP_NUMBER << endl;
+//    cout << "ORB_KP_NUMBER:" << ORB_KP_NUMBER << endl;
     
     cv::Mat bgrMat;
     UIImageToMat(image, bgrMat);
@@ -660,9 +712,19 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
     cv::Mat outMat;
     
     try {
-   
+        
+        // Are keypoints needed?
+        bool keypointsRequired = true;
+        if ([fb  isEqual: @"matching"] || [fb  isEqual: @"guide ghost"] || [fb  isEqual: @"guide outline"] || [fb  isEqual: @"guide compare"] || [fb  isEqual: @"guide side by side"] || [fb  isEqual: @"guide picture in picture"]) {
+            keypointsRequired = false;
+        }
+        if (kpon) keypointsRequired = true;
+        
+        
+        
+        // If kepoints are needed then create them
         vector<cv::KeyPoint> keypoints;
-        if (![fb  isEqual: @"matching"]) {
+        if (keypointsRequired) {
             try {
                 keypoints = getKeypoints(grayMat, algFeat);
             } catch (...) {
@@ -674,6 +736,19 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
         if ([fb  isEqual: @"keypoints"]) {
             outMat = bgrMat;
             kpon = true;
+            
+        // Overlay
+        } else if ([fb  isEqual: @"guide ghost"]) {
+            FeedbackOvelays(bgrMat, keyImage, outMat, 1);
+        } else if ([fb  isEqual: @"guide outline"]) {
+            FeedbackOvelays(bgrMat, keyImage, outMat, 2);
+        } else if ([fb  isEqual: @"guide compare"]) {
+            FeedbackOvelays(bgrMat, keyImage, outMat, 3);
+        } else if ([fb  isEqual: @"guide side by side"]) {
+            FeedbackOvelays(bgrMat, keyImage, outMat, 4);
+        } else if ([fb  isEqual: @"guide picture in picture"]) {
+            FeedbackOvelays(bgrMat, keyImage, outMat, 5);
+        
             
         // Density
         } else if ([fb  isEqual: @"density reveal"]) {
@@ -762,24 +837,14 @@ static void FeedbackPipelineEnd(cv::Mat &bgrMat, cv::Mat &grayMat, UIImage* keyI
 
 
 //
-// Grayscale image
+// Rotate image
 //
 
 + (nonnull UIImage *)rotate:(nonnull UIImage*)img arg2:(double)angle {
-    
     cv::Mat src;
     cv::Mat dst;
     UIImageToMat(img, src);
-    
-    cv::Point2f center(src.cols/2.0, src.rows/2.0);
-    cv::Mat rot = cv::getRotationMatrix2D(center, angle, 1.0);
-    // determine bounding rectangle
-    cv::Rect bbox = cv::RotatedRect(center,src.size(), angle).boundingRect();
-    // adjust transformation matrix
-    rot.at<double>(0,2) += bbox.width/2.0 - center.x;
-    rot.at<double>(1,2) += bbox.height/2.0 - center.y;
-    
-    cv::warpAffine(src, dst, rot, bbox.size());
+    rotateMat(src, angle, dst);
     UIImage *kpImage = MatToUIImage(dst);
     return RestoreUIImageOrientation(kpImage, img);
 }

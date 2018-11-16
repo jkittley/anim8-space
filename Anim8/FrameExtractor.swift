@@ -37,6 +37,8 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
     weak var previewDelegate: PreviewFrameExtractorDelegate?
     weak var newPhotoDeligate: NewPhotoDelegate?
     
+    public var showFeedback = false
+    
     override init() {
         super.init()
         checkPermission()
@@ -134,33 +136,27 @@ class FrameExtractor: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AV
         
         var resultImage: UIImage? = nil
         
-        do {
+        if let p = self.project {
             
-            if let p = self.project {
-                if let project = self.project {
+            do {
+                if !showFeedback || p.feedback == "none" {
+                    resultImage = uiImage
                     
-                    //Does this work???
-                    
-                    if p.feedback == "none" {
-                        resultImage = uiImage
-                        
-                    } else if project.frames.count > 0 {
-                        let keyFrame = project.compareFrameWithFirst ? project.frames.first : project.frames.last
-                        try OpenCVWrapper.catchException {
-                            resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:keyFrame?.image, arg7:p.algDescriptor, arg8:p.orbLimit )
-                        }
-                    } else {
-                        try OpenCVWrapper.catchException {
-                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:nil, arg7:p.algDescriptor, arg8:p.orbLimit)
-                        }
+                } else if p.frames.count > 0 {
+                    let keyFrame = p.compareFrameWithFirst ? p.frames.first : p.frames.last
+                    try OpenCVWrapper.catchException {
+                        resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:keyFrame?.image, arg7:p.algDescriptor, arg8:p.orbLimit )
+                    }
+                } else {
+                    try OpenCVWrapper.catchException {
+                    resultImage = OpenCVWrapper.feedback(uiImage, arg2:p.algFeatures, arg3:p.feedback, arg4:p.keypoints, arg5:p.keypointsAdv, arg6:nil, arg7:p.algDescriptor, arg8:p.orbLimit)
                     }
                 }
-                
-            } else {
+            } catch {
                 resultImage = uiImage
             }
-        
-        } catch {
+                
+        } else {
             resultImage = uiImage
         }
     

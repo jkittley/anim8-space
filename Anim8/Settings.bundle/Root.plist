@@ -24,7 +24,7 @@
 			<key>Key</key>
 			<string>allow_visualisation_options</string>
 			<key>DefaultValue</key>
-			<false/>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>
@@ -98,37 +98,28 @@
 			<key>Titles</key>
 			<array>
 				<string>None</string>
-				<string>Key Points</string>
-				<string>Density Reveal</string>
-				<string>Density Heatmap</string>
-				<string>Density Blurred</string>
-				<string>Density Colour</string>
-				<string>Vision Reveal</string>
-				<string>Vision Blurred</string>
-				<string>Vision Colour</string>
+				<string>KeyPoints</string>
+				<string>Ghost</string>
+				<string>Outline</string>
+				<string>Compare</string>
+				<string>Side By Side</string>
+				<string>Picture In Picture</string>
 				<string>Matches Only</string>
 				<string>Mathces All</string>
 				<string>Output Split</string>
-				<string>Output Canny</string>
-				<string>Output Picture In Picture</string>
 			</array>
 			<key>Values</key>
 			<array>
 				<string>none</string>
 				<string>keypoints</string>
-				<string>density reveal</string>
-				<string>density heatmap</string>
-				<string>density blurred</string>
-				<string>density colour</string>
-				<string>vision reveal</string>
-				<string>vision reveal paper</string>
-				<string>vision blurred</string>
-				<string>vision colour</string>
+				<string>guide ghost</string>
+				<string>guide outline</string>
+				<string>guide compare</string>
+				<string>guide side by side</string>
+				<string>guide picture in picture</string>
 				<string>matches only</string>
 				<string>matches all</string>
 				<string>output split</string>
-				<string>output canny</string>
-				<string>output picture in picture</string>
 			</array>
 		</dict>
 		<dict>

@@ -825,43 +825,10 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="Adt-FD-jus">
                                 <rect key="frame" x="0.0" y="0.0" width="1112" height="834"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jRN-TS-o0G">
-                                <rect key="frame" x="1017" y="749" width="60" height="60"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="baj-Iu-8Xt"/>
-                                    <constraint firstAttribute="height" constant="60" id="djS-Gv-Ua1"/>
-                                </constraints>
-                                <size key="titleShadowOffset" width="3" height="3"/>
-                                <state key="normal" image="camCapture.png">
-                                    <color key="titleShadowColor" red="0.99991279840000002" green="1" blue="0.99988144639999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </state>
-                                <connections>
-                                    <action selector="saveWithSender:" destination="XSW-t6-zlv" eventType="touchDown" id="Twx-mg-rnW"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lzH-N3-MFH">
-                                <rect key="frame" x="35" y="759" width="40" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="dcb-gj-sGu"/>
-                                    <constraint firstAttribute="width" constant="40" id="dkT-vU-Ohz"/>
-                                </constraints>
-                                <state key="normal" image="camClose.png"/>
-                                <connections>
-                                    <action selector="backWithSender:" destination="XSW-t6-zlv" eventType="touchUpInside" id="UWF-gr-awL"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5CV-XU-0Wp">
-                                <rect key="frame" x="75" y="792.5" width="942" height="21.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <color key="highlightedColor" red="1" green="0.46772867439999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <color key="shadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <size key="shadowOffset" width="-1" height="-1"/>
-                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aK5-sj-xVg" userLabel="ProcessingView">
                                 <rect key="frame" x="0.0" y="0.0" width="1112" height="834"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="EEf-By-bsb">
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="EEf-By-bsb" userLabel="Processing Message">
                                         <rect key="frame" x="491" y="407" width="130" height="20.5"/>
                                         <subviews>
                                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="zja-9w-dXq">
@@ -890,10 +857,60 @@
                                     <constraint firstItem="EEf-By-bsb" firstAttribute="centerX" secondItem="aK5-sj-xVg" secondAttribute="centerX" id="TzB-3R-KEu"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jRN-TS-o0G" userLabel="Capture Button">
+                                <rect key="frame" x="1017" y="749" width="60" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="baj-Iu-8Xt"/>
+                                    <constraint firstAttribute="height" constant="60" id="djS-Gv-Ua1"/>
+                                </constraints>
+                                <size key="titleShadowOffset" width="3" height="3"/>
+                                <state key="normal" image="camCapture.png">
+                                    <color key="titleShadowColor" red="0.99991279840000002" green="1" blue="0.99988144639999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="saveWithSender:" destination="XSW-t6-zlv" eventType="touchDown" id="Twx-mg-rnW"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lzH-N3-MFH" userLabel="Back Button">
+                                <rect key="frame" x="35" y="759" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="dcb-gj-sGu"/>
+                                    <constraint firstAttribute="width" constant="40" id="dkT-vU-Ohz"/>
+                                </constraints>
+                                <state key="normal" image="camClose.png">
+                                    <color key="titleShadowColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="backWithSender:" destination="XSW-t6-zlv" eventType="touchUpInside" id="UWF-gr-awL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pOA-qM-67a" userLabel="Vis Button">
+                                <rect key="frame" x="1027" y="689" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="u0m-Nq-jbc"/>
+                                    <constraint firstAttribute="width" constant="40" id="zfY-Wt-DAh"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="camVisToggle.png"/>
+                                <connections>
+                                    <action selector="toggleVisualisationClick:" destination="XSW-t6-zlv" eventType="touchUpInside" id="cmy-dR-Ha0"/>
+                                </connections>
+                            </button>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="cA3-cn-pgk">
+                                <rect key="frame" x="536.5" y="767" width="39" height="37"/>
+                            </pageControl>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5CV-XU-0Wp">
+                                <rect key="frame" x="75" y="792.5" width="942" height="21.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <color key="highlightedColor" red="1" green="0.46772867439999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="shadowColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <size key="shadowOffset" width="-1" height="-1"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Adt-FD-jus" secondAttribute="trailing" id="10s-Ci-nCM"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="pOA-qM-67a" secondAttribute="trailing" constant="25" id="261-Bb-kDv"/>
                             <constraint firstItem="aK5-sj-xVg" firstAttribute="top" secondItem="d7P-Nd-0U0" secondAttribute="top" id="3l6-3w-Gqu"/>
                             <constraint firstItem="aK5-sj-xVg" firstAttribute="leading" secondItem="d7P-Nd-0U0" secondAttribute="leading" id="5EI-sa-EOY"/>
                             <constraint firstItem="d8C-0J-M9Q" firstAttribute="top" secondItem="jRN-TS-o0G" secondAttribute="bottom" constant="25" id="7zt-QB-SSe"/>
@@ -906,7 +923,10 @@
                             <constraint firstAttribute="trailingMargin" secondItem="jRN-TS-o0G" secondAttribute="trailing" constant="15" id="ZZN-UZ-We0"/>
                             <constraint firstAttribute="bottom" secondItem="aK5-sj-xVg" secondAttribute="bottom" id="cg1-oa-wnI"/>
                             <constraint firstAttribute="bottom" secondItem="5CV-XU-0Wp" secondAttribute="bottom" priority="750" constant="20" symbolic="YES" id="hhs-e3-8E9"/>
+                            <constraint firstItem="jRN-TS-o0G" firstAttribute="top" secondItem="pOA-qM-67a" secondAttribute="bottom" constant="20" id="hiq-Sm-kGF"/>
                             <constraint firstItem="Adt-FD-jus" firstAttribute="leading" secondItem="d7P-Nd-0U0" secondAttribute="leading" id="jqJ-zq-Br3"/>
+                            <constraint firstAttribute="bottom" secondItem="cA3-cn-pgk" secondAttribute="bottom" constant="30" id="jqq-qh-vru"/>
+                            <constraint firstItem="cA3-cn-pgk" firstAttribute="centerX" secondItem="d7P-Nd-0U0" secondAttribute="centerX" id="tf7-or-1rL"/>
                             <constraint firstItem="5CV-XU-0Wp" firstAttribute="leading" secondItem="lzH-N3-MFH" secondAttribute="trailing" id="zIU-Ik-q4v"/>
                         </constraints>
                     </view>
@@ -914,6 +934,8 @@
                         <outlet property="debugLabel" destination="5CV-XU-0Wp" id="28p-jq-OHG"/>
                         <outlet property="imageView" destination="Adt-FD-jus" id="1Fi-Tg-o2J"/>
                         <outlet property="processingView" destination="aK5-sj-xVg" id="P6v-24-Gx6"/>
+                        <outlet property="toggleVisualisationButton" destination="pOA-qM-67a" id="8me-15-ahc"/>
+                        <outlet property="visViewIndicator" destination="cA3-cn-pgk" id="Rbe-6V-Gx3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Hs-tm-c60" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1130,6 +1152,7 @@
     <resources>
         <image name="camCapture.png" width="128" height="128"/>
         <image name="camClose.png" width="128" height="128"/>
+        <image name="camVisToggle.png" width="128" height="128"/>
         <image name="delProj.png" width="256" height="256"/>
         <image name="helpView.png" width="2000" height="1500"/>
         <image name="helpViewArrow.png" width="300" height="200"/>
